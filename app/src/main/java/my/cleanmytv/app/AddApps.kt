@@ -184,6 +184,15 @@ fun AddAppsRoot(vm: MainViewModel) {
                     HomeAction(t("Urus app", "Manage apps"), t("Semak dan nyahaktif app pada box", "Review and disable apps on your box"), "01") { manage = true }
                     HomeAction(t("Tambah app", "Add apps"), t("Waktu Solat dan pemasangan APK sendiri", "Waktu Solat and your own APK files"), "02") { model.host = vm.host; model.port = vm.port; open = true }
                     HomeAction(t("Sejarah & pulihkan", "History & restore"), t("Lihat perubahan dan aktifkan semula app", "Review changes and re-enable apps"), "03") { vm.openHistory() }
+                    OutlinedButton(onClick = {
+                        val details = vm.analysis?.info
+                        val body = "## Masalah / Problem\nTerangkan apa yang berlaku / Describe what happened:\n\n## Langkah / Steps to reproduce\n1. \n2. \n\n## Sepatutnya / Expected result\n\n## Maklumat peranti / Device information\n- App: cleanMYTV\n- Versi / Version: ${runCatching { @Suppress("DEPRECATION") val info = model.getApplication<Application>().packageManager.getPackageInfo("my.cleanmytv.app", 0); info.versionName }.getOrDefault("unknown")}\n- Android telefon / Phone Android: ${android.os.Build.VERSION.RELEASE}\n- TV: ${details?.brand.orEmpty()} ${details?.model.orEmpty()}\n- Android TV: ${details?.release ?: "Tidak diketahui / Unknown"}\n\n## Screenshot\nTambah screenshot jika perlu. Padam maklumat peribadi sebelum hantar. / Attach screenshots if useful; remove personal information before submitting.\n"
+                        val url = "https://github.com/AmexSaad/cleanMYTV/issues/new?title=" + Uri.encode("[Bug] ") + "&body=" + Uri.encode(body)
+                        runCatching { uriHandler.openUri(url) }
+                    }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp), shape = RoundedCornerShape(16.dp)) {
+                        Text(t("Lapor Masalah ↗", "Report a problem ↗"))
+                    }
+                    Text(t("Laporan GitHub adalah awam. Semak maklumat sebelum hantar; akaun GitHub diperlukan.", "GitHub reports are public. Review details before submitting; a GitHub account is required."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     HorizontalDivider()
                     Text(t("Dibina untuk pilihan anda.", "Built around your choices."), style = MaterialTheme.typography.labelLarge)
                     Button(onClick = { runCatching { uriHandler.openUri("https://sociabuzz.com/cleanmytv/tribe") } }, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp), elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp, pressedElevation = 2.dp), shape = RoundedCornerShape(16.dp)) { Text(t("♡  Sokong cleanMYTV", "♡  Support cleanMYTV"), fontWeight = FontWeight.Bold) }
