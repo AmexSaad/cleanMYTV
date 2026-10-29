@@ -82,7 +82,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         private set
 
     // ---- Language ----
-    fun setLang(l: Lang) {
+    fun changeLanguage(l: Lang) {
         lang = l
         prefs.edit().putString("lang", l.code).apply()
     }
