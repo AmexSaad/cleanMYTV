@@ -10,15 +10,15 @@ import androidx.compose.ui.unit.dp
 import my.cleanmytv.app.Lang
 
 @Composable
-fun HelpGuide(lang: Lang) {
-    var open by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+fun HelpGuide(lang: Lang, autoOpen: Boolean = false, showButton: Boolean = true, onClosed: () -> Unit = {}) {
+    var open by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(autoOpen) }
     val ms = lang == Lang.MS
     fun t(a: String, b: String) = if(ms) a else b
-    TextButton(onClick = { open = true }, contentPadding = PaddingValues(horizontal = 6.dp)) {
+    if(showButton) TextButton(onClick = { open = true }, contentPadding = PaddingValues(horizontal = 6.dp)) {
         Text(t("Bantuan", "Help"), maxLines = 1, softWrap = false)
     }
     if(open) AlertDialog(
-        onDismissRequest = { open = false },
+        onDismissRequest = { open = false; onClosed() },
         title = { Text(t("Panduan cleanMYTV", "cleanMYTV guide")) },
         text = {
             val sections = if(ms) listOf(
@@ -49,6 +49,6 @@ fun HelpGuide(lang: Lang) {
                 } }
             }
         },
-        confirmButton = { TextButton(onClick = { open = false }) { Text(t("Faham", "Got it")) } }
+        confirmButton = { TextButton(onClick = { open = false; onClosed() }) { Text(t("Faham", "Got it")) } }
     )
 }
