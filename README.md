@@ -1,69 +1,107 @@
+<div align="center">
+
 # cleanMYTV
+### TV lebih kemas. Pilihan di tangan anda.
 
-**BM** · [English below](#english)
+Urus app Android TV dan TV box melalui telefon — dalam Bahasa Melayu dan English.
 
-Aplikasi Android (telefon) untuk membersihkan bloatware pada Android TV / Google TV melalui Wi-Fi. Tiada root, tiada kabel, tiada apa dipadam. Pakej hanya dimatikan (`pm disable-user`) dan semuanya boleh dipulihkan. Dwibahasa: Bahasa Melayu & English (butang **BM | EN** di penjuru atas).
+[![Build APK](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml/badge.svg)](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml)
+![Android phone 8+](https://img.shields.io/badge/Android%20phone-8%2B-0866FF?logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-Jetpack%20Compose-7F52FF?logo=kotlin&logoColor=white)
+![Language](https://img.shields.io/badge/Bahasa-BM%20%7C%20EN-0866FF)
 
-Idea fungsi diambil daripada projek sumber terbuka [CleanYourTV](https://github.com/Gathin23/cleanyourtv) (MIT). Kod dan rekaan antara muka cleanMYTV ditulis sendiri.
+[**Muat turun APK**](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml) · [**Lapor masalah**](https://github.com/AmexSaad/cleanMYTV/issues/new) · [**Sokong projek**](https://sociabuzz.com/cleanmytv/tribe)
 
-### Cara guna
-1. Di TV: Tetapan → Pilihan Peranti → Perihal → tekan OK pada **Build** 7 kali → Pilihan pembangun → hidupkan **USB debugging** (dan **ADB rangkaian** jika ada).
-2. Telefon dan TV atas Wi-Fi yang sama. Buka cleanMYTV → **Cari TV di rangkaian** (atau taip IP) → **Sambung & analisis**.
-3. Di TV, tekan **Allow USB debugging?** → Always allow.
-4. Semak pelan pembersihan (Disyorkan / Semak sendiri / Lanjutan) → **Bersihkan**.
-5. Jika ada yang tidak kena: **Pulih / Sejarah** → **Pulihkan**. Selepas kemas kini firmware: **Matikan semula**.
+![cleanMYTV — TV lebih kemas](cover.jpg)
 
-### Ciri
-- Imbas rangkaian untuk cari TV (port ADB 5555), sambungan ADB terus dari telefon (pustaka [dadb](https://github.com/mobile-dev-inc/dadb), tiada binari `adb`).
-- Analisis: model, versi Android, skrin utama semasa, senarai pakej sistem.
-- Perlindungan: skrin utama (dan semua pakej yang menjawab HOME), pakej sistem penting, Chromecast built-in, dan aplikasi ini sendiri tidak akan disentuh.
-- Rekod pemulihan ditulis **sebelum** setiap pakej dimatikan (write-ahead), jadi Wi-Fi terputus pun tidak menghilangkan senarai undo.
-- **Import senarai**: tampal atau ambil senarai `debloat.txt` komuniti (satu pakej setiap baris, komen `#`) dari pautan GitHub; hanya pakej yang wujud dan selamat pada TV anda dipilih.
+</div>
 
-### Bina APK
-**Cara paling mudah (tanpa Android Studio):** muat naik folder ini ke repo GitHub anda. Tab **Actions → Build APK** akan menghasilkan `cleanMYTV-apk` (fail `app-debug.apk`) yang boleh dipasang terus.
+## Tentang cleanMYTV
 
-**Android Studio:** buka folder ini, tunggu Gradle sync, kemudian **Build → Build APK(s)**. Perlu JDK 17, compileSdk 35.
+cleanMYTV ialah aplikasi **pada telefon Android** untuk mengurus app pada Android TV / Google TV melalui ADB di rangkaian Wi-Fi. Pilih app yang mahu dinyahaktifkan, pulihkan perubahan melalui Sejarah, atau hantar APK sendiri ke box.
 
-Pasang APK: benarkan "Install unknown apps" untuk pelayar/pengurus fail anda.
+**Tiada root untuk aliran yang disokong.** Fungsi pembersihan menggunakan nyahaktif app, bukan memadam pakej sistem. Sekatan firmware masih boleh menyebabkan arahan ditolak.
 
-### Had yang jujur
-- Hanya Android TV / Google TV. Samsung (Tizen), LG (webOS), Roku, Vizio tiada ADB, jadi tidak disokong.
-- Fire TV: bahagian "matikan pakej" mungkin berfungsi, tetapi Fire OS tidak membenarkan skrin utama pihak ketiga.
-- Senarai pakej terkurasi dalam app sengaja pendek dan konservatif. Untuk senarai khusus model TV, guna **Import senarai** dengan senarai komuniti.
-- Pelancar (launcher) gaya Apple TV dalam projek asal **tidak** termasuk dalam versi ini; cleanMYTV fokus pada pembersihan + pemulihan.
-- Guna pada TV milik sendiri, atas risiko sendiri. Tiada kaitan dengan mana-mana pengeluar TV.
+## Apa yang boleh dibuat?
+
+| Fungsi | Kegunaan |
+| :--- | :--- |
+| **Sambung TV Anda** | Cari TV dalam rangkaian atau masukkan IP dan port sendiri. |
+| **Urus App** | Semak cadangan dan pilih app lain secara manual, dengan perlindungan komponen penting. |
+| **Tambah App** | Pilih satu fail APK pada telefon dan pasang pada box; had 200 MB. |
+| **Waktu Solat** | Buka halaman rasmi Waktu Solat oleh RIQTech di Play Store TV; lengkapkan pemasangan dengan remote. |
+| **Sejarah & Pulihkan** | Lihat rekod perubahan, aktifkan semula app atau lakukan nyahaktif semula. |
+| **Status sambungan** | Papar model dan IP selepas sambungan berjaya; semak sambungan semasa dashboard dibuka. |
+| **Lapor Masalah** | Buka draf GitHub Issue dengan maklumat asas app dan peranti untuk disemak sebelum dihantar. |
+| **BM / EN** | Tukar bahasa terus dalam app. |
+
+## Mula dalam 3 langkah
+
+### 1 · Pasang pada telefon
+
+Buka [Build APK](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml), pilih run terkini yang **berjaya**, kemudian muat turun **cleanMYTV-apk** di bahagian **Artifacts**. Log masuk GitHub jika diminta.
+
+Ekstrak ZIP dan pasang `app-debug.apk` pada telefon Android. Fail ini ialah binaan debug; belum disediakan sebagai keluaran Play Store.
+
+### 2 · Sambung box
+
+- Pastikan telefon dan TV / box menggunakan Wi-Fi yang sama.
+- Aktifkan pilihan pembangun dan ADB rangkaian pada TV, jika firmware menyokongnya.
+- Tekan **Sambung TV Anda**, cari TV atau isi IP serta port.
+- Terima permintaan kebenaran debugging pada TV.
+
+### 3 · Pilih tindakan
+
+Buka **Urus App** untuk analisis dan nyahaktif app, **Tambah App** untuk pemasangan APK, atau **Sejarah & Pulihkan** untuk membatalkan perubahan yang direkodkan.
+
+> Mulakan dengan sedikit app yang anda kenal. Keserasian bergantung pada model, versi Android dan firmware; binaan berjaya bukan pengesahan bahawa semua box telah diuji.
+
+## Keserasian & had
+
+| Perkara | Status |
+| :--- | :--- |
+| Telefon Android | Android 8.0+ |
+| Android TV / Google TV / box Android | Memerlukan sambungan ADB yang boleh dicapai dan dibenarkan |
+| Box Unifi | Bergantung pada model dan sekatan firmware; belum disahkan pada semua model |
+| Samsung Tizen / LG webOS / Roku | Tidak disokong oleh aliran ADB ini |
+| APK sendiri | Satu fail `.apk`; XAPK / APKS / split bundle tidak disokong |
+| Widget waktu solat di home screen | Bergantung pada app dan launcher TV; bukan widget terbina dalam cleanMYTV |
+| Launcher pengganti | Tidak termasuk dalam app ini |
+
+App sistem tertentu dilindungi daripada pemilihan. Perlindungan berasaskan senarai dan pengesanan launcher ini mengurangkan risiko, tetapi tidak menjamin semua app pengeluar telah dikenal pasti.
+
+## Lapor masalah
+
+Tekan **Lapor Masalah** dalam app atau [buka GitHub Issue](https://github.com/AmexSaad/cleanMYTV/issues/new).
+
+Sertakan langkah masalah, hasil yang dijangka, model box dan screenshot jika berkaitan. **Issues adalah awam** — semak dan padam maklumat peribadi sebelum hantar. App membuka borang untuk semakan pengguna; laporan tidak dihantar secara automatik.
+
+## Untuk pembangun
+
+- Kotlin + Jetpack Compose
+- Sambungan ADB terus dari telefon melalui [dadb](https://github.com/mobile-dev-inc/dadb)
+- JDK 17 · Gradle 8.10.2 · compileSdk 35
+
+Dengan Android SDK dan Gradle yang sesuai tersedia:
+
+```sh
+gradle assembleDebug
+```
+
+APK dihasilkan di `app/build/outputs/apk/debug/app-debug.apk`. Lihat [workflow binaan](.github/workflows/build.yml) untuk persekitaran CI.
+
+Cadangan ciri dan pembaikan dialu-alukan melalui Issues dan pull request. Terangkan perubahan dan cara mengujinya; jangan masukkan kunci, kata laluan atau log yang mengandungi data peribadi.
+
+## Kredit & sokongan
+
+Idea fungsi mendapat inspirasi daripada [CleanYourTV](https://github.com/Gathin23/cleanyourtv). cleanMYTV ialah projek berasingan; tiada gabungan rasmi dinyatakan. Pustaka ADB: [dadb](https://github.com/mobile-dev-inc/dadb).
+
+Jika cleanMYTV membantu anda, [**sokong pembangunannya di SociaBuzz**](https://sociabuzz.com/cleanmytv/tribe). Sumbangan adalah sukarela.
 
 ---
 
-## English
+### English
 
-An Android (phone) app that debloats Android TV / Google TV over Wi-Fi. No root, no cable, nothing deleted. Packages are only disabled (`pm disable-user`) and everything can be restored. Bilingual: Bahasa Melayu & English (**BM | EN** switch at the top right).
+**cleanMYTV is an Android phone app for managing apps on Android TV and Google TV over Wi-Fi ADB.** It offers app disabling with restore records, manual selection, single-APK installation, a Waktu Solat Play Store shortcut, and user-reviewed GitHub issue reports. The interface supports Malay and English.
 
-The functional idea comes from the open-source [CleanYourTV](https://github.com/Gathin23/cleanyourtv) project (MIT). cleanMYTV's code and UI design are original.
-
-### How to use
-1. On the TV: Settings → Device Preferences → About → press OK on **Build** 7 times → Developer options → turn on **USB debugging** (and **Network ADB** if shown).
-2. Phone and TV on the same Wi-Fi. Open cleanMYTV → **Find TVs on my network** (or type the IP) → **Connect & analyse**.
-3. On the TV, accept **Allow USB debugging?** → Always allow.
-4. Review the plan (Recommended / Review first / Advanced) → **Clean**.
-5. If something feels off: **Restore / History** → **Restore**. After a firmware update: **Disable again**.
-
-### Features
-- Network scan for TVs (ADB port 5555) and a direct ADB connection from the phone ([dadb](https://github.com/mobile-dev-inc/dadb), no `adb` binary).
-- Analysis: model, Android version, current home app, system package list.
-- Safety: the home app (and every package that answers HOME), essential system packages, built-in Chromecast and this app are never touched.
-- The restore record is written **before** each package is disabled (write-ahead), so a dropped Wi-Fi never loses the undo list.
-- **Import a list**: paste or fetch a community `debloat.txt` (one package per line, `#` comments) from a GitHub link; only packages that exist and are safe on your TV get selected.
-
-### Build the APK
-**Easiest (no Android Studio):** push this folder to a GitHub repo. **Actions → Build APK** produces the `cleanMYTV-apk` artifact (`app-debug.apk`), which installs directly.
-
-**Android Studio:** open this folder, let Gradle sync, then **Build → Build APK(s)**. Needs JDK 17, compileSdk 35.
-
-### Honest limits
-- Android TV / Google TV only. Samsung (Tizen), LG (webOS), Roku and Vizio have no ADB.
-- Fire TV: the disable part may work, but Fire OS will not hand Home to a third-party launcher.
-- The built-in curated list is deliberately short and conservative. For model-specific lists, use **Import a list** with a community list.
-- The Apple-TV-style launcher from the original project is **not** included; cleanMYTV focuses on cleaning + restoring.
-- Use it on a TV you own, at your own risk. Not affiliated with any TV maker.
+Download an artifact from the latest successful [Build APK run](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml), extract it and install the debug APK on your phone. Device support depends on ADB availability and firmware restrictions. A successful build does not mean every TV model has been tested.
