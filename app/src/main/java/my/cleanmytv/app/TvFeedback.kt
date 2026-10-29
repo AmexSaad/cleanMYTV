@@ -19,7 +19,7 @@ fun TvFeedback(vm: MainViewModel) {
     fun t(a: String, b: String) = if(ms) a else b
     val context = LocalContext.current
     val browser = LocalUriHandler.current
-    var show by remember { mutableStateOf(false) }
+    var show by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(true) }
     var result by remember { mutableStateOf(-1) }
     var comment by remember { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
@@ -50,6 +50,11 @@ fun TvFeedback(vm: MainViewModel) {
             error = runCatching { browser.openUri("https://github.com/AmexSaad/cleanMYTV/issues/new?title=" + Uri.encode(title) + "&body=" + Uri.encode(body)) }.isFailure
             if(!error) show = false
         }) { Text(t("Semak & buka GitHub", "Review & open GitHub")) } },
-        dismissButton = { TextButton(onClick = { show = false }) { Text(t("Batal", "Cancel")) } }
+        dismissButton = {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                TextButton(onClick = { show = false }) { Text(t("Batal", "Cancel")) }
+                TextButton(onClick = { error = runCatching { browser.openUri("https://sociabuzz.com/cleanmytv/tribe") }.isFailure }) { Text(t("♡ Sokong", "♡ Donate")) }
+            }
+        }
     )
 }
