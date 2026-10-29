@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
             CleanTheme {
                 val vm: MainViewModel = viewModel()
                 AddAppsRoot(vm)
+                my.cleanmytv.app.ui.WelcomeReminder(vm.lang)
             }
         }
     }
