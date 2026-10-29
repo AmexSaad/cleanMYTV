@@ -7,14 +7,14 @@ import androidx.compose.ui.graphics.Color
 
 /** Night-navy base with pandan green and songket gold accents. */
 object Pal {
-    val Ink = Color(0xFFF7F8F2)
+    val Ink = Color(0xFFF7F9FD)
     val Panel = Color(0xFFFFFFFF)
-    val PanelHi = Color(0xFFE8EFE9)
-    val Line = Color(0xFFD3DDD5)
-    val Pandan = Color(0xFF176B55)
-    val Songket = Color(0xFF9C4C30)
-    val Text = Color(0xFF20392F)
-    val Muted = Color(0xFF5C7066)
+    val PanelHi = Color(0xFFEAF1FF)
+    val Line = Color(0xFFDCE4F0)
+    val Pandan = Color(0xFF0866FF)
+    val Songket = Color(0xFF2452B8)
+    val Text = Color(0xFF142039)
+    val Muted = Color(0xFF64718A)
     val Danger = Color(0xFFBA3535)
 }
 
