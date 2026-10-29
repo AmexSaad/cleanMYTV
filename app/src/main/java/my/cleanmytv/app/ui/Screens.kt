@@ -86,7 +86,7 @@ fun AppRoot(vm: MainViewModel) {
             .systemBarsPadding()
             .imePadding()
     ) {
-        TopBar(vm.lang) { vm.setLang(it) }
+        TopBar(vm.lang) { vm.changeLanguage(it) }
         when (vm.screen) {
             Screen.CONNECT -> ConnectScreen(vm, s)
             Screen.ANALYSING -> AnalysingScreen(vm, s)
