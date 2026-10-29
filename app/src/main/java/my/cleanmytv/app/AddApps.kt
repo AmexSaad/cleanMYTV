@@ -159,7 +159,7 @@ fun AddAppsRoot(vm: MainViewModel) {
         if ((vm.screen == Screen.CONNECT || vm.screen == Screen.REVIEW) && !manage) {
             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 Column(Modifier.systemBarsPadding().verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
-                    my.cleanmytv.app.ui.TopBar(vm.lang) { vm.changeLanguage(it) }
+                    my.cleanmytv.app.ui.TopBar(vm.lang, horizontalPadding = 0.dp) { vm.changeLanguage(it) }
                     Text(t("Ruang TV anda.", "Your TV space."), style = MaterialTheme.typography.headlineLarge)
                     Text(t("Satu tempat untuk urus app, tambah pilihan dan pulihkan perubahan.", "One place to manage apps, add your favourites and restore changes."), color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Card(shape = RoundedCornerShape(28.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F5FC))) {
@@ -194,7 +194,7 @@ fun AddAppsRoot(vm: MainViewModel) {
             }
             return
         }
-        Column(Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).systemBarsPadding()) {
             if (vm.screen == Screen.CONNECT || vm.screen == Screen.REVIEW) {
                 TextButton(onClick = { manage = false }) { Text(t("← Halaman utama", "← Home")) }
             }
