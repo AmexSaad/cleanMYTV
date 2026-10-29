@@ -144,14 +144,19 @@ class AddAppsModel(app: Application) : AndroidViewModel(app) {
 @Composable
 fun AddAppsRoot(vm: MainViewModel) {
     var open by remember { mutableStateOf(false) }
+    var custom by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
     var manage by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
     val model: AddAppsModel = viewModel()
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val ms = vm.lang == Lang.MS
     fun t(a: String, b: String) = if (ms) a else b
     LaunchedEffect(vm.connected) { if (vm.connected) manage = false }
-    LaunchedEffect(manage, open, vm.connected) {
-        while (!manage && !open && vm.connected) { delay(5000); vm.checkConnection() }
+    LaunchedEffect(manage, open, custom, vm.connected) {
+        while (!manage && !open && !custom && vm.connected) { delay(5000); vm.checkConnection() }
+    }
+    if (custom) {
+        LauncherEditor(vm) { custom = false }
+        return
     }
     BackHandler(open) { if (!model.busy) open = false }
     BackHandler(!open && manage && vm.screen == Screen.CONNECT) { manage = false }
@@ -185,6 +190,12 @@ fun AddAppsRoot(vm: MainViewModel) {
                         Box(Modifier.weight(1f).fillMaxHeight()) { HomeAction(t("Tambah App", "Add apps"), t("Waktu Solat & APK sendiri", "Waktu Solat & APK files"), "02") { model.host = vm.host; model.port = vm.port; open = true } }
                         Box(Modifier.weight(1f).fillMaxHeight()) { HomeAction(t("Sejarah & Pulihkan", "History & restore"), t("Pulihkan perubahan anda", "Restore your changes"), "03") { vm.openHistory() } }
                     }
+                    OutlinedCard(onClick = { custom = true }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp)) {
+                        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("Custom MyLauncher  →", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Color(0xFF0866FF))
+                            Text(t("Selepas urus TV, reka ruang anda. 12 gaya jam/tarikh, 20 wallpaper dan susunan app pilihan.", "After managing your TV, make it yours. 12 clock/date styles, 20 wallpapers and your app layout."))
+                        }
+                    }
                     ProblemReporter(ms)
                     Text(t("Laporan GitHub adalah awam. Semak maklumat sebelum hantar; akaun GitHub diperlukan.", "GitHub reports are public. Review details before submitting; a GitHub account is required."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     HorizontalDivider()
@@ -198,7 +209,10 @@ fun AddAppsRoot(vm: MainViewModel) {
             if (vm.screen == Screen.CONNECT || vm.screen == Screen.REVIEW) {
                 TextButton(onClick = { manage = false }) { Text(t("← Halaman utama", "← Home")) }
             }
-            if (vm.screen == Screen.DONE) TvFeedback(vm)
+            if (vm.screen == Screen.DONE) {
+                TvFeedback(vm)
+                Button(onClick = { custom = true }, modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) { Text(t("Seterusnya: Custom MyLauncher", "Next: Custom MyLauncher")) }
+            }
             Box(Modifier.weight(1f)) { AppRoot(vm) }
         }
         return
