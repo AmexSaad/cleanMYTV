@@ -21,6 +21,8 @@ jobs:
         run: |
           set -o pipefail
           gradle assembleDebug --no-daemon --console=plain 2>&1 | tee build.log
+      - name: Name APK cleanMYTV
+        run: cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/cleanMYTV.apk
       - name: Show errors
         if: failure()
         run: |
@@ -28,5 +30,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: cleanMYTV-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/cleanMYTV.apk
           if-no-files-found: error
