@@ -5,6 +5,8 @@
 
 Urus app Android TV dan TV box melalui telefon — dalam Bahasa Melayu dan English.
 
+[**Bahasa Melayu**](#bahasa-melayu) · [**English**](#english)
+
 [![Build APK](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml/badge.svg)](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml)
 ![Android phone 8+](https://img.shields.io/badge/Android%20phone-8%2B-0866FF?logo=android&logoColor=white)
 ![Kotlin](https://img.shields.io/badge/Kotlin-Jetpack%20Compose-7F52FF?logo=kotlin&logoColor=white)
@@ -16,7 +18,9 @@ Urus app Android TV dan TV box melalui telefon — dalam Bahasa Melayu dan Engli
 
 </div>
 
-## Tentang cleanMYTV
+## Bahasa Melayu
+
+### Tentang cleanMYTV
 
 cleanMYTV ialah aplikasi **pada telefon Android** untuk mengurus app pada Android TV / Google TV melalui ADB di rangkaian Wi-Fi. Pilih app yang mahu dinyahaktifkan, pulihkan perubahan melalui Sejarah, atau hantar APK sendiri ke box.
 
@@ -104,8 +108,75 @@ Jika cleanMYTV membantu anda, [**sokong pembangunannya di SociaBuzz**](https://s
 
 ---
 
-### English
+## English
 
-**cleanMYTV is an Android phone app for managing apps on Android TV and Google TV over Wi-Fi ADB.** It offers app disabling with restore records, manual selection, single-APK installation, a Waktu Solat Play Store shortcut, and user-reviewed GitHub issue reports. The interface supports Malay and English.
+[↑ Bahasa Melayu](#bahasa-melayu)
 
-Download an artifact from the latest successful [Build APK run](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml), extract it and install the debug APK on your phone. Device support depends on ADB availability and firmware restrictions. A successful build does not mean every TV model has been tested.
+### Your TV, your choice
+
+cleanMYTV is an **Android phone app** for managing apps on Android TV / Google TV over Wi-Fi ADB. Disable selected apps, restore recorded changes, or send an APK from your phone to your box. The interface supports **Malay and English**.
+
+### Features
+
+| Feature | What it does |
+| :--- | :--- |
+| Connect your TV | Scan your local network or enter the TV IP and ADB port. |
+| Manage apps | Review recommendations and manually select other apps, with core-component protection. |
+| Add apps | Send and install one APK from your phone, up to 200 MB. |
+| Waktu Solat | Open the official RIQTech listing in the TV Play Store, then install with your remote. |
+| History & restore | Review recorded changes, re-enable apps or reapply disabling. |
+| Connection status | Show model and IP after a successful connection; check it while the dashboard is open. |
+| Problem reports | Select locally recorded errors and review a prefilled GitHub Issue before submitting. |
+
+### 1 · Install on your phone
+
+[**📥 Download cleanMYTV from Google Drive**](https://drive.google.com/file/d/1_OXyHOOSbgyuJNnI0jDn1y2V-h0bGQW8/view?usp=sharing)
+
+Open the link and select **Download**. Extract the file first if it is a ZIP, then open **`cleanMYTV.apk`** on your Android phone. Allow installation for your browser or file manager if Android asks. This is a debug build, not a Play Store release.
+
+Alternatively, download **cleanMYTV-apk** from **Artifacts** on a successful [GitHub Actions run](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml). GitHub sign-in may be required.
+
+### 2 · Connect your TV or box
+
+1. Keep your phone and TV on the same Wi-Fi network.
+2. Enable Developer options and network ADB on the TV, if supported by its firmware.
+3. Tap **Connect your TV**, scan for the device or enter its IP and port.
+4. Accept the debugging authorization prompt on the TV.
+
+### 3 · Choose an action
+
+Open **Manage apps** to analyse and disable selected apps, **Add apps** to install your APK, or **History & restore** to undo recorded changes.
+
+### Compatibility and limits
+
+- Requires an Android 8.0+ phone and an Android TV / Google TV / Android box with reachable, authorized ADB.
+- Unifi box support depends on the model and firmware; not all models have been tested.
+- Samsung Tizen, LG webOS and Roku are not supported by this ADB workflow.
+- Only single `.apk` files are supported; XAPK, APKS and split bundles are not supported.
+- Home-screen prayer widgets depend on the TV launcher and app; cleanMYTV does not include a built-in prayer widget or replacement launcher.
+- Firmware may refuse app changes. Protection rules reduce risk but cannot identify every critical manufacturer package. Start with a few apps you recognise.
+- A successful build does not mean every device has been tested.
+
+### Report a problem
+
+Tap **Report a problem** in the app or [open a GitHub Issue](https://github.com/AmexSaad/cleanMYTV/issues/new). Include steps to reproduce, expected behaviour and your box model. You can select from up to 20 locally stored error records, including captured crash types where available.
+
+**Issues are public.** Review the report and remove personal information before submitting or attaching screenshots. Reports are not submitted automatically.
+
+### Build and contribute
+
+Kotlin + Jetpack Compose, using [dadb](https://github.com/mobile-dev-inc/dadb) for direct ADB connections. Build with JDK 17, Gradle 8.10.2 and Android SDK 35:
+
+```sh
+gradle assembleDebug
+```
+
+The build output is `app/build/outputs/apk/debug/app-debug.apk`; GitHub Actions packages a copy named `cleanMYTV.apk`. See the [build workflow](.github/workflows/build.yml).
+
+Feature suggestions and pull requests are welcome. Explain your change and how to test it. Do not include credentials or private logs.
+
+### Credits and support
+
+The functional idea was inspired by [CleanYourTV](https://github.com/Gathin23/cleanyourtv). cleanMYTV is a separate project; no official affiliation is claimed. ADB library: [dadb](https://github.com/mobile-dev-inc/dadb).
+
+[**Support cleanMYTV on SociaBuzz**](https://sociabuzz.com/cleanmytv/tribe). Contributions are voluntary.
