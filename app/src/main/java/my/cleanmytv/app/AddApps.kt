@@ -135,22 +135,40 @@ class AddAppsModel(app: Application) : AndroidViewModel(app) {
 @Composable
 fun AddAppsRoot(vm: MainViewModel) {
     var open by remember { mutableStateOf(false) }
+    var manage by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
     val model: AddAppsModel = viewModel()
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val ms = vm.lang == Lang.MS
     fun t(a: String, b: String) = if (ms) a else b
     BackHandler(open) { if (!model.busy) open = false }
+    BackHandler(!open && manage && vm.screen == Screen.CONNECT) { manage = false }
     if (!open) {
-        Column(Modifier.fillMaxSize()) {
-            if (vm.screen == Screen.CONNECT) {
-                TextButton(onClick = { model.host = vm.host; model.port = vm.port; open = true }) {
-                    Text(t("+ Tambah app pada TV", "+ Add apps to TV"))
+        if (vm.screen == Screen.CONNECT && !manage) {
+            Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Column(Modifier.systemBarsPadding().verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                    my.cleanmytv.app.ui.TopBar(vm.lang) { vm.changeLanguage(it) }
+                    Text(t("Ruang TV anda.", "Your TV space."), style = MaterialTheme.typography.headlineLarge)
+                    Text(t("Satu tempat untuk urus app, tambah pilihan dan pulihkan perubahan.", "One place to manage apps, add your favourites and restore changes."), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+                        Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(t("PERANTI ANDA", "YOUR DEVICE"), style = MaterialTheme.typography.labelMedium)
+                            Text(vm.host.ifBlank { t("Belum pilih TV", "No TV selected") }, style = MaterialTheme.typography.titleLarge)
+                            Text(t("Sambung melalui Wi-Fi yang sama", "Connect over the same Wi-Fi"), style = MaterialTheme.typography.bodyMedium)
+                        }
+                    }
+                    HomeAction(t("Urus app", "Manage apps"), t("Semak dan nyahaktif app pada box", "Review and disable apps on your box"), "01") { manage = true }
+                    HomeAction(t("Tambah app", "Add apps"), t("Waktu Solat dan pemasangan APK sendiri", "Waktu Solat and your own APK files"), "02") { model.host = vm.host; model.port = vm.port; open = true }
+                    HomeAction(t("Sejarah & pulihkan", "History & restore"), t("Lihat perubahan dan aktifkan semula app", "Review changes and re-enable apps"), "03") { vm.openHistory() }
+                    HorizontalDivider()
+                    Text(t("Dibina untuk pilihan anda.", "Built around your choices."), style = MaterialTheme.typography.labelLarge)
+                    TextButton(onClick = { runCatching { uriHandler.openUri("https://sociabuzz.com/cleanmytv/tribe") } }) { Text(t("Sokong pembangunan cleanMYTV ↗", "Support cleanMYTV development ↗")) }
                 }
             }
+            return
+        }
+        Column(Modifier.fillMaxSize()) {
             if (vm.screen == Screen.CONNECT) {
-                TextButton(onClick = { runCatching { uriHandler.openUri("https://sociabuzz.com/cleanmytv/tribe") } }) {
-                    Text(t("Beri Sokongan kepada cleanMYTV", "Support cleanMYTV"))
-                }
+                TextButton(onClick = { manage = false }) { Text(t("← Halaman utama", "← Home")) }
             }
             Box(Modifier.weight(1f)) { AppRoot(vm) }
         }
@@ -190,4 +208,18 @@ fun AddAppsRoot(vm: MainViewModel) {
         confirmButton = { TextButton(onClick = { confirm = false; model.perform(true) }) { Text(t("Pasang", "Install")) } },
         dismissButton = { TextButton(onClick = { confirm = false }) { Text(t("Batal", "Cancel")) } }
     )
+}
+
+@Composable
+private fun HomeAction(title: String, subtitle: String, number: String, onClick: () -> Unit) {
+    OutlinedCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(20.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Text(number, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleMedium)
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(title, style = MaterialTheme.typography.titleLarge)
+                Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Text("→", color = MaterialTheme.colorScheme.primary)
+        }
+    }
 }
