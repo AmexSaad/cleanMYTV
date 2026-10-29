@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CleanTheme {
                 val vm: MainViewModel = viewModel()
-                AppRoot(vm)
+                AddAppsRoot(vm)
             }
         }
     }
