@@ -38,10 +38,27 @@ cleanMYTV ialah aplikasi **pada telefon Android** untuk mengurus app pada Androi
 | **Status sambungan** | Papar model dan IP selepas sambungan berjaya; semak sambungan semasa dashboard dibuka. |
 | **Lapor Masalah** | Buka draf GitHub Issue dengan maklumat asas app dan peranti untuk disemak sebelum dihantar. |
 | **BM / EN** | Tukar bahasa terus dalam app. |
+| **Custom MyLauncher** | 12 gaya jam/tarikh, 20 wallpaper, susunan app, tema dan penghantaran ke TV. |
+
+### Custom MyLauncher · versi 1.1.0
+
+Selepas urus app, buka **Custom MyLauncher** pada halaman utama atau skrin selesai.
+
+1. Baca semula app TV yang masih aktif, pilih app dan susun melintang atau menegak.
+2. Pilih **J01–J12** untuk jam/tarikh dan **W01–W20** untuk wallpaper. Seret jam atau laras saiz serta kedudukannya. Pilih format 12/24 jam dan gelapkan wallpaper.
+3. Simpan sehingga 10 tema pada telefon. Tekan **Pasang & hantar reka bentuk ke TV** dan sahkan alamat IP.
+4. APK telefon memasang MyLauncher dan membuka reka bentuk pada TV. Ikon/nama app sebenar dibaca pada TV; waktu mengikut jam dan zon waktu TV.
+5. Untuk butang Home, buka **Pilih launcher lalai pada TV** dan pilih MyLauncher dengan remote. Sokongan bergantung pada firmware. **Kembali ke launcher asal** memilih launcher yang direkod sebelum penghantaran pertama; launcher asal kekal aktif.
+
+Wallpaper asal dijana untuk projek dan dibundel sebagai satu atlas ringan. MyLauncher tidak menyokong widget Android pihak ketiga. Pengesahan penghantaran ADB kini menggunakan binaan debug; versi release memerlukan saluran pengesahan lain. Belum disahkan pada TV fizikal.
 
 ## Mula dalam 3 langkah
 
 ### 1 · Pasang pada telefon
+
+**MyLauncher 1.1.0:** ambil `cleanMYTV-apk` daripada run `main` terkini yang berjaya di [GitHub Actions](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml). Ekstrak ZIP dan pasang `cleanMYTV.apk`.
+
+Pautan Google Drive di bawah ialah **binaan terdahulu**, sebelum MyLauncher:
 
 [**📥 Muat turun cleanMYTV di Google Drive**](https://drive.google.com/file/d/1oJF38W7EZH4YznjOjDgGsNYLy6kkbTu2/view?usp=sharing)
 
@@ -74,7 +91,7 @@ Buka **Urus App** untuk analisis dan nyahaktif app, **Tambah App** untuk pemasan
 | Samsung Tizen / LG webOS / Roku | Tidak disokong oleh aliran ADB ini |
 | APK sendiri | Satu fail `.apk`; XAPK / APKS / split bundle tidak disokong |
 | Widget waktu solat di home screen | Bergantung pada app dan launcher TV; bukan widget terbina dalam cleanMYTV |
-| Launcher pengganti | Tidak termasuk dalam app ini |
+| MyLauncher | Termasuk dalam APK; dipasang pada TV melalui editor telefon. Launcher lalai bergantung pada firmware. |
 
 App sistem tertentu dilindungi daripada pemilihan. Perlindungan berasaskan senarai dan pengesanan launcher ini mengurangkan risiko, tetapi tidak menjamin semua app pengeluar telah dikenal pasti.
 
@@ -128,7 +145,23 @@ cleanMYTV is an **Android phone app** for managing apps on Android TV / Google T
 | Connection status | Show model and IP after a successful connection; check it while the dashboard is open. |
 | Problem reports | Select locally recorded errors and review a prefilled GitHub Issue before submitting. |
 
+### Custom MyLauncher · version 1.1.0
+
+After managing apps, open **Custom MyLauncher** from Home or the completion screen.
+
+1. Refresh the TV's enabled launchable apps, choose apps and arrange them horizontally or vertically.
+2. Choose a **J01–J12** clock/date style and **W01–W20** wallpaper. Drag the clock or adjust its size and position; choose 12/24-hour time and wallpaper dimming.
+3. Save up to 10 themes on the phone. Tap **Install & send design to TV** and confirm the target IP.
+4. The phone APK installs MyLauncher on the TV and opens the design. The TV reads actual app names/icons and uses its own clock and time zone.
+5. For the Home button, choose MyLauncher in **Choose default launcher on TV** using the remote. Firmware may restrict this. **Restore original launcher** selects the launcher recorded before the first send; the original stays enabled.
+
+Original generated wallpapers are bundled as one lightweight atlas. MyLauncher does not host third-party Android widgets. ADB design acknowledgement currently uses the debug build; release builds need another acknowledgement channel. Physical TV behaviour has not yet been verified.
+
 ### 1 · Install on your phone
+
+**MyLauncher 1.1.0:** get `cleanMYTV-apk` from the latest successful `main` run in [GitHub Actions](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml). Extract the ZIP and install `cleanMYTV.apk`.
+
+The Google Drive link below is a **previous build**, before MyLauncher:
 
 [**📥 Download cleanMYTV from Google Drive**](https://drive.google.com/file/d/1oJF38W7EZH4YznjOjDgGsNYLy6kkbTu2/view?usp=sharing)
 
@@ -153,7 +186,7 @@ Open **Manage apps** to analyse and disable selected apps, **Add apps** to insta
 - Unifi box support depends on the model and firmware; not all models have been tested.
 - Samsung Tizen, LG webOS and Roku are not supported by this ADB workflow.
 - Only single `.apk` files are supported; XAPK, APKS and split bundles are not supported.
-- Home-screen prayer widgets depend on the TV launcher and app; cleanMYTV does not include a built-in prayer widget or replacement launcher.
+- Home-screen prayer widgets depend on the TV launcher and app; cleanMYTV includes MyLauncher but does not include a built-in prayer widget.
 - Firmware may refuse app changes. Protection rules reduce risk but cannot identify every critical manufacturer package. Start with a few apps you recognise.
 - A successful build does not mean every device has been tested.
 
