@@ -43,7 +43,7 @@ cleanMYTV ialah aplikasi **pada telefon Android** untuk mengurus app pada Androi
 
 ### 1 · Pasang pada telefon
 
-[**📥 Muat turun cleanMYTV di Google Drive**](https://drive.google.com/file/d/1_OXyHOOSbgyuJNnI0jDn1y2V-h0bGQW8/view?usp=sharing)
+[**📥 Muat turun cleanMYTV di Google Drive**](https://drive.google.com/file/d/15AgEfJsegPxgQFI4y-Uq-6gzfSnhVmcJ/view?usp=sharing)
 
 Buka pautan di atas dan tekan **Download / Muat turun**. Jika fail yang dimuat turun ialah ZIP, ekstrak dahulu. Kemudian buka **`cleanMYTV.apk`** pada telefon Android untuk memasang app.
 
@@ -130,7 +130,7 @@ cleanMYTV is an **Android phone app** for managing apps on Android TV / Google T
 
 ### 1 · Install on your phone
 
-[**📥 Download cleanMYTV from Google Drive**](https://drive.google.com/file/d/1_OXyHOOSbgyuJNnI0jDn1y2V-h0bGQW8/view?usp=sharing)
+[**📥 Download cleanMYTV from Google Drive**](https://drive.google.com/file/d/15AgEfJsegPxgQFI4y-Uq-6gzfSnhVmcJ/view?usp=sharing)
 
 Open the link and select **Download**. Extract the file first if it is a ZIP, then open **`cleanMYTV.apk`** on your Android phone. Allow installation for your browser or file manager if Android asks. This is a debug build, not a Play Store release.
 
