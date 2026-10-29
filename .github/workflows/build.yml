@@ -47,7 +47,7 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: bash -c 'gradle connectedDebugAndroidTest --no-daemon --console=plain; test_result=$?; adb pull /sdcard/Android/data/my.cleanmytv.app/files/screenshots ui-screenshots; exit "$test_result"'
+          script: bash .github/workflows/verify-launcher.sh
       - name: Save UI screenshots and test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,4 +57,5 @@ jobs:
             ui-screenshots
             app/build/reports/tests
             app/build/reports/androidTests
+            instrumentation.log
           if-no-files-found: warn
