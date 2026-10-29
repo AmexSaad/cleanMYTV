@@ -79,6 +79,7 @@ class AddAppsModel(app: Application) : AndroidViewModel(app) {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                ErrorReports.record("Tambah app / Add app", e.javaClass.simpleName)
                 message = e.message ?: "Gagal membaca APK / Cannot read APK"
             } finally {
                 staged?.delete()
@@ -122,11 +123,13 @@ class AddAppsModel(app: Application) : AndroidViewModel(app) {
                             else "Play Store tidak dapat dibuka. Cari Waktu Solat oleh RIQTech di Play Store TV. / Cannot open Play Store; search for Waktu Solat by RIQTech on TV.\n${output.take(600)}"
                         }
                     }
+                    if (result.startsWith("Pemasangan gagal") || result.startsWith("Play Store tidak")) ErrorReports.record("Tambah app / Add app", Regex("INSTALL_FAILED_[A-Z_]+").find(result)?.value ?: "INSTALL_OR_STORE_FAILED")
                     message = result
                 }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
+                ErrorReports.record("Tambah app / Add app", e.javaClass.simpleName)
                 message = "Gagal / Failed: ${e.message ?: e.javaClass.simpleName}"
             } finally { busy = false }
         }
@@ -182,14 +185,7 @@ fun AddAppsRoot(vm: MainViewModel) {
                         Box(Modifier.weight(1f).fillMaxHeight()) { HomeAction(t("Tambah App", "Add apps"), t("Waktu Solat & APK sendiri", "Waktu Solat & APK files"), "02") { model.host = vm.host; model.port = vm.port; open = true } }
                         Box(Modifier.weight(1f).fillMaxHeight()) { HomeAction(t("Sejarah & Pulihkan", "History & restore"), t("Pulihkan perubahan anda", "Restore your changes"), "03") { vm.openHistory() } }
                     }
-                    OutlinedButton(onClick = {
-                        val details = vm.analysis?.info
-                        val body = "## Masalah / Problem\nTerangkan apa yang berlaku / Describe what happened:\n\n## Langkah / Steps to reproduce\n1. \n2. \n\n## Sepatutnya / Expected result\n\n## Maklumat peranti / Device information\n- App: cleanMYTV\n- Versi / Version: ${runCatching { @Suppress("DEPRECATION") val info = model.getApplication<Application>().packageManager.getPackageInfo("my.cleanmytv.app", 0); info.versionName }.getOrDefault("unknown")}\n- Android telefon / Phone Android: ${android.os.Build.VERSION.RELEASE}\n- TV: ${details?.brand.orEmpty()} ${details?.model.orEmpty()}\n- Android TV: ${details?.release ?: "Tidak diketahui / Unknown"}\n\n## Screenshot\nTambah screenshot jika perlu. Padam maklumat peribadi sebelum hantar. / Attach screenshots if useful; remove personal information before submitting.\n"
-                        val url = "https://github.com/AmexSaad/cleanMYTV/issues/new?title=" + Uri.encode("[Bug] ") + "&body=" + Uri.encode(body)
-                        runCatching { uriHandler.openUri(url) }
-                    }, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp), shape = RoundedCornerShape(16.dp)) {
-                        Text(t("Lapor Masalah ↗", "Report a problem ↗"))
-                    }
+                    ProblemReporter(ms)
                     Text(t("Laporan GitHub adalah awam. Semak maklumat sebelum hantar; akaun GitHub diperlukan.", "GitHub reports are public. Review details before submitting; a GitHub account is required."), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     HorizontalDivider()
                     Text(t("Dibina untuk pilihan anda.", "Built around your choices."), style = MaterialTheme.typography.labelLarge)

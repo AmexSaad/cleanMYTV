@@ -35,6 +35,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val active = tv ?: return
         val alive = withContext(Dispatchers.IO) { runCatching { active.sh("echo cleanmytv") .trim() == "cleanmytv" }.getOrDefault(false) }
         if (tv === active && !alive) {
+            ErrorReports.record("Sambungan terputus / Connection lost", "CONNECTION_LOST")
             active.close(); tv = null; connected = false; screen = Screen.CONNECT
         }
     }
@@ -111,6 +112,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
+                ErrorReports.record("Operasi TV / TV operation", e.javaClass.simpleName)
                 // ignore: user can still type the IP
             } finally {
                 scanning = false
@@ -121,6 +123,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     // ---- Connect + analyse ----
     private fun failToConnect(msg: (S) -> String) {
+        ErrorReports.record("Sambungan TV / TV connection", "CONNECTION_FAILED")
         error = msg
         tv?.close()
         tv = null
@@ -170,6 +173,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
+                ErrorReports.record("Operasi TV / TV operation", e.javaClass.simpleName)
                 val m = e.message ?: e.javaClass.simpleName
                 failToConnect { it.errConnect(m) }
             }
@@ -196,6 +200,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
+                ErrorReports.record("Operasi TV / TV operation", e.javaClass.simpleName)
                 val m = e.message ?: e.javaClass.simpleName
                 importMsg = { it.importFailed(m) }
             } finally {
@@ -261,6 +266,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                         okList += pkg
                         okCount = okList.size
                     } else {
+                        ErrorReports.record("Nyahaktif atau pulihkan / Disable or restore", "PACKAGE_OPERATION_FAILED")
                         failed += r
                         store.save(record.copy(packages = okList.toList()))
                     }
@@ -269,6 +275,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: CancellationException) {
                 // user pressed Stop: keep what was done so far
             } catch (e: Throwable) {
+                ErrorReports.record("Operasi TV / TV operation", e.javaClass.simpleName)
                 failed += OpResult(currentPkg, false, e.message ?: e.javaClass.simpleName)
             } finally {
                 // If Stop hit while a package was in flight, it stays on the undo list on purpose
@@ -329,7 +336,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                                 okCount++
                             } else {
                                 val r = Cleaner.disable(conn, pkg)
-                                if (r.ok) okCount++ else failed += r
+                                if (r.ok) okCount++ else { ErrorReports.record("Pulihkan / Restore", "PACKAGE_OPERATION_FAILED"); failed += r }
                             }
                         } else {
                             if (pkg !in disabledNow) {
@@ -337,7 +344,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                             } else {
                                 val r = Cleaner.enable(conn, pkg)
                                 if (r.ok) okCount++ else {
-                                    failed += r
+                                    ErrorReports.record("Nyahaktif atau pulihkan / Disable or restore", "PACKAGE_OPERATION_FAILED")
+                        failed += r
                                     remaining += pkg
                                 }
                             }
@@ -356,6 +364,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             } catch (e: CancellationException) {
                 screen = Screen.DONE
             } catch (e: Throwable) {
+                ErrorReports.record("Operasi TV / TV operation", e.javaClass.simpleName)
                 val m = e.message ?: e.javaClass.simpleName
                 error = { it.errConnect(m) }
                 screen = Screen.HISTORY
