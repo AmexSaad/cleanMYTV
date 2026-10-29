@@ -83,7 +83,7 @@ fun AppRoot(vm: MainViewModel) {
         Modifier
             .fillMaxSize()
             .background(Pal.Ink)
-            .systemBarsPadding()
+
             .imePadding()
     ) {
         TopBar(vm.lang) { vm.changeLanguage(it) }

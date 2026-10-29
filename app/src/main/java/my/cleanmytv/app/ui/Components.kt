@@ -98,45 +98,29 @@ fun Wordmark(fontSize: TextUnit) {
 
 @Composable
 fun LangToggle(lang: Lang, onChange: (Lang) -> Unit) {
-    val pill = RoundedCornerShape(50)
-    Row(
-        Modifier
-            .clip(pill)
-            .background(Pal.Panel)
-            .border(1.dp, Pal.Line, pill)
-            .padding(3.dp)
-    ) {
-        Lang.values().forEach { l ->
-            val on = l == lang
-            Box(
-                Modifier
-                    .clip(pill)
-                    .background(if (on) Pal.Pandan else Color.Transparent)
-                    .clickable { onChange(l) }
-                    .padding(horizontal = 14.dp, vertical = 6.dp)
-            ) {
-                Text(
-                    l.label,
-                    color = if (on) Pal.Ink else Pal.Muted,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp
-                )
+    val expanded = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    Box {
+        androidx.compose.material3.TextButton(onClick = { expanded.value = true }) {
+            Text("${lang.label} ▾", color = Pal.Pandan, fontWeight = FontWeight.Bold, fontSize = 13.sp, maxLines = 1, softWrap = false)
+        }
+        androidx.compose.material3.DropdownMenu(expanded = expanded.value, onDismissRequest = { expanded.value = false }) {
+            Lang.values().forEach { choice ->
+                androidx.compose.material3.DropdownMenuItem(text = { Text(if (choice == Lang.MS) "Bahasa Melayu" else "English") }, onClick = { onChange(choice); expanded.value = false })
             }
         }
     }
 }
-
 @Composable
-fun TopBar(lang: Lang, onLang: (Lang) -> Unit) {
+fun TopBar(lang: Lang, horizontalPadding: Dp = 20.dp, onLang: (Lang) -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .padding(horizontal = horizontalPadding, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Logo(36.dp)
+        Logo(30.dp)
         Spacer(Modifier.width(10.dp))
-        Wordmark(24.sp)
+        Wordmark(22.sp)
         Spacer(Modifier.weight(1f))
         LangToggle(lang, onLang)
     }
