@@ -39,9 +39,13 @@ cleanMYTV ialah aplikasi **pada telefon Android** untuk mengurus app pada Androi
 
 ### 1 · Pasang pada telefon
 
-Buka [Build APK](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml), pilih run terkini yang **berjaya**, kemudian muat turun **cleanMYTV-apk** di bahagian **Artifacts**. Log masuk GitHub jika diminta.
+[**📥 Muat turun cleanMYTV di Google Drive**](https://drive.google.com/file/d/1_OXyHOOSbgyuJNnI0jDn1y2V-h0bGQW8/view?usp=sharing)
 
-Ekstrak ZIP dan pasang `app-debug.apk` pada telefon Android. Fail ini ialah binaan debug; belum disediakan sebagai keluaran Play Store.
+Buka pautan di atas dan tekan **Download / Muat turun**. Jika fail yang dimuat turun ialah ZIP, ekstrak dahulu. Kemudian buka **`cleanMYTV.apk`** pada telefon Android untuk memasang app.
+
+Jika Android meminta kebenaran pemasangan, benarkan untuk pelayar atau pengurus fail yang digunakan. APK ini ialah binaan debug dan belum disediakan sebagai keluaran Play Store.
+
+Pilihan lain: binaan terkini tersedia melalui [GitHub Actions](https://github.com/AmexSaad/cleanMYTV/actions/workflows/build.yml), di bahagian **Artifacts** pada run yang berjaya.
 
 ### 2 · Sambung box
 
