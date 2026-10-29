@@ -136,6 +136,7 @@ class AddAppsModel(app: Application) : AndroidViewModel(app) {
 fun AddAppsRoot(vm: MainViewModel) {
     var open by remember { mutableStateOf(false) }
     val model: AddAppsModel = viewModel()
+    val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val ms = vm.lang == Lang.MS
     fun t(a: String, b: String) = if (ms) a else b
     BackHandler(open) { if (!model.busy) open = false }
@@ -144,6 +145,11 @@ fun AddAppsRoot(vm: MainViewModel) {
             if (vm.screen == Screen.CONNECT) {
                 TextButton(onClick = { model.host = vm.host; model.port = vm.port; open = true }) {
                     Text(t("+ Tambah app pada TV", "+ Add apps to TV"))
+                }
+            }
+            if (vm.screen == Screen.CONNECT) {
+                TextButton(onClick = { runCatching { uriHandler.openUri("https://sociabuzz.com/cleanmytv/tribe") } }) {
+                    Text(t("Beri Sokongan kepada cleanMYTV", "Support cleanMYTV"))
                 }
             }
             Box(Modifier.weight(1f)) { AppRoot(vm) }
