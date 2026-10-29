@@ -74,8 +74,8 @@ object Analyzer {
         val (home, homes) = homeInfo(tv)
 
         onStage(Stage.SORT)
-        val candidates = enabledSys
-            .mapNotNull { BloatDb.classify(it, homes, selfPkg) }
+        val candidates = (parsePkgs(tv.sh("pm list packages -e")) + enabledSys)
+            .mapNotNull { BloatDb.classify(it, homes, selfPkg) }.map { c -> if (c.group == Group.OTHER) c.copy(reason = Bi("Pilihan manual: pilih app yang anda kenal.", "Manual selection: choose apps you recognise."), warn = Bi("Belum dinilai. Boleh menjejaskan servis Unifi. Pulihkan melalui Sejarah jika perlu. Firmware mungkin menyekat perubahan.", "Not reviewed. May affect Unifi services. Restore from History if needed. Firmware may block changes.")) else c }
             .sortedWith(compareBy<Candidate>({ it.group.ordinal }, { it.pkg }))
 
         return Analysis(
