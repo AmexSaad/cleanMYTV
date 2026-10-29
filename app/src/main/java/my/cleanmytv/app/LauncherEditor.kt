@@ -92,7 +92,7 @@ fun LauncherEditor(vm: MainViewModel, close: () -> Unit) {
                     Adjustment(t("Saiz widget", "Widget size"), c.clockSize, .6f..1.5f) { model.edit(c.copy(clockSize=it)) }
                     Adjustment(t("Kedudukan kiri / kanan", "Left / right position"), c.clockX) { model.edit(c.copy(clockX=it)) }
                     Adjustment(t("Kedudukan atas / bawah", "Top / bottom position"), c.clockY) { model.edit(c.copy(clockY=it)) }
-                    Text(t("Waktu sebenar pada TV mengikut jam dan zon waktu TV. Tarikh dalam kad kalendar ialah sebahagian reka bentuk J09.", "Live TV time uses the TV clock and time zone. The calendar date is part of the J09 design."), style = MaterialTheme.typography.bodySmall)
+                    Text(t("Waktu sebenar pada TV mengikut jam dan zon waktu TV.", "Live TV time uses the TV clock and time zone."), style = MaterialTheme.typography.bodySmall)
                 }
                 1 -> {
                     Text("20 wallpaper", style = MaterialTheme.typography.titleLarge)

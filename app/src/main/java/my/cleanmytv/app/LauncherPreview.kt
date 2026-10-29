@@ -117,6 +117,7 @@ fun LauncherClock(config: LauncherConfig, modifier: Modifier = Modifier, now: Lo
                     line(w*.02f, h*.38f, w*.94f, h*.38f, 0x55000000, h*.014f)
                 }
                 8 -> {
+                    if(!c.showDate) { text(time, w*.02f, h*.64f, w*.29f); return@drawIntoCanvas }
                     rect(w*.03f, h*.04f, w*.40f, h*.85f, 0xFFF5F8FF.toInt(), w*.04f)
                     val fg = 0xFF12264C.toInt()
                     text(now.format(DateTimeFormatter.ofPattern("MMM", locale)).uppercase(locale), w*.10f, h*.27f, w*.09f, true, fg)
