@@ -120,8 +120,9 @@ fun TopBar(lang: Lang, horizontalPadding: Dp = 20.dp, onLang: (Lang) -> Unit) {
     ) {
         Logo(30.dp)
         Spacer(Modifier.width(10.dp))
-        Wordmark(22.sp)
+        Wordmark(20.sp)
         Spacer(Modifier.weight(1f))
+        HelpGuide(lang)
         LangToggle(lang, onLang)
     }
 }
