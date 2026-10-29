@@ -6,6 +6,12 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -149,15 +155,26 @@ fun AddAppsRoot(vm: MainViewModel) {
                     my.cleanmytv.app.ui.TopBar(vm.lang) { vm.changeLanguage(it) }
                     Text(t("Ruang TV anda.", "Your TV space."), style = MaterialTheme.typography.headlineLarge)
                     Text(t("Satu tempat untuk urus app, tambah pilihan dan pulihkan perubahan.", "One place to manage apps, add your favourites and restore changes."), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                        Column(Modifier.fillMaxWidth().padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text(t("PERANTI ANDA", "YOUR DEVICE"), style = MaterialTheme.typography.labelMedium)
-                            Text(vm.host.ifBlank { t("Belum pilih TV", "No TV selected") }, style = MaterialTheme.typography.titleLarge)
-                            Text(t("Sambung melalui Wi-Fi yang sama", "Connect over the same Wi-Fi"), style = MaterialTheme.typography.bodyMedium)
+                    Card(shape = RoundedCornerShape(28.dp)) {
+                        Row(Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(Color(0xFF123F36), Color(0xFF267B61)))).padding(24.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                Surface(color = Color.White.copy(alpha = 0.14f), shape = RoundedCornerShape(50)) {
+                                    Text(t("RUANG PERANTI", "DEVICE SPACE"), modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), color = Color(0xFFDBF4DA), style = MaterialTheme.typography.labelSmall)
+                                }
+                                Text(vm.host.ifBlank { t("TV anda,\npilihan anda.", "Your TV,\nyour choice.") }, color = Color.White, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                                Text(t("Mulakan dengan sambungan Wi-Fi", "Start with a Wi-Fi connection"), color = Color(0xFFC7E4D5), style = MaterialTheme.typography.bodySmall)
+                            }
+                            Surface(color = Color.White.copy(alpha = 0.12f), shape = RoundedCornerShape(24.dp)) {
+                                Box(Modifier.padding(12.dp)) { my.cleanmytv.app.ui.Logo(64.dp) }
+                            }
                         }
                     }
                     Button(onClick = { manage = true }, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)) {
                         Text(t("Sambung TV Anda", "Connect your TV"), style = MaterialTheme.typography.titleMedium)
+                    }
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(t("Pilihan untuk TV", "Tools for your TV"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                        Text("cleanMYTV", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium)
                     }
                     HomeAction(t("Urus app", "Manage apps"), t("Semak dan nyahaktif app pada box", "Review and disable apps on your box"), "01") { manage = true }
                     HomeAction(t("Tambah app", "Add apps"), t("Waktu Solat dan pemasangan APK sendiri", "Waktu Solat and your own APK files"), "02") { model.host = vm.host; model.port = vm.port; open = true }
@@ -215,11 +232,16 @@ fun AddAppsRoot(vm: MainViewModel) {
 
 @Composable
 private fun HomeAction(title: String, subtitle: String, number: String, onClick: () -> Unit) {
-    OutlinedCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-        Row(Modifier.padding(20.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text(number, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleMedium)
+    val accent = when (number) { "01" -> Color(0xFF176B55); "02" -> Color(0xFF4765A8); else -> Color(0xFF9C4C30) }
+    Card(onClick = onClick, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = Color.White), elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
+        Row(Modifier.padding(20.dp), horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Surface(color = accent.copy(alpha = 0.10f), shape = RoundedCornerShape(16.dp)) {
+                Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                    Text(when(number) { "01" -> "▦"; "02" -> "+"; else -> "↶" }, color = accent, style = MaterialTheme.typography.headlineMedium)
+                }
+            }
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Text(title, style = MaterialTheme.typography.titleLarge)
+                Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Text("→", color = MaterialTheme.colorScheme.primary)
