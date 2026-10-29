@@ -29,6 +29,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val store = RecordStore(ctx)
     private var job: Job? = null
     private var tv: Tv? = null
+    var connected by mutableStateOf(false)
+        private set
+    suspend fun checkConnection() {
+        val active = tv ?: return
+        val alive = withContext(Dispatchers.IO) { runCatching { active.sh("echo cleanmytv") .trim() == "cleanmytv" }.getOrDefault(false) }
+        if (tv === active && !alive) {
+            active.close(); tv = null; connected = false; screen = Screen.CONNECT
+        }
+    }
 
     // ---- UI state ----
     var lang by mutableStateOf(Lang.fromCode(prefs.getString("lang", null) ?: Lang.systemDefault().code))
@@ -115,6 +124,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         error = msg
         tv?.close()
         tv = null
+        connected = false
         screen = Screen.CONNECT
     }
 
@@ -148,6 +158,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 val result = withContext(Dispatchers.IO) {
                     Analyzer.analyse(conn, ctx.packageName) { stage = it }
                 }
+                connected = true
                 analysis = result
                 selected.clear()
                 result.candidates.forEach { selected[it.pkg] = it.group == Group.RECOMMENDED }
@@ -357,6 +368,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         job?.cancel()
         tv?.close()
         tv = null
+        connected = false
         error = null
         screen = Screen.CONNECT
     }

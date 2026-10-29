@@ -146,23 +146,27 @@ fun AddAppsRoot(vm: MainViewModel) {
     val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
     val ms = vm.lang == Lang.MS
     fun t(a: String, b: String) = if (ms) a else b
+    LaunchedEffect(vm.connected) { if (vm.connected) manage = false }
+    LaunchedEffect(manage, open, vm.connected) {
+        while (!manage && !open && vm.connected) { delay(5000); vm.checkConnection() }
+    }
     BackHandler(open) { if (!model.busy) open = false }
     BackHandler(!open && manage && vm.screen == Screen.CONNECT) { manage = false }
     if (!open) {
-        if (vm.screen == Screen.CONNECT && !manage) {
+        if ((vm.screen == Screen.CONNECT || vm.screen == Screen.REVIEW) && !manage) {
             Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 Column(Modifier.systemBarsPadding().verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
                     my.cleanmytv.app.ui.TopBar(vm.lang) { vm.changeLanguage(it) }
                     Text(t("Ruang TV anda.", "Your TV space."), style = MaterialTheme.typography.headlineLarge)
                     Text(t("Satu tempat untuk urus app, tambah pilihan dan pulihkan perubahan.", "One place to manage apps, add your favourites and restore changes."), color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Card(shape = RoundedCornerShape(28.dp)) {
-                        Row(Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(Color(0xFF123F36), Color(0xFF267B61)))).padding(24.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        Row(Modifier.fillMaxWidth().background(Brush.linearGradient(listOf(Color(0xFFEAF2FF), Color(0xFFDCEAFF)))).padding(24.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                                 Surface(color = Color.White.copy(alpha = 0.14f), shape = RoundedCornerShape(50)) {
-                                    Text(t("RUANG PERANTI", "DEVICE SPACE"), modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), color = Color(0xFFDBF4DA), style = MaterialTheme.typography.labelSmall)
+                                    Text(if (vm.connected) t("● TV disambungkan", "● TV connected") else t("TV tidak disambungkan", "TV disconnected"), modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), color = if (vm.connected) Color(0xFF16704B) else Color(0xFF2452B8), style = MaterialTheme.typography.labelSmall)
                                 }
-                                Text(vm.host.ifBlank { t("TV anda,\npilihan anda.", "Your TV,\nyour choice.") }, color = Color.White, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                                Text(t("Mulakan dengan sambungan Wi-Fi", "Start with a Wi-Fi connection"), color = Color(0xFFC7E4D5), style = MaterialTheme.typography.bodySmall)
+                                Text(if (vm.connected) vm.analysis?.info?.let { "${it.brand} ${it.model}" } ?: "Android TV" else t("TV anda,\npilihan anda.", "Your TV,\nyour choice."), color = Color(0xFF142039), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                                Text(if (vm.connected) vm.host else t("Mulakan dengan sambungan Wi-Fi", "Start with a Wi-Fi connection"), color = Color(0xFF64718A), style = MaterialTheme.typography.bodySmall)
                             }
                             Surface(color = Color.White.copy(alpha = 0.12f), shape = RoundedCornerShape(24.dp)) {
                                 Box(Modifier.padding(12.dp)) { my.cleanmytv.app.ui.Logo(64.dp) }
@@ -170,8 +174,9 @@ fun AddAppsRoot(vm: MainViewModel) {
                         }
                     }
                     Button(onClick = { manage = true }, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)) {
-                        Text(t("Sambung TV Anda", "Connect your TV"), style = MaterialTheme.typography.titleMedium)
+                        Text(if (vm.connected) t("Urus App", "Manage apps") else t("Sambung TV Anda", "Connect your TV"), style = MaterialTheme.typography.titleMedium)
                     }
+                    if (vm.connected) TextButton(onClick = { vm.goHome() }) { Text(t("Putuskan sambungan", "Disconnect")) }
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(t("Pilihan untuk TV", "Tools for your TV"), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                         Text("cleanMYTV", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium)
@@ -181,13 +186,13 @@ fun AddAppsRoot(vm: MainViewModel) {
                     HomeAction(t("Sejarah & pulihkan", "History & restore"), t("Lihat perubahan dan aktifkan semula app", "Review changes and re-enable apps"), "03") { vm.openHistory() }
                     HorizontalDivider()
                     Text(t("Dibina untuk pilihan anda.", "Built around your choices."), style = MaterialTheme.typography.labelLarge)
-                    TextButton(onClick = { runCatching { uriHandler.openUri("https://sociabuzz.com/cleanmytv/tribe") } }) { Text(t("Sokong pembangunan cleanMYTV ↗", "Support cleanMYTV development ↗")) }
+                    Button(onClick = { runCatching { uriHandler.openUri("https://sociabuzz.com/cleanmytv/tribe") } }, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp), elevation = ButtonDefaults.buttonElevation(defaultElevation = 6.dp, pressedElevation = 2.dp), shape = RoundedCornerShape(16.dp)) { Text(t("♡  Sokong cleanMYTV", "♡  Support cleanMYTV"), fontWeight = FontWeight.Bold) }
                 }
             }
             return
         }
         Column(Modifier.fillMaxSize()) {
-            if (vm.screen == Screen.CONNECT) {
+            if (vm.screen == Screen.CONNECT || vm.screen == Screen.REVIEW) {
                 TextButton(onClick = { manage = false }) { Text(t("← Halaman utama", "← Home")) }
             }
             Box(Modifier.weight(1f)) { AppRoot(vm) }
