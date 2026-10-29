@@ -156,6 +156,9 @@ fun AddAppsRoot(vm: MainViewModel) {
                             Text(t("Sambung melalui Wi-Fi yang sama", "Connect over the same Wi-Fi"), style = MaterialTheme.typography.bodyMedium)
                         }
                     }
+                    Button(onClick = { manage = true }, modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp)) {
+                        Text(t("Sambung TV Anda", "Connect your TV"), style = MaterialTheme.typography.titleMedium)
+                    }
                     HomeAction(t("Urus app", "Manage apps"), t("Semak dan nyahaktif app pada box", "Review and disable apps on your box"), "01") { manage = true }
                     HomeAction(t("Tambah app", "Add apps"), t("Waktu Solat dan pemasangan APK sendiri", "Waktu Solat and your own APK files"), "02") { model.host = vm.host; model.port = vm.port; open = true }
                     HomeAction(t("Sejarah & pulihkan", "History & restore"), t("Lihat perubahan dan aktifkan semula app", "Review changes and re-enable apps"), "03") { vm.openHistory() }
