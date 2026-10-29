@@ -7,7 +7,8 @@ data class TvInfo(
     val model: String,
     val release: String,
     val sdk: Int,
-    val homePkg: String?
+    val homePkg: String?,
+    val firmware: String = ""
 )
 
 data class Analysis(
@@ -79,7 +80,7 @@ object Analyzer {
             .sortedWith(compareBy<Candidate>({ it.group.ordinal }, { it.pkg }))
 
         return Analysis(
-            info = TvInfo(brand, model, release, sdk, home),
+            info = TvInfo(brand, model, release, sdk, home, prop("ro.build.display.id")),
             candidates = candidates,
             enabledSystem = enabledSys,
             homePackages = homes,

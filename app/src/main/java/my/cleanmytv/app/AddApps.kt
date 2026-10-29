@@ -198,6 +198,7 @@ fun AddAppsRoot(vm: MainViewModel) {
             if (vm.screen == Screen.CONNECT || vm.screen == Screen.REVIEW) {
                 TextButton(onClick = { manage = false }) { Text(t("← Halaman utama", "← Home")) }
             }
+            if (vm.screen == Screen.DONE) TvFeedback(vm)
             Box(Modifier.weight(1f)) { AppRoot(vm) }
         }
         return
