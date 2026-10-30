@@ -3,6 +3,11 @@ on:
   push:
     branches: [main, feature/reference-parity, feature/lime-ui]
   workflow_dispatch:
+    inputs:
+      branding_only:
+        description: Logo-only update (retain feature goldens; capture installed app and launcher)
+        type: boolean
+        default: false
 permissions:
   contents: write
 concurrency:
@@ -29,8 +34,10 @@ jobs:
       - name: Test connection, plans, operations, recovery and app integration
         run: ./gradlew :core:model:check :core:spec:check :core:ops:check :core:probe:check :core:planner:check :core:engine:check :core:backup:check :core:flows:check :core:trust:check :core:registry:check :adb:wire:check :adb:pairing:check :adb:session:check :app:testFullDebugUnitTest :e2e:check --continue --console=plain
       - name: Record refreshed screenshots and test feature interactions
+        if: ${{ !inputs.branding_only }}
         run: ./gradlew recordRoborazziDebug --continue --console=plain
       - name: Save feature storyboard for visual review
+        if: ${{ !inputs.branding_only }}
         run: |
           python3 -m pip install pillow
           python3 - <<'PY'
@@ -61,6 +68,7 @@ jobs:
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - name: Verify refreshed screenshots
+        if: ${{ !inputs.branding_only }}
         run: ./gradlew verifyRoborazziDebug --continue --console=plain
       - name: Package APK
         run: |
@@ -130,6 +138,7 @@ jobs:
             adb install apk-download/cleanMYTV.apk
             mkdir -p previews
             adb shell input keyevent 82
+            adb shell am force-stop com.google.android.apps.nexuslauncher
             printf '<?xml version="1.0" encoding="utf-8" standalone="yes" ?><map><string name="language">en</string></map>' > /tmp/cleanmytv-language.xml
             adb push /tmp/cleanmytv-language.xml /data/local/tmp/cleanmytv-language.xml
             adb shell run-as my.cleanmytv.app mkdir -p shared_prefs
@@ -152,11 +161,20 @@ jobs:
             grep -q 'TV lebih kemas' previews/phone-ms.xml
             adb shell screencap -p /sdcard/cleanmytv-phone-ms.png
             adb pull /sdcard/cleanmytv-phone-ms.png previews/phone-ms.png
+            adb shell input keyevent KEYCODE_HOME
+            sleep 5
+            adb shell input swipe 540 1700 540 350 350
+            sleep 3
+            adb shell uiautomator dump /sdcard/cleanmytv-launcher.xml
+            adb pull /sdcard/cleanmytv-launcher.xml previews/phone-launcher.xml
+            grep -q 'cleanMYTV' previews/phone-launcher.xml
+            adb shell screencap -p /sdcard/cleanmytv-launcher.png
+            adb pull /sdcard/cleanmytv-launcher.png previews/phone-launcher.png
       - name: Save installed app screenshots for review
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add previews/phone-en.png previews/phone-ms.png
+          git add previews/phone-en.png previews/phone-ms.png previews/phone-launcher.png
           if ! git diff --cached --quiet; then
             git commit -m 'Capture installed cleanMYTV on Android 15 in BM and English'
             git pull --rebase origin "${GITHUB_REF_NAME}"

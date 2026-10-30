@@ -39,12 +39,14 @@ jobs:
           test -s dist/cleanMYTV.apk
           sha256sum --check dist/SHA256SUMS.txt
           cat > /tmp/release-notes.md <<'NOTES'
-          cleanMYTV 1.2.1 beta1 — fungsi asas Clean Your TV v0.4.6-beta2, dengan reka bentuk Hitam + Limau dan Bahasa Melayu / English.
+          cleanMYTV 1.2.2 beta1 — fungsi asas Clean Your TV v0.4.6-beta2, dengan reka bentuk Hitam + Limau, logo 03 Monogram pada ikon aplikasi dan dalam app, serta Bahasa Melayu / English.
 
           Muat turun cleanMYTV.apk dan pasang pada telefon Android 9+. Telefon dan TV mesti menggunakan rangkaian yang sama. Panduan sambungan disediakan dalam app. Binaan ini ialah beta debug; keserasian TV fizikal masih perlu disahkan. Rekod versi lama kekal tetapi tidak diimport ke jurnal baharu. Pulihkan perubahan yang diperlukan menggunakan versi lama sebelum menggantikan app.
 
-          Download cleanMYTV.apk for an Android 9+ phone. This beta uses the reference connection, analysis, cleaning, home-screen and recovery flows with a graphite and lime BM/EN interface. Physical TV compatibility is not yet verified. Legacy records are retained but not imported into the new journal.
+          Download cleanMYTV.apk for an Android 9+ phone. This beta uses the reference connection, analysis, cleaning, home-screen and recovery flows with a graphite and lime BM/EN interface and the selected Monogram 03 logo on the launcher icon and in the app. Physical TV compatibility is not yet verified. Legacy records are retained but not imported into the new journal.
+
+          Tandatangan debug beta ini berbeza daripada beta terdahulu. Android menolak kemas kini terus jika tandatangan berbeza. Selesaikan pemulihan TV yang diperlukan menggunakan app lama sebelum menyahpasangnya. / This debug beta has a different signing certificate from earlier betas. Finish any needed TV restoration with the old app before uninstalling it.
 
           Upstream MIT copyright and third-party notices are retained. See the README for source credits and upgrade information.
           NOTES
-          gh release create v1.2.1-beta1 dist/cleanMYTV.apk dist/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.2.1 beta1' --notes-file /tmp/release-notes.md
+          gh release create v1.2.2-beta1 dist/cleanMYTV.apk dist/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.2.2 beta1' --notes-file /tmp/release-notes.md
