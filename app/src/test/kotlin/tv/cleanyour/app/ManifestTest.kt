@@ -45,7 +45,7 @@ class ManifestTest {
     // D-W8-27: always dark from the first frame, whatever the phone's mode: a black window and
     // bars with light icons, in light mode as in dark.
     @Test @Config(sdk = [35], application = android.app.Application::class, qualifiers = "notnight")
-    fun theActivityThemeMatchesTheLightCleanMyTvSurface() {
+    fun theActivityThemeMatchesTheGraphiteCleanMyTvSurface() {
         val main = info.activities!!.single { it.name == "tv.cleanyour.app.MainActivity" }
         val theme = context.resources.newTheme().apply { applyStyle(main.themeResource, true) }
         val a = theme.obtainStyledAttributes(intArrayOf(
@@ -54,13 +54,13 @@ class ManifestTest {
             android.R.attr.windowSplashScreenBackground,
         ))
         try {
-            assertEquals(android.graphics.Color.rgb(245, 248, 255), (a.getDrawable(0) as android.graphics.drawable.ColorDrawable).color)
-            assertEquals(android.graphics.Color.rgb(245, 248, 255), a.getColor(1, 0))
-            assertEquals(android.graphics.Color.rgb(245, 248, 255), a.getColor(2, 0))
-            assertEquals(true, a.getBoolean(3, false))
-            assertEquals(true, a.getBoolean(4, false))
+            assertEquals(android.graphics.Color.rgb(9, 13, 11), (a.getDrawable(0) as android.graphics.drawable.ColorDrawable).color)
+            assertEquals(android.graphics.Color.rgb(9, 13, 11), a.getColor(1, 0))
+            assertEquals(android.graphics.Color.rgb(9, 13, 11), a.getColor(2, 0))
+            assertFalse(a.getBoolean(3, true))
+            assertFalse(a.getBoolean(4, true))
             assertFalse(a.getBoolean(5, true))
-            assertEquals(android.graphics.Color.rgb(245, 248, 255), a.getColor(6, 0))
+            assertEquals(android.graphics.Color.rgb(9, 13, 11), a.getColor(6, 0))
         } finally {
             a.recycle()
         }

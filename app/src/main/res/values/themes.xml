@@ -3,11 +3,11 @@
     <!-- D-W8-27: always dark. Black window and bars from the first frame, light bar icons, so the
          phone's own light mode never shows a white flash before Compose draws (DESIGN-SYSTEM 2). -->
     <style name="Theme.CleanYourTv" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">#F5F8FF</item>
-        <item name="android:colorBackground">#F5F8FF</item>
-        <item name="android:statusBarColor">#F5F8FF</item>
-        <item name="android:navigationBarColor">#F5F8FF</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowBackground">#090D0B</item>
+        <item name="android:colorBackground">#090D0B</item>
+        <item name="android:statusBarColor">#090D0B</item>
+        <item name="android:navigationBarColor">#090D0B</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>

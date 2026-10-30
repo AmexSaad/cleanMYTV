@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Light cleanMYTV launch surface, matching the Compose theme. -->
+    <!-- Graphite cleanMYTV launch surface, matching the Compose theme. -->
     <style name="Theme.CleanYourTv" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">#F5F8FF</item>
-        <item name="android:colorBackground">#F5F8FF</item>
-        <item name="android:statusBarColor">#F5F8FF</item>
-        <item name="android:navigationBarColor">#F5F8FF</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowBackground">#090D0B</item>
+        <item name="android:colorBackground">#090D0B</item>
+        <item name="android:statusBarColor">#090D0B</item>
+        <item name="android:navigationBarColor">#090D0B</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <item name="android:forceDarkAllowed">false</item>
     </style>
 </resources>

@@ -159,17 +159,14 @@ fun WelcomeScreen(state: SetupState.Welcome, extras: SetupExtras, actions: Setup
                 }
             },
         ) {
-            // The product name scrolls with the hero (no top bar on Welcome), so a stop card scrolled
-            // into view never slides the film under it (R4-W8). Gaps and the 300 dp hero are the
-            // mockup's (28, 32, 40).
-            Overline(stringResource(R.string.welcome_overline), Modifier.padding(top = if (compact) 12.dp else 28.dp))
-            WelcomeIllustration(
+            // A compact heading and scalable graphic leave discovery and Start in view.
+            ScreenTitle(stringResource(R.string.welcome_title), Modifier.padding(top = if (compact) 12.dp else 24.dp), size = TitleSize.DISPLAY)
+            Lead(stringResource(R.string.welcome_body), Modifier.padding(top = 12.dp))
+            tv.cleanyour.ui.design.component.LimeWelcomeArt(
                 Modifier.padding(top = if (compact) 16.dp else 32.dp).align(Alignment.CenterHorizontally)
-                    .widthIn(max = if (compact) 248.dp else 300.dp),
+                    .widthIn(max = if (compact) 224.dp else 280.dp),
                 contentDescription = stringResource(R.string.welcome_hero_cd),
             )
-            ScreenTitle(stringResource(R.string.welcome_title), Modifier.padding(top = if (compact) 20.dp else 40.dp), size = TitleSize.DISPLAY)
-            Lead(stringResource(R.string.welcome_body), Modifier.padding(top = 12.dp))
             InlineCard(extras, actions)
         }
     }

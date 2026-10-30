@@ -151,30 +151,35 @@ fun ManageScreen(state: ManageState, onIntent: (ManageIntent) -> Unit, modifier:
                 )
                 if (state.switchingHome) LiveLine(stringResource(R.string.manage_wizard_home_working))
             }
-            ListGroup(Modifier.padding(top = 16.dp)) {
-                // 0.3.3 D2: without the new home screen there is no dock to name; the row opens the reason.
-                ListRow(stringResource(R.string.manage_row_home),
-                    subtitle = if (tv.ownHome) stringResource(R.string.manage_row_home_own) else tv.dockNames.joinToString(", ").ifEmpty { null },
-                    onClick = { onIntent(ManageIntent.Open(ManageSection.HOME_SCREEN)) })
-                ListDivider()
-                // STORES-PLAN 1: the Play build has no add-ons, so no row that leads to them.
-                if (state.addOns) {
-                    ListRow(stringResource(R.string.manage_row_cards), onClick = { onIntent(ManageIntent.Open(ManageSection.MODULES)) })
-                    ListDivider()
+            Column(Modifier.padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    DashboardTile(stringResource(R.string.manage_row_home), CytIcons.Tv, Modifier.weight(1f),
+                        subtitle = if (tv.ownHome) stringResource(R.string.manage_row_home_own) else tv.dockNames.joinToString(", ").ifEmpty { null }) {
+                        onIntent(ManageIntent.Open(ManageSection.HOME_SCREEN))
+                    }
+                    if (state.addOns) DashboardTile(stringResource(R.string.manage_row_cards), CytIcons.Plus, Modifier.weight(1f)) {
+                        onIntent(ManageIntent.Open(ManageSection.MODULES))
+                    }
                 }
+                androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    DashboardTile(msg(R.string.manage_row_switched_off, "count" to tv.switchedOff), CytIcons.Shield, Modifier.weight(1f),
+                        subtitle = stringResource(R.string.manage_row_switched_off_sub)) {
+                        onIntent(ManageIntent.Open(ManageSection.SWITCHED_OFF))
+                    }
+                    DashboardTile(stringResource(R.string.manage_row_restore), CytIcons.Refresh, Modifier.weight(1f),
+                        subtitle = tv.restorePointAtMs?.let { msg(R.string.manage_row_restore_sub, "date" to shortDateTime(it, locale)) }) {
+                        onIntent(ManageIntent.Open(ManageSection.RESTORE_POINT))
+                    }
+                }
+            }
+            ListGroup(Modifier.padding(top = 16.dp)) {
                 // WP4 (C6): what the list for this TV now keeps on, as one line into Switched off.
                 if (tv.betterBackOn > 0) {
                     ListRow(msg(R.string.manage_row_better_back_on, "count" to tv.betterBackOn), onClick = { onIntent(ManageIntent.Open(ManageSection.SWITCHED_OFF)) })
                     ListDivider()
                 }
-                ListRow(msg(R.string.manage_row_switched_off, "count" to tv.switchedOff), subtitle = stringResource(R.string.manage_row_switched_off_sub),
-                    onClick = { onIntent(ManageIntent.Open(ManageSection.SWITCHED_OFF)) })
-                ListDivider()
                 ListRow(stringResource(R.string.manage_row_leftovers), subtitle = stringResource(R.string.manage_row_leftovers_sub),
                     onClick = { onIntent(ManageIntent.Open(ManageSection.LEFTOVERS)) })
-                ListDivider()
-                ListRow(stringResource(R.string.manage_row_restore), subtitle = tv.restorePointAtMs?.let { msg(R.string.manage_row_restore_sub, "date" to shortDateTime(it, locale)) },
-                    onClick = { onIntent(ManageIntent.Open(ManageSection.RESTORE_POINT)) })
                 ListDivider()
                 ListRow(stringResource(R.string.manage_row_tvsettings), onClick = { onIntent(ManageIntent.Open(ManageSection.TV_SETTINGS)) })
             }
