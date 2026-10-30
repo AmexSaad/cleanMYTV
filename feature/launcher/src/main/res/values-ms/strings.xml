@@ -86,6 +86,6 @@
   <string name="home_look_ended_restore">Letakkan semula</string>
   <!-- S3b Your dock (sheet) -->
   <string name="dock_title">Dok anda</string>
-  <string name="dock_body">Sehingga {count, ejaan} di sepanjang bahagian bawah. Seret apl mengikut titiknya untuk menukar susunan.</string>
+  <string name="dock_body">Sehingga {count, spellout} di sepanjang bahagian bawah. Seret apl mengikut titiknya untuk menukar susunan.</string>
   <string name="dock_waiting">Apl {count, plural, one {# menunggu} other {# apl tunggu}} dalam grid sehingga anda memilih lebih banyak apl dalam satu baris.</string>
 </resources>

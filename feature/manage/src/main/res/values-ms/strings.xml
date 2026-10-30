@@ -145,11 +145,11 @@
   <string name="appsettings_up_to_date">Anda mempunyai versi terkini</string>
   <string name="appsettings_update_error">Tidak dapat menyemak kemas kini</string>
   <string name="appsettings_licences">Lesen</string>
-  <string name="appsettings_licence_app">Bersihkan TV Anda: MIT</string>
-  <string name="appsettings_licence_font">Muka taip pakaian: Lesen Font Terbuka SIL 1.1</string>
+  <string name="appsettings_licence_app">Clean Your TV dan cleanMYTV: MIT</string>
+  <string name="appsettings_licence_font">Fon Outfit: SIL Open Font License 1.1</string>
   <string name="appsettings_licence_apache">dadb dan kod Shizuku yang kami sesuaikan: notis Apache-2.0</string>
-  <string name="appsettings_licence_pictures">Lihat gambar: kerja kami sendiri, CC0 1.0 (domain awam); Aurora, Glass and Autumn tasik (Ruska) daripada pelancar Clean Your TV, MIT</string>
-  <string name="appsettings_licence_bouncycastle">Perpustakaan kriptografi Istana Bouncy: Lesen Istana Bouncy</string>
+  <string name="appsettings_licence_pictures">Gambar gaya: karya asal, CC0 1.0 (domain awam); Aurora, Glass dan Autumn lake (Ruska) daripada launcher Clean Your TV, MIT</string>
+  <string name="appsettings_licence_bouncycastle">Pustaka kriptografi Bouncy Castle: Bouncy Castle Licence</string>
   <string name="appsettings_privacy">Privasi</string>
   <string name="appsettings_privacy_text">Tiada apa-apa yang meninggalkan rangkaian anda kecuali muat turun dari github.com. GitHub melihat alamat telefon anda dan ejen pengguna generik. Laporan meninggalkan telefon hanya apabila anda menyalin, berkongsi atau menyiarkannya sendiri.</string>
   <string name="appsettings_privacy_text_offline">Tiada apa-apa yang meninggalkan rangkaian anda. Apl bercakap hanya kepada TV yang anda pilih dan tidak membuat permintaan internet sendiri. Laporan meninggalkan telefon hanya apabila anda menyalin, berkongsi atau menyiarkannya sendiri.</string>

@@ -40,8 +40,8 @@
   <string name="stop_plan_refused_title">Kami tidak dapat membuat rancangan selamat untuk TV ini</string>
   <string name="stop_plan_refused_body">TV menjawab, tetapi apa yang kami temui padanya tidak sesuai dengan rancangan yang kami pasti selamat, jadi kami berhenti sebelum melakukan apa-apa. Tiada apa yang diubah. Laporkan masalah menghantar sebabnya kepada kami, jadi kami boleh membetulkannya.</string>
   <!-- S3 What we found -->
-  <string name="found_title">{count, plural, =0 {Tiada apa-apa untuk dimatikan. Mahukan skrin utama baharu?} one {Kami mendapati satu perkara untuk dimatikan} other {Kami mendapati # perkara untuk dimatikan}}</string>
-  <string name="found_headline">{count, plural, =0 {Tiada apa-apa untuk dimatikan. Mahu skrin utama baharu?} one {thing to switch off} other {things to switch off}}</string>
+  <string name="found_title">{count, plural, =0 {Tiada item untuk dinyahaktif. Mahu skrin utama baharu?} one {Satu item boleh dinyahaktif} other {# item boleh dinyahaktif}}</string>
+  <string name="found_headline">{count, plural, =0 {Tiada item untuk dinyahaktif. Mahu skrin utama baharu?} one {item untuk dinyahaktif} other {item untuk dinyahaktif}}</string>
   <string name="found_overline">Kami dapati</string>
   <string name="found_zero_body">TV ini sudah kemas.</string>
   <string name="found_group_ads">Iklan dan baris yang ditaja</string>
@@ -71,7 +71,7 @@
   <string name="found_tcl_remote_keys">Pada TCL Google TV, butang Tetapan (gear), Netflix dan YouTube alat kawalan jauh berhenti berfungsi dengan skrin utama baharu. Untuk mendapatkannya kembali, pilih Gunakan skrin utama TV sendiri dalam Urus.</string>
   <string name="found_no_lock">Tiada kunci skrin pada telefon ini, jadi kami tidak boleh menyemak semula orang itu ialah anda.</string>
   <!-- Unknown model (no profile) -->
-  <string name="found_unknown_title">{count, plural, =0 {Kami tidak menemui apa-apa yang kami pasti tentang} one {Kami menemui satu perkara yang kami pasti tentang} other {Kami menemui # perkara yang pasti tentang}}</string>
+  <string name="found_unknown_title">{count, plural, =0 {Tiada item yang dapat dikenal pasti dengan yakin} one {Satu item dikenal pasti dengan yakin} other {# item dikenal pasti dengan yakin}}</string>
   <string name="found_unknown_headline">{count, plural, =0 {Tiada item yang dapat dikenal pasti dengan yakin} one {item yang dikenal pasti dengan yakin} other {item yang dikenal pasti dengan yakin}}</string>
   <string name="found_unknown_body">Kami tidak pernah menemui TV yang tepat ini sebelum ini, jadi kami berhati-hati. Lebih banyak lagi boleh dimatikan di bawah Sesuaikan setelah anda hidup dengannya.</string>
   <string name="found_help_add_tv">Bantu tambahkan TV ini</string>
@@ -137,7 +137,7 @@
   <string name="theme_card_selected_cd">{name}, dipilih. {description}</string>
   <!-- S3b Your dock (sheet) -->
   <string name="dock_title">Dok anda</string>
-  <string name="dock_body">Sehingga {count, ejaan} di sepanjang bahagian bawah. Seret apl mengikut titiknya untuk menukar susunan.</string>
+  <string name="dock_body">Sehingga {count, spellout} di sepanjang bahagian bawah. Seret apl mengikut titiknya untuk menukar susunan.</string>
   <!-- S4a Making it clean -->
   <string name="working_title">Menjadikannya bersih</string>
   <string name="working_step_restore_active">Menyimpan titik pemulihan...</string>
