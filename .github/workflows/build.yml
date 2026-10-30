@@ -5,7 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       branding_only:
-        description: Logo-only update (retain feature goldens; capture installed app and launcher)
+        description: App-only change (retain unchanged feature goldens; capture installed app controls)
+        type: boolean
+        default: false
+      require_signing:
+        description: Require the approved permanent release signing key
         type: boolean
         default: false
 permissions:
@@ -17,6 +21,8 @@ jobs:
   apk:
     runs-on: ubuntu-latest
     timeout-minutes: 80
+    outputs:
+      signed_release: ${{ steps.signing.outputs.signed_release }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -27,15 +33,31 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
+        with:
+          cache-read-only: true
+      - name: Restore the approved permanent signing identity
+        id: signing
+        env:
+          CLEANMYTV_SIGNING: ${{ secrets.CLEANMYTV_SIGNING }}
+          REQUIRE_SIGNING: ${{ inputs.require_signing }}
+        run: python3 scripts/prepare-app-signing.py
       - name: Build full APK and verify bundled TV assets
         run: |
           chmod +x gradlew
-          ./gradlew :core:trust:verifyLauncherPin :core:trust:verifyCurtainPin checkModuleGraph :app:assembleFullDebug --console=plain
+          ./gradlew :core:trust:verifyLauncherPin :core:trust:verifyCurtainPin checkModuleGraph --no-configuration-cache --console=plain
+          if [ "$CLEANMYTV_SIGNING_MODE" = release ]; then
+            ./gradlew :app:assembleFullRelease -PcleanmytvUpgradeBase=true --no-configuration-cache --no-daemon --console=plain
+            mkdir -p build/upgrade-test
+            cp app/build/outputs/apk/full/release/app-full-release.apk build/upgrade-test/upgrade-base.apk
+            ./gradlew :app:assembleFullRelease --no-configuration-cache --no-daemon --console=plain
+          else
+            ./gradlew :app:assembleFullDebug --no-configuration-cache --console=plain
+          fi
       - name: Test connection, plans, operations, recovery and app integration
-        run: ./gradlew :core:model:check :core:spec:check :core:ops:check :core:probe:check :core:planner:check :core:engine:check :core:backup:check :core:flows:check :core:trust:check :core:registry:check :adb:wire:check :adb:pairing:check :adb:session:check :app:testFullDebugUnitTest :e2e:check --continue --console=plain
+        run: ./gradlew :core:model:check :core:spec:check :core:ops:check :core:probe:check :core:planner:check :core:engine:check :core:backup:check :core:flows:check :core:trust:check :core:registry:check :adb:wire:check :adb:pairing:check :adb:session:check :app:testFullDebugUnitTest :e2e:check --continue --no-configuration-cache --console=plain
       - name: Record refreshed screenshots and test feature interactions
         if: ${{ !inputs.branding_only }}
-        run: ./gradlew recordRoborazziDebug --continue --console=plain
+        run: ./gradlew recordRoborazziDebug --continue --no-configuration-cache --console=plain
       - name: Save feature storyboard for visual review
         if: ${{ !inputs.branding_only }}
         run: |
@@ -69,17 +91,32 @@ jobs:
           fi
       - name: Verify refreshed screenshots
         if: ${{ !inputs.branding_only }}
-        run: ./gradlew verifyRoborazziDebug --continue --console=plain
+        run: ./gradlew verifyRoborazziDebug --continue --no-configuration-cache --console=plain
       - name: Package APK
         run: |
           mkdir -p dist
-          cp app/build/outputs/apk/full/debug/app-full-debug.apk dist/cleanMYTV.apk
+          if [ "$CLEANMYTV_SIGNING_MODE" = release ]; then
+            cp app/build/outputs/apk/full/release/app-full-release.apk dist/cleanMYTV.apk
+          else
+            cp app/build/outputs/apk/full/debug/app-full-debug.apk dist/cleanMYTV.apk
+          fi
+          python3 scripts/verify-app-package.py dist/cleanMYTV.apk "$CLEANMYTV_SIGNING_MODE"
           sha256sum dist/cleanMYTV.apk > dist/SHA256SUMS.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: cleanMYTV-apk
           path: dist/
           if-no-files-found: error
+      - name: Retain the same-key upgrade test predecessor
+        if: steps.signing.outputs.signed_release == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cleanMYTV-upgrade-test
+          path: build/upgrade-test/upgrade-base.apk
+          retention-days: 7
+      - name: Remove signing material from the disposable runner
+        if: always()
+        run: rm -f "$RUNNER_TEMP/cleanmytv-release.p12" "$RUNNER_TEMP/cleanmytv-signing.pass"
       - name: Summarize tests and print any failures
         if: always()
         run: |
@@ -120,6 +157,12 @@ jobs:
         with:
           name: cleanMYTV-apk
           path: apk-download
+      - name: Download the same-key upgrade test predecessor
+        if: needs.apk.outputs.signed_release == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: cleanMYTV-upgrade-test
+          path: upgrade-test
       - name: Enable emulator acceleration on the disposable runner
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -134,47 +177,12 @@ jobs:
           profile: pixel_2
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            adb install apk-download/cleanMYTV.apk
-            mkdir -p previews
-            adb shell input keyevent 82
-            adb shell am force-stop com.google.android.apps.nexuslauncher
-            printf '<?xml version="1.0" encoding="utf-8" standalone="yes" ?><map><string name="language">en</string></map>' > /tmp/cleanmytv-language.xml
-            adb push /tmp/cleanmytv-language.xml /data/local/tmp/cleanmytv-language.xml
-            adb shell run-as my.cleanmytv.app mkdir -p shared_prefs
-            adb shell "run-as my.cleanmytv.app sh -c 'cat /data/local/tmp/cleanmytv-language.xml > shared_prefs/cleanmytv-ui.xml'"
-            adb shell am start -n my.cleanmytv.app/tv.cleanyour.app.MainActivity
-            sleep 12
-            adb shell uiautomator dump /sdcard/cleanmytv-window.xml
-            adb pull /sdcard/cleanmytv-window.xml previews/phone-en.xml
-            grep -q 'A cleaner TV' previews/phone-en.xml
-            adb shell screencap -p /sdcard/cleanmytv-phone-en.png
-            adb pull /sdcard/cleanmytv-phone-en.png previews/phone-en.png
-            adb shell am force-stop my.cleanmytv.app
-            printf '<?xml version="1.0" encoding="utf-8" standalone="yes" ?><map><string name="language">ms</string></map>' > /tmp/cleanmytv-language.xml
-            adb push /tmp/cleanmytv-language.xml /data/local/tmp/cleanmytv-language.xml
-            adb shell "run-as my.cleanmytv.app sh -c 'cat /data/local/tmp/cleanmytv-language.xml > shared_prefs/cleanmytv-ui.xml'"
-            adb shell am start -n my.cleanmytv.app/tv.cleanyour.app.MainActivity
-            sleep 10
-            adb shell uiautomator dump /sdcard/cleanmytv-window.xml
-            adb pull /sdcard/cleanmytv-window.xml previews/phone-ms.xml
-            grep -q 'TV lebih kemas' previews/phone-ms.xml
-            adb shell screencap -p /sdcard/cleanmytv-phone-ms.png
-            adb pull /sdcard/cleanmytv-phone-ms.png previews/phone-ms.png
-            adb shell input keyevent KEYCODE_HOME
-            sleep 5
-            adb shell input swipe 540 1700 540 350 350
-            sleep 3
-            adb shell uiautomator dump /sdcard/cleanmytv-launcher.xml
-            adb pull /sdcard/cleanmytv-launcher.xml previews/phone-launcher.xml
-            grep -q 'cleanMYTV' previews/phone-launcher.xml
-            adb shell screencap -p /sdcard/cleanmytv-launcher.png
-            adb pull /sdcard/cleanmytv-launcher.png previews/phone-launcher.png
+          script: python3 scripts/capture-phone-ui.py
       - name: Save installed app screenshots for review
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add previews/phone-en.png previews/phone-ms.png previews/phone-launcher.png
+          git add previews/phone-en.png previews/phone-ms.png previews/phone-launcher.png previews/phone-update-en.png previews/phone-update-ms.png
           if ! git diff --cached --quiet; then
             git commit -m 'Capture installed cleanMYTV on Android 15 in BM and English'
             git pull --rebase origin "${GITHUB_REF_NAME}"

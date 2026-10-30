@@ -1,0 +1,766 @@
+name: Apply cleanMYTV update feature
+on:
+  push:
+    branches: [feature/app-updates]
+    paths: [.github/workflows/apply-updates.yml]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Apply reviewed app update code
+        run: |
+          cat > /tmp/updates.patch <<'PATCH'
+          diff --git a/UPDATES.md b/UPDATES.md
+          new file mode 100644
+          index 0000000..a377121
+          --- /dev/null
+          +++ b/UPDATES.md
+          @@ -0,0 +1,15 @@
+          +# App updates / Kemas kini app
+          +
+          +The full build provides an Update / Kemas kini button below the brand header, without connecting a TV first. Settings uses the same release check. It checks only after a user asks, reads the repository's published release list, ignores drafts and incomplete or foreign APK assets, compares numeric versions, and includes beta releases for beta installations. Stable installations remain on the stable channel. Release notes and the exact repository APK link appear before download. The browser downloads the APK and Android asks the user to confirm installation. No silent installer or new phone permissions are added. A download is blocked while a known TV has an unfinished engine run.
+          +
+          +Butang Kemas kini tersedia sebelum TV disambung. Tekan untuk semak versi, lihat perubahan dan muat turun APK. Buka fail yang dimuat turun dan sahkan pemasangan Android. Operasi TV yang belum selesai mesti diselesaikan atau dipulihkan dahulu. Enjin sambungan, analisis, pembersihan dan pemulihan tidak diubah.
+          +
+          +## Permanent signing
+          +
+          +The approved repository secret `CLEANMYTV_SIGNING` contains JSON fields `keystore` (base64 PKCS#12), `password`, and `alias` (`cleanmytv`). Never commit this secret or its decoded key. Only the public certificate fingerprint is committed in `signing-certificate.sha256`. The signing script verifies that identity before building; the publisher refuses debug or wrongly signed APKs. Configuration caching is disabled for builds that read signing credentials, Gradle caches are read-only, and temporary key material is removed from the disposable runner.
+          +
+          +The signed build tests a same-key `adb install -r` upgrade from a test-only predecessor and checks that the chosen Malay language preference remains. This verifies an in-place Android upgrade without uninstalling or clearing data. The normal published APK has version code 6; the test-only predecessor has code 5 and is never published as a release asset.
+          +
+          +Earlier 1.2.x debug APKs were signed with temporary keys that cannot be reused for this new release. Finish any needed TV recovery with the old app before uninstalling it for the first permanent-key installation. Later releases using this permanent key can update that installation in place. Keep an independent secure backup of the release keystore and its password; replacing a lost key breaks this update identity.
+          +
+          +Beta debug 1.2.x memerlukan pemasangan semula sekali selepas pemulihan TV yang diperlukan selesai. Keluaran dengan kunci tetap ini menyokong kemas kini seterusnya tanpa membuang app lama, selagi kunci yang sama digunakan.
+          diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+          index 52ea29c..984767c 100644
+          --- a/app/build.gradle.kts
+          +++ b/app/build.gradle.kts
+          @@ -8,8 +8,10 @@ android {
+               // (STORES-PLAN 0 and 3): GitHub, F-Droid and Google Play ship the same versionCode and versionName.
+               defaultConfig {
+                   // cleanMYTV derivative of upstream v0.4.6-beta2; follows cleanMYTV 1.1.0 (code 2).
+          -        versionCode = 5
+          -        versionName = "1.2.2-beta1"
+          +        // CI installs this test-only predecessor, then upgrades to the normal signed APK.
+          +        val upgradeBase = providers.gradleProperty("cleanmytvUpgradeBase").orNull == "true"
+          +        versionCode = if (upgradeBase) 5 else 6
+          +        versionName = if (upgradeBase) "1.3.0-beta1-upgradecheck" else "1.3.0-beta1"
+               }
+               // STORES-PLAN 1: one codebase, two store builds, the same applicationId and signing certificate.
+               // `full` (GitHub and F-Droid) checks GitHub for a newer release and offers the optional add-ons;
+          @@ -65,6 +67,7 @@ dependencies {
+               implementation(libs.androidx.navigation3.runtime)
+               implementation(libs.androidx.navigation3.ui)
+               implementation(libs.kotlinx.serialization.core)
+          +    implementation(libs.kotlinx.serialization.json)
+               implementation(libs.kotlinx.coroutines.android)
+           
+               testImplementation(project(":testing:fixtures"))
+          diff --git a/app/src/full/kotlin/tv/cleanyour/app/GithubReleases.kt b/app/src/full/kotlin/tv/cleanyour/app/GithubReleases.kt
+          new file mode 100644
+          index 0000000..a63f8c3
+          --- /dev/null
+          +++ b/app/src/full/kotlin/tv/cleanyour/app/GithubReleases.kt
+          @@ -0,0 +1,113 @@
+          +package tv.cleanyour.app
+          +
+          +import java.net.URI
+          +import kotlinx.coroutines.CancellationException
+          +import kotlinx.coroutines.Dispatchers
+          +import kotlinx.coroutines.withContext
+          +import kotlinx.serialization.json.*
+          +import tv.cleanyour.core.registry.HttpFetcher
+          +
+          +/** No automatic traffic. Both update entry points call this only after a user taps Check. */
+          +internal object GithubReleases {
+          +    const val URL = "https://api.github.com/repos/AmexSaad/cleanMYTV/releases?per_page=100"
+          +    private const val MAX_BODY = 2_000_000
+          +
+          +    suspend fun check(http: HttpFetcher, current: String): AppUpdateStatus = withContext(Dispatchers.IO) {
+          +        try {
+          +            val response = http.get(URL, null, null)
+          +            val body = response.body ?: return@withContext AppUpdateStatus.Failed
+          +            body.use { input ->
+          +                if (response.code != 200) return@withContext AppUpdateStatus.Failed
+          +                val text = buildString {
+          +                    val buffer = CharArray(8192)
+          +                    val reader = input.reader(Charsets.UTF_8)
+          +                    while (true) {
+          +                        val n = reader.read(buffer)
+          +                        if (n < 0) break
+          +                        require(length + n <= MAX_BODY) { "Release response too large" }
+          +                        append(buffer, 0, n)
+          +                    }
+          +                }
+          +                select(text, current)
+          +            }
+          +        } catch (cancelled: CancellationException) {
+          +            throw cancelled
+          +        } catch (_: Exception) {
+          +            AppUpdateStatus.Failed
+          +        }
+          +    }
+          +
+          +    internal fun select(text: String, current: String): AppUpdateStatus =
+          +        runCatching { selectRelease(text, current) }.getOrDefault(AppUpdateStatus.Failed)
+          +
+          +    private fun selectRelease(text: String, current: String): AppUpdateStatus {
+          +        val installed = AppVersion.parse(current) ?: return AppUpdateStatus.Failed
+          +        val releases = Json.parseToJsonElement(text) as? JsonArray ?: return AppUpdateStatus.Failed
+          +        val candidates = releases.mapNotNull { element ->
+          +            val release = element as? JsonObject ?: return@mapNotNull null
+          +            if (release["draft"]?.jsonPrimitive?.booleanOrNull != false) return@mapNotNull null
+          +            val tag = release["tag_name"]?.jsonPrimitive?.contentOrNull ?: return@mapNotNull null
+          +            val version = AppVersion.parse(tag) ?: return@mapNotNull null
+          +            val prerelease = release["prerelease"]?.jsonPrimitive?.booleanOrNull ?: return@mapNotNull null
+          +            // Stable installations stay on the stable channel; beta installations see both.
+          +            if (installed.pre == null && (prerelease || version.pre != null)) return@mapNotNull null
+          +            if (version <= installed) return@mapNotNull null
+          +            val assets = release["assets"] as? JsonArray ?: return@mapNotNull null
+          +            val apk = assets.mapNotNull { it as? JsonObject }.firstOrNull { asset ->
+          +                asset["name"]?.jsonPrimitive?.contentOrNull == "cleanMYTV.apk" &&
+          +                    asset["state"]?.jsonPrimitive?.contentOrNull == "uploaded" &&
+          +                    (asset["size"]?.jsonPrimitive?.longOrNull ?: 0) in 1L..100_000_000L &&
+          +                    validApkUrl(asset["browser_download_url"]?.jsonPrimitive?.contentOrNull.orEmpty(), tag)
+          +            } ?: return@mapNotNull null
+          +            version to AppRelease(tag.removePrefix("v"),
+          +                release["body"]?.jsonPrimitive?.contentOrNull.orEmpty().take(6000),
+          +                apk.getValue("browser_download_url").jsonPrimitive.content)
+          +        }
+          +        return candidates.maxByOrNull { it.first }?.let { AppUpdateStatus.Available(it.second) }
+          +            ?: AppUpdateStatus.Latest
+          +    }
+          +
+          +    private fun validApkUrl(url: String, tag: String): Boolean = runCatching {
+          +        val uri = URI(url)
+          +        uri.scheme == "https" && uri.host == "github.com" && uri.rawUserInfo == null &&
+          +            uri.port == -1 && uri.rawQuery == null && uri.rawFragment == null &&
+          +            uri.rawPath == "/AmexSaad/cleanMYTV/releases/download/$tag/cleanMYTV.apk"
+          +    }.getOrDefault(false)
+          +}
+          +
+          +/** Numeric versions and prerelease ordering; never offer a downgrade or the same build. */
+          +internal data class AppVersion(val main: List<Int>, val pre: List<String>?) : Comparable<AppVersion> {
+          +    override fun compareTo(other: AppVersion): Int {
+          +        for (i in 0..2) main[i].compareTo(other.main[i]).takeIf { it != 0 }?.let { return it }
+          +        if (pre == null) return if (other.pre == null) 0 else 1
+          +        if (other.pre == null) return -1
+          +        for (i in 0 until maxOf(pre.size, other.pre.size)) {
+          +            val a = pre.getOrNull(i) ?: return -1
+          +            val b = other.pre.getOrNull(i) ?: return 1
+          +            val an = a.toIntOrNull(); val bn = b.toIntOrNull()
+          +            val order = when {
+          +                an != null && bn != null -> an.compareTo(bn)
+          +                an != null -> -1
+          +                bn != null -> 1
+          +                else -> a.compareTo(b)
+          +            }
+          +            if (order != 0) return order
+          +        }
+          +        return 0
+          +    }
+          +
+          +    companion object {
+          +        private val format = Regex("v?(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-([0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*))?(?:\\+[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?")
+          +        fun parse(text: String): AppVersion? {
+          +            if (text.length > 80) return null
+          +            val match = format.matchEntire(text) ?: return null
+          +            val main = (1..3).map { match.groupValues[it].toIntOrNull() ?: return null }
+          +            val suffix = match.groupValues[4].takeIf { it.isNotEmpty() }
+          +            val pre = suffix?.split('.')?.flatMap { part ->
+          +                // This project's existing tags use beta1/beta2, including beta10.
+          +                Regex("(alpha|beta|rc)([0-9]+)").matchEntire(part)?.let { listOf(it.groupValues[1], it.groupValues[2]) } ?: listOf(part)
+          +            }
+          +            return AppVersion(main, pre)
+          +        }
+          +    }
+          +}
+          diff --git a/app/src/full/kotlin/tv/cleanyour/app/Store.kt b/app/src/full/kotlin/tv/cleanyour/app/Store.kt
+          index 1449261..1df8488 100644
+          --- a/app/src/full/kotlin/tv/cleanyour/app/Store.kt
+          +++ b/app/src/full/kotlin/tv/cleanyour/app/Store.kt
+          @@ -15,36 +15,26 @@ object Store : StorePorts {
+               override val updatesMayGoOff = rules.updatesOff
+               override val releasePage: String = RELEASE_PAGE
+           
+          -    // D12: one GET on user action (Settings, "Check for updates"); "couldn't check" when GitHub
+          -    // does not answer or the repository has no published release yet.
+          +    // Both the visible Update button and Settings share the same validated release feed.
+          +    override suspend fun releaseStatus(http: HttpFetcher, current: String): AppUpdateStatus =
+          +        GithubReleases.check(http, current)
+          +
+               override fun updateChecker(http: HttpFetcher) = UpdateChecker { current ->
+          -        val r = http.get(RELEASES_URL, null, null)
+          -        if (r.code != 200) { r.body?.close(); null } else {
+          -            val body = r.body?.use { it.readBytes().decodeToString() } ?: return@UpdateChecker null
+          -            val tag = Regex("\"tag_name\"\\s*:\\s*\"v?([0-9][0-9A-Za-z.]*)\"").find(body)?.groupValues?.get(1) ?: return@UpdateChecker null
+          -            if (offered(tag, current)) tag else ""
+          +        when (val result = releaseStatus(http, current)) {
+          +            is AppUpdateStatus.Available -> result.release.version
+          +            AppUpdateStatus.Latest -> ""
+          +            else -> null
+                   }
+               }
+           
+          -    // Whether the latest release `tag` is worth offering to `current`: any other version, as before,
+          -    // except on a test build ("0.3.5-test1", a GitHub pre-release that /releases/latest never
+          -    // returns), which is offered only a higher version or its own release, never the one before it.
+               internal fun offered(tag: String, current: String): Boolean {
+          -        if (tag == current) return false
+          -        if ('-' !in current) return true
+          -        fun numbers(v: String) = v.substringBefore('-').split('.').map { it.toIntOrNull() ?: 0 }
+          -        val a = numbers(tag)
+          -        val b = numbers(current)
+          -        for (i in 0 until maxOf(a.size, b.size)) {
+          -            val x = a.getOrElse(i) { 0 }
+          -            val y = b.getOrElse(i) { 0 }
+          -            if (x != y) return x > y
+          -        }
+          -        return '-' !in tag
+          +        val candidate = AppVersion.parse(tag) ?: return false
+          +        val installed = AppVersion.parse(current) ?: return false
+          +        return candidate > installed && (installed.pre != null || candidate.pre == null)
+               }
+           
+               override fun addOnFetcher(make: () -> ArtifactFetcher): ArtifactFetcher = make()
+           
+          -    const val RELEASES_URL = "https://api.github.com/repos/AmexSaad/cleanMYTV/releases/latest"
+          +    const val RELEASES_URL = "https://api.github.com/repos/AmexSaad/cleanMYTV/releases?per_page=100"
+               const val RELEASE_PAGE = "https://github.com/AmexSaad/cleanMYTV/releases"
+           }
+          diff --git a/app/src/main/kotlin/tv/cleanyour/app/AppUpdate.kt b/app/src/main/kotlin/tv/cleanyour/app/AppUpdate.kt
+          new file mode 100644
+          index 0000000..e9df8f6
+          --- /dev/null
+          +++ b/app/src/main/kotlin/tv/cleanyour/app/AppUpdate.kt
+          @@ -0,0 +1,12 @@
+          +package tv.cleanyour.app
+          +
+          +/** A validated APK asset from this app's own published GitHub release. */
+          +data class AppRelease(val version: String, val notes: String, val apkUrl: String)
+          +
+          +sealed interface AppUpdateStatus {
+          +    data object Checking : AppUpdateStatus
+          +    data object Latest : AppUpdateStatus
+          +    data object Failed : AppUpdateStatus
+          +    data object TvBusy : AppUpdateStatus
+          +    data class Available(val release: AppRelease) : AppUpdateStatus
+          +}
+          diff --git a/app/src/main/kotlin/tv/cleanyour/app/AppUpdateEntry.kt b/app/src/main/kotlin/tv/cleanyour/app/AppUpdateEntry.kt
+          new file mode 100644
+          index 0000000..20678bb
+          --- /dev/null
+          +++ b/app/src/main/kotlin/tv/cleanyour/app/AppUpdateEntry.kt
+          @@ -0,0 +1,78 @@
+          +package tv.cleanyour.app
+          +
+          +import android.content.ActivityNotFoundException
+          +import android.content.Intent
+          +import android.net.Uri
+          +import androidx.compose.foundation.layout.*
+          +import androidx.compose.foundation.rememberScrollState
+          +import androidx.compose.foundation.verticalScroll
+          +import androidx.compose.material3.*
+          +import androidx.compose.runtime.*
+          +import androidx.compose.ui.Modifier
+          +import androidx.compose.ui.platform.LocalContext
+          +import androidx.compose.ui.res.stringResource
+          +import androidx.compose.ui.text.style.TextOverflow
+          +import androidx.compose.ui.unit.dp
+          +import tv.cleanyour.core.engine.RunState
+          +import tv.cleanyour.ui.design.theme.CytTheme
+          +
+          +@Composable
+          +internal fun AppUpdateEntry(graph: AppGraph) {
+          +    if (!graph.store.rules.updateCheck) return
+          +    var show by remember { mutableStateOf(false) }
+          +    Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp), horizontalArrangement = Arrangement.SpaceBetween,
+          +        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+          +        Text("v${graph.appVersion}", Modifier.weight(1f), color = CytTheme.colors.textSecondary,
+          +            style = CytTheme.type.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+          +        TextButton(onClick = { show = true }, modifier = Modifier.heightIn(min = 48.dp)) {
+          +            Text(stringResource(R.string.clean_update_button))
+          +        }
+          +    }
+          +    if (show) AppUpdateDialog(graph, onDismiss = { show = false })
+          +}
+          +
+          +@Composable
+          +private fun AppUpdateDialog(graph: AppGraph, onDismiss: () -> Unit) {
+          +    val context = LocalContext.current
+          +    var status by remember { mutableStateOf<AppUpdateStatus>(AppUpdateStatus.Checking) }
+          +    var attempt by remember { mutableIntStateOf(0) }
+          +    LaunchedEffect(attempt) { status = AppUpdateStatus.Checking; status = graph.store.releaseStatus(graph.http, graph.appVersion) }
+          +    AlertDialog(
+          +        onDismissRequest = onDismiss,
+          +        title = { Text(stringResource(R.string.clean_update_title)) },
+          +        text = {
+          +            Column(Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+          +                Text(stringResource(R.string.clean_update_current) + " " + graph.appVersion)
+          +                when (val value = status) {
+          +                    AppUpdateStatus.Checking -> { CircularProgressIndicator(Modifier.size(24.dp)); Text(stringResource(R.string.clean_update_checking)) }
+          +                    AppUpdateStatus.Latest -> Text(stringResource(R.string.clean_update_latest))
+          +                    AppUpdateStatus.Failed -> Text(stringResource(R.string.clean_update_failed))
+          +                    AppUpdateStatus.TvBusy -> Text(stringResource(R.string.clean_update_tv_busy))
+          +                    is AppUpdateStatus.Available -> {
+          +                        Text(stringResource(R.string.clean_update_available) + " " + value.release.version, style = CytTheme.type.titleMedium)
+          +                        Text(stringResource(R.string.clean_update_notes), style = CytTheme.type.labelLarge)
+          +                        Text(value.release.notes.ifBlank { stringResource(R.string.clean_update_no_notes) })
+          +                        Text(stringResource(R.string.clean_update_install_hint), style = CytTheme.type.bodySmall)
+          +                    }
+          +                }
+          +            }
+          +        },
+          +        confirmButton = {
+          +            when (val value = status) {
+          +                is AppUpdateStatus.Available -> Button(onClick = {
+          +                    // Do not invite replacement of the phone app while a TV run is unfinished.
+          +                    val safe = graph.tvs.tvs.value.all { tv ->
+          +                        val state = graph.engine.runState(tv.id).value
+          +                        state == RunState.Idle || state is RunState.Finished
+          +                    }
+          +                    if (!safe) status = AppUpdateStatus.TvBusy
+          +                    else try { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(value.release.apkUrl))) }
+          +                    catch (_: ActivityNotFoundException) { status = AppUpdateStatus.Failed }
+          +                }) { Text(stringResource(R.string.clean_update_download)) }
+          +                AppUpdateStatus.Failed, AppUpdateStatus.TvBusy -> TextButton(onClick = { attempt++ }) { Text(stringResource(R.string.clean_update_retry)) }
+          +                AppUpdateStatus.Checking, AppUpdateStatus.Latest -> Unit
+          +            }
+          +        },
+          +        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.clean_update_later)) } },
+          +    )
+          +}
+          diff --git a/app/src/main/kotlin/tv/cleanyour/app/CleanBrand.kt b/app/src/main/kotlin/tv/cleanyour/app/CleanBrand.kt
+          index af67dcc..4bf58f9 100644
+          --- a/app/src/main/kotlin/tv/cleanyour/app/CleanBrand.kt
+          +++ b/app/src/main/kotlin/tv/cleanyour/app/CleanBrand.kt
+          @@ -42,7 +42,7 @@ internal object CleanLocale {
+           }
+           
+           @Composable
+          -internal fun CleanBrandFrame(content: @Composable () -> Unit) {
+          +internal fun CleanBrandFrame(graph: AppGraph, content: @Composable () -> Unit) {
+               val context = LocalContext.current
+               var menu by remember { mutableStateOf(false) }
+               Column(Modifier.fillMaxSize().background(CytTheme.colors.bg)) {
+          @@ -81,6 +81,7 @@ internal fun CleanBrandFrame(content: @Composable () -> Unit) {
+                           )
+                       }
+                   }
+          +        AppUpdateEntry(graph)
+                   Box(Modifier.weight(1f).fillMaxWidth().consumeWindowInsets(WindowInsets.statusBars)) { content() }
+               }
+           }
+          diff --git a/app/src/main/kotlin/tv/cleanyour/app/MainActivity.kt b/app/src/main/kotlin/tv/cleanyour/app/MainActivity.kt
+          index d84026f..1221618 100644
+          --- a/app/src/main/kotlin/tv/cleanyour/app/MainActivity.kt
+          +++ b/app/src/main/kotlin/tv/cleanyour/app/MainActivity.kt
+          @@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
+                           }
+                           val s = start
+                           if (s == null) Box(Modifier.fillMaxSize().background(CytTheme.colors.bg))
+          -                else CleanBrandFrame { AppRoot(graph, s, onExit = { finish() }) }
+          +                else CleanBrandFrame(graph) { AppRoot(graph, s, onExit = { finish() }) }
+                       }
+                   }
+               }
+          diff --git a/app/src/main/kotlin/tv/cleanyour/app/StorePorts.kt b/app/src/main/kotlin/tv/cleanyour/app/StorePorts.kt
+          index 37d0af9..630d0e3 100644
+          --- a/app/src/main/kotlin/tv/cleanyour/app/StorePorts.kt
+          +++ b/app/src/main/kotlin/tv/cleanyour/app/StorePorts.kt
+          @@ -26,6 +26,7 @@ interface StorePorts {
+               // Where "an update is available" opens; null when there is no update check.
+               val releasePage: String?
+               fun updateChecker(http: HttpFetcher): UpdateChecker
+          +    suspend fun releaseStatus(http: HttpFetcher, current: String): AppUpdateStatus = AppUpdateStatus.Failed
+               // The add-on fetcher: `make` builds the real one (InstallableOnlyFetcher over the resumable
+               // fetcher); a build without add-ons returns one that never downloads.
+               fun addOnFetcher(make: () -> ArtifactFetcher): ArtifactFetcher
+          diff --git a/app/src/main/res/values-ms/strings.xml b/app/src/main/res/values-ms/strings.xml
+          index b97bb4b..9a44ed3 100644
+          --- a/app/src/main/res/values-ms/strings.xml
+          +++ b/app/src/main/res/values-ms/strings.xml
+          @@ -11,4 +11,18 @@
+             <string name="app_channel_setup_description">Menunjukkan kemajuan semasa telefon menukar perkara pada TV anda dan memberitahu anda masa untuk melihat TV.</string>
+             <string name="app_restore_read_failed">Kesilapan telah berlaku semasa membaca titik pemulihan</string>
+             <string name="clean_support">Sokong cleanMYTV</string>
+          -</resources>
+          \ No newline at end of file
+          +  <string name="clean_update_button">Kemas kini</string>
+          +  <string name="clean_update_title">Kemas kini app</string>
+          +  <string name="clean_update_current">Versi semasa:</string>
+          +  <string name="clean_update_checking">Menyemak kemas kini di GitHub…</string>
+          +  <string name="clean_update_latest">Anda menggunakan versi tersedia yang terkini.</string>
+          +  <string name="clean_update_failed">Tidak dapat menyemak kemas kini. Semak sambungan internet dan cuba lagi.</string>
+          +  <string name="clean_update_tv_busy">Selesaikan atau pulihkan operasi TV semasa sebelum mengemas kini app telefon.</string>
+          +  <string name="clean_update_available">Versi baharu:</string>
+          +  <string name="clean_update_notes">Perubahan baharu</string>
+          +  <string name="clean_update_no_notes">Tiada nota keluaran disediakan.</string>
+          +  <string name="clean_update_install_hint">Muat turun APK daripada keluaran GitHub kami. Buka fail yang dimuat turun dan sahkan pemasangan di Android. Kemas kini tidak dipasang secara senyap.</string>
+          +  <string name="clean_update_download">Muat turun APK</string>
+          +  <string name="clean_update_retry">Cuba lagi</string>
+          +  <string name="clean_update_later">Tutup</string>
+          +</resources>
+          diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+          index 4746e56..436e431 100644
+          --- a/app/src/main/res/values/strings.xml
+          +++ b/app/src/main/res/values/strings.xml
+          @@ -11,4 +11,18 @@
+               <string name="app_channel_setup_description">Shows progress while the phone changes things on your TV, and tells you when to look at the TV.</string>
+               <string name="app_restore_read_failed">Something went wrong reading the restore point</string>
+               <string name="clean_support">Support cleanMYTV</string>
+          +    <string name="clean_update_button">Update</string>
+          +    <string name="clean_update_title">App update</string>
+          +    <string name="clean_update_current">Installed version:</string>
+          +    <string name="clean_update_checking">Checking GitHub for updates…</string>
+          +    <string name="clean_update_latest">You are using the latest available version.</string>
+          +    <string name="clean_update_failed">Unable to check for updates. Check your internet connection and try again.</string>
+          +    <string name="clean_update_tv_busy">Finish or recover the current TV operation before updating the phone app.</string>
+          +    <string name="clean_update_available">New version:</string>
+          +    <string name="clean_update_notes">What is new</string>
+          +    <string name="clean_update_no_notes">No release notes provided.</string>
+          +    <string name="clean_update_install_hint">Download the APK from our GitHub release. Open the downloaded file and confirm installation in Android. Updates do not run silently.</string>
+          +    <string name="clean_update_download">Download APK</string>
+          +    <string name="clean_update_retry">Try again</string>
+          +    <string name="clean_update_later">Close</string>
+           </resources>
+          diff --git a/app/src/testFull/kotlin/tv/cleanyour/app/FullStoreTest.kt b/app/src/testFull/kotlin/tv/cleanyour/app/FullStoreTest.kt
+          index bbb5666..31678fa 100644
+          --- a/app/src/testFull/kotlin/tv/cleanyour/app/FullStoreTest.kt
+          +++ b/app/src/testFull/kotlin/tv/cleanyour/app/FullStoreTest.kt
+          @@ -44,6 +44,8 @@ class FullStoreTest {
+                   }
+               }
+           
+          +    private fun release(tag: String): String = """[{"tag_name":"v$tag","draft":false,"prerelease":${'-' in tag},"assets":[{"name":"cleanMYTV.apk","state":"uploaded","size":100,"browser_download_url":"https://github.com/AmexSaad/cleanMYTV/releases/download/v$tag/cleanMYTV.apk"}]}]"""
+          +
+               @Test fun thisIsTheFullBuild() {
+                   assertEquals("full", Store.flavour)
+                   assertEquals(StoreRules.FULL, Store.rules)
+          @@ -58,17 +60,17 @@ class FullStoreTest {
+               }
+           
+               @Test fun theUpdateCheckAsksGithubForTheLatestRelease() = runBlocking {
+          -        val newer = OneAnswer(200, """{"tag_name": "v0.4.0", "name": "x"}""")
+          +        val newer = OneAnswer(200, release("0.4.0"))
+                   assertEquals("0.4.0", Store.updateChecker(newer).latestNewerThan("0.3.0"))
+                   assertEquals(listOf(Store.RELEASES_URL), newer.urls)
+          -        assertEquals("", Store.updateChecker(OneAnswer(200, """{"tag_name":"v0.3.0"}""")).latestNewerThan("0.3.0"))
+          +        assertEquals("", Store.updateChecker(OneAnswer(200, release("0.3.0"))).latestNewerThan("0.3.0"))
+                   assertEquals(null, Store.updateChecker(OneAnswer(404, "")).latestNewerThan("0.3.0"))
+                   assertEquals("https://github.com/AmexSaad/cleanMYTV/releases", Store.releasePage)
+               }
+           
+               // Test build: 0.3.5-test1 is offered 0.3.5 and later, never the 0.3.4 it installs over.
+               @Test fun aTestBuildIsOfferedOnlyANewerRelease() = runBlocking {
+          -        fun latest(tag: String, current: String) = runBlocking { Store.updateChecker(OneAnswer(200, "{\"tag_name\":\"v$tag\"}")).latestNewerThan(current) }
+          +        fun latest(tag: String, current: String) = runBlocking { Store.updateChecker(OneAnswer(200, release(tag))).latestNewerThan(current) }
+                   assertEquals("", latest("0.3.4", "0.3.5-test1"))
+                   assertEquals("0.3.5", latest("0.3.5", "0.3.5-test1"))
+                   assertEquals("0.4.0", latest("0.4.0", "0.3.5-test1"))
+          diff --git a/app/src/testFull/kotlin/tv/cleanyour/app/GithubReleasesTest.kt b/app/src/testFull/kotlin/tv/cleanyour/app/GithubReleasesTest.kt
+          new file mode 100644
+          index 0000000..f041af6
+          --- /dev/null
+          +++ b/app/src/testFull/kotlin/tv/cleanyour/app/GithubReleasesTest.kt
+          @@ -0,0 +1,96 @@
+          +package tv.cleanyour.app
+          +
+          +import java.io.ByteArrayInputStream
+          +import kotlinx.coroutines.CancellationException
+          +import kotlinx.coroutines.runBlocking
+          +import org.junit.Test
+          +import tv.cleanyour.core.registry.HttpFetcher
+          +import tv.cleanyour.core.registry.HttpResponse
+          +import kotlin.test.*
+          +
+          +class GithubReleasesTest {
+          +    private fun release(version: String, draft: Boolean = false, prerelease: Boolean = '-' in version,
+          +        url: String = "https://github.com/AmexSaad/cleanMYTV/releases/download/v$version/cleanMYTV.apk",
+          +        apk: String = "cleanMYTV.apk", state: String = "uploaded"): String =
+          +        """{"tag_name":"v$version","draft":$draft,"prerelease":$prerelease,"body":"New changes","assets":[{"name":"$apk","state":"$state","size":100,"browser_download_url":"$url"}]}"""
+          +
+          +    private fun select(current: String, vararg releases: String) = GithubReleases.select(releases.joinToString(",", "[", "]"), current)
+          +
+          +    @Test fun betaInstallationsDiscoverBetaAssets() {
+          +        val result = assertIs<AppUpdateStatus.Available>(select("1.2.2-beta1", release("1.3.0-beta1")))
+          +        assertEquals("1.3.0-beta1", result.release.version)
+          +        assertEquals("New changes", result.release.notes)
+          +        assertTrue(result.release.apkUrl.endsWith("/v1.3.0-beta1/cleanMYTV.apk"))
+          +    }
+          +
+          +    @Test fun beta10FollowsBeta2RegardlessOfFeedOrdering() {
+          +        assertEquals("1.3.0-beta10", assertIs<AppUpdateStatus.Available>(select("1.3.0-beta2",
+          +            release("1.3.0-beta3"), release("1.3.0-beta10"), release("1.3.0-beta1"))).release.version)
+          +    }
+          +
+          +    @Test fun stableChannelDoesNotOfferBetasOrOlderStableReleases() {
+          +        assertEquals(AppUpdateStatus.Latest, select("1.3.0", release("1.4.0-beta1"), release("1.2.2")))
+          +    }
+          +
+          +    @Test fun betaCanUpgradeToStableWithTheSameVersionNumbers() {
+          +        assertEquals("1.3.0", assertIs<AppUpdateStatus.Available>(select("1.3.0-beta2", release("1.3.0"))).release.version)
+          +    }
+          +
+          +    @Test fun sameBuildAndOldBuildsAreNeverOffered() {
+          +        assertEquals(AppUpdateStatus.Latest, select("1.3.0-beta2", release("1.3.0-beta2"), release("1.3.0-beta1"), release("1.2.9")))
+          +        assertEquals(AppUpdateStatus.Latest, select("1.3.0", release("1.3.0+rebuild")))
+          +    }
+          +
+          +    @Test fun draftAndIncompleteAssetsAreIgnored() {
+          +        assertEquals(AppUpdateStatus.Latest, select("1.3.0-beta1", release("1.4.0", draft = true),
+          +            release("1.5.0", state = "new"), release("1.6.0", apk = "other-app.apk")))
+          +    }
+          +
+          +    @Test fun apkMustBelongToTheExactRepositoryAndRelease() {
+          +        for (url in listOf("http://github.com/AmexSaad/cleanMYTV/releases/download/v2.0.0/cleanMYTV.apk",
+          +            "https://github.com/other/repo/releases/download/v2.0.0/cleanMYTV.apk",
+          +            "https://github.com.evil.test/AmexSaad/cleanMYTV/releases/download/v2.0.0/cleanMYTV.apk",
+          +            "https://github.com/AmexSaad/cleanMYTV/releases/download/v1.0.0/cleanMYTV.apk",
+          +            "https://github.com/AmexSaad/cleanMYTV/releases/download/v2.0.0/cleanMYTV.apk?redirect=1")) {
+          +            assertEquals(AppUpdateStatus.Latest, select("1.3.0-beta1", release("2.0.0", url = url)), url)
+          +        }
+          +    }
+          +
+          +    @Test fun malformedRepliesAndUnknownInstalledVersionsFailClearly() {
+          +        assertEquals(AppUpdateStatus.Failed, GithubReleases.select("not JSON", "1.3.0-beta1"))
+          +        assertEquals(AppUpdateStatus.Failed, GithubReleases.select("{}", "1.3.0-beta1"))
+          +        assertEquals(AppUpdateStatus.Failed, select("unknown", release("2.0.0")))
+          +    }
+          +
+          +    @Test fun checkUsesTheReleaseListAndClosesTheBody() = runBlocking {
+          +        var closed = false
+          +        val body = object : ByteArrayInputStream("[${release("1.4.0-beta1")}]".toByteArray()) {
+          +            override fun close() { closed = true; super.close() }
+          +        }
+          +        val http = object : HttpFetcher {
+          +            override suspend fun get(url: String, etag: String?, rangeFrom: Long?): HttpResponse {
+          +                assertEquals(GithubReleases.URL, url)
+          +                assertNull(etag); assertNull(rangeFrom)
+          +                return HttpResponse(200, null, body, null)
+          +            }
+          +        }
+          +        assertIs<AppUpdateStatus.Available>(GithubReleases.check(http, "1.3.0-beta1"))
+          +        assertTrue(closed)
+          +    }
+          +
+          +    @Test fun rateLimitsAndNetworkFailuresAreNotReportedAsUpToDate() = runBlocking {
+          +        for (code in listOf(403, 429, 500)) {
+          +            val http = object : HttpFetcher {
+          +                override suspend fun get(url: String, etag: String?, rangeFrom: Long?) = HttpResponse(code, null, ByteArrayInputStream("[]".toByteArray()), 2)
+          +            }
+          +            assertEquals(AppUpdateStatus.Failed, GithubReleases.check(http, "1.3.0-beta1"))
+          +        }
+          +    }
+          +
+          +    @Test fun cancellationIsNotSwallowed() = runBlocking {
+          +        val http = object : HttpFetcher {
+          +            override suspend fun get(url: String, etag: String?, rangeFrom: Long?): HttpResponse = throw CancellationException("closed dialog")
+          +        }
+          +        assertFailsWith<CancellationException> { GithubReleases.check(http, "1.3.0-beta1") }
+          +    }
+          +}
+          diff --git a/scripts/capture-phone-ui.py b/scripts/capture-phone-ui.py
+          new file mode 100644
+          index 0000000..71e3af5
+          --- /dev/null
+          +++ b/scripts/capture-phone-ui.py
+          @@ -0,0 +1,104 @@
+          +"""Exercise the installed APK's real language and update controls on the disposable CI emulator."""
+          +from pathlib import Path
+          +import os
+          +import re
+          +import subprocess
+          +import time
+          +import xml.etree.ElementTree as ET
+          +
+          +OUT = Path("previews")
+          +OUT.mkdir(exist_ok=True)
+          +PACKAGE = "my.cleanmytv.app"
+          +ACTIVITY = PACKAGE + "/tv.cleanyour.app.MainActivity"
+          +
+          +def adb(*args):
+          +    return subprocess.run(["adb", *args], check=True, capture_output=True, text=True).stdout
+          +
+          +def window():
+          +    adb("shell", "uiautomator", "dump", "/sdcard/cleanmytv-ui.xml")
+          +    return adb("shell", "cat", "/sdcard/cleanmytv-ui.xml")
+          +
+          +def wait_text(text, timeout=60):
+          +    end = time.monotonic() + timeout
+          +    while time.monotonic() < end:
+          +        xml = window()
+          +        if text in xml:
+          +            return xml
+          +        if "Pixel Launcher isn" in xml:
+          +            adb("shell", "am", "force-stop", "com.google.android.apps.nexuslauncher")
+          +            adb("shell", "am", "start", "-n", ACTIVITY)
+          +        time.sleep(2)
+          +    raise AssertionError("Expected installed UI text: " + text)
+          +
+          +def tap(text):
+          +    root = ET.fromstring(wait_text(text))
+          +    for node in root.iter("node"):
+          +        if node.get("text") == text or node.get("content-desc") == text:
+          +            x1, y1, x2, y2 = map(int, re.findall(r"\d+", node.attrib["bounds"]))
+          +            adb("shell", "input", "tap", str((x1+x2)//2), str((y1+y2)//2))
+          +            time.sleep(1)
+          +            return
+          +    raise AssertionError("Control not found: " + text)
+          +
+          +def shot(name):
+          +    OUT.joinpath(name + ".xml").write_text(window(), encoding="utf-8")
+          +    adb("shell", "screencap", "-p", "/sdcard/cleanmytv-shot.png")
+          +    adb("pull", "/sdcard/cleanmytv-shot.png", str(OUT / (name + ".png")))
+          +
+          +def malay():
+          +    tap("EN ▾")
+          +    tap("Bahasa Melayu")
+          +    wait_text("TV lebih kemas")
+          +
+          +def english():
+          +    tap("BM ▾")
+          +    tap("English")
+          +    wait_text("A cleaner TV")
+          +
+          +def update_dialog(language):
+          +    tap("Kemas kini" if language == "ms" else "Update")
+          +    wait_text("Versi semasa:" if language == "ms" else "Installed version:")
+          +    # Live GitHub can rate-limit shared runners; both Latest and the honest retry state are valid.
+          +    terminal = ("Anda menggunakan versi", "Tidak dapat menyemak") if language == "ms" else ("You are using", "Unable to check")
+          +    end = time.monotonic() + 75
+          +    while time.monotonic() < end:
+          +        xml = window()
+          +        if any(text in xml for text in terminal):
+          +            shot("phone-update-" + language)
+          +            tap("Tutup" if language == "ms" else "Close")
+          +            return
+          +        time.sleep(2)
+          +    raise AssertionError("Update check did not finish")
+          +
+          +base = Path("upgrade-test/upgrade-base.apk")
+          +apk = Path("apk-download/cleanMYTV.apk")
+          +if base.exists():
+          +    adb("install", str(base))
+          +    adb("shell", "am", "force-stop", "com.google.android.apps.nexuslauncher")
+          +    adb("shell", "am", "start", "-n", ACTIVITY)
+          +    wait_text("A cleaner TV")
+          +    malay()
+          +    adb("shell", "am", "force-stop", PACKAGE)
+          +    # Android rejects this command on a certificate mismatch. Do not uninstall or clear app data.
+          +    adb("install", "-r", str(apk))
+          +    adb("shell", "am", "start", "-n", ACTIVITY)
+          +    wait_text("TV lebih kemas")
+          +    OUT.joinpath("upgrade-verification.txt").write_text("Same-key in-place upgrade passed; Malay preference retained.\n")
+          +else:
+          +    adb("install", str(apk))
+          +    adb("shell", "am", "force-stop", "com.google.android.apps.nexuslauncher")
+          +    adb("shell", "am", "start", "-n", ACTIVITY)
+          +    wait_text("A cleaner TV")
+          +    malay()
+          +
+          +shot("phone-ms")
+          +update_dialog("ms")
+          +english()
+          +shot("phone-en")
+          +update_dialog("en")
+          +adb("shell", "input", "keyevent", "KEYCODE_HOME")
+          +time.sleep(5)
+          +adb("shell", "input", "swipe", "540", "1700", "540", "350", "350")
+          +time.sleep(3)
+          +wait_text("cleanMYTV")
+          +shot("phone-launcher")
+          diff --git a/scripts/prepare-app-signing.py b/scripts/prepare-app-signing.py
+          new file mode 100644
+          index 0000000..1f53d43
+          --- /dev/null
+          +++ b/scripts/prepare-app-signing.py
+          @@ -0,0 +1,39 @@
+          +"""Restore an approved GitHub Actions secret without writing credentials into the checkout."""
+          +import base64
+          +import hashlib
+          +import json
+          +import os
+          +from pathlib import Path
+          +import subprocess
+          +
+          +payload = os.environ.get("CLEANMYTV_SIGNING", "")
+          +required = os.environ.get("REQUIRE_SIGNING", "false") == "true"
+          +if not payload:
+          +    if required:
+          +        raise SystemExit("The protected CLEANMYTV_SIGNING secret must be configured before a release build.")
+          +    with open(os.environ["GITHUB_ENV"], "a") as env:
+          +        env.write("CLEANMYTV_SIGNING_MODE=debug\n")
+          +    with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+          +        out.write("signed_release=false\n")
+          +    raise SystemExit(0)
+          +
+          +secret = json.loads(payload)
+          +password = secret["password"]
+          +assert isinstance(password, str) and len(password) >= 24 and "\n" not in password and "\r" not in password
+          +assert secret["alias"] == "cleanmytv"
+          +print("::add-mask::" + password)
+          +key = Path(os.environ["RUNNER_TEMP"]) / "cleanmytv-release.p12"
+          +password_file = Path(os.environ["RUNNER_TEMP"]) / "cleanmytv-signing.pass"
+          +key.write_bytes(base64.b64decode(secret["keystore"], validate=True))
+          +password_file.write_text(password, encoding="utf-8")
+          +key.chmod(0o600)
+          +password_file.chmod(0o600)
+          +cert = subprocess.run(["keytool", "-exportcert", "-keystore", str(key), "-alias", "cleanmytv",
+          +    "-storepass:file", str(password_file)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout
+          +expected = Path("signing-certificate.sha256").read_text().strip()
+          +assert hashlib.sha256(cert).hexdigest() == expected, "Signing certificate does not match the pinned release identity"
+          +with open(os.environ["GITHUB_ENV"], "a") as env:
+          +    env.write(f"CLEANMYTV_SIGNING_MODE=release\nCYT_RELEASE_KEYSTORE={key}\nCYT_RELEASE_KEY_ALIAS=cleanmytv\nCYT_RELEASE_KEYSTORE_PASSWORD_FILE={password_file}\n")
+          +with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+          +    out.write("signed_release=true\n")
+          +print("Pinned cleanMYTV release signing identity verified.")
+          diff --git a/scripts/verify-app-package.py b/scripts/verify-app-package.py
+          new file mode 100644
+          index 0000000..18fbc44
+          --- /dev/null
+          +++ b/scripts/verify-app-package.py
+          @@ -0,0 +1,26 @@
+          +"""Record public APK identity; release packages must match the pinned signing certificate."""
+          +import glob
+          +import json
+          +import os
+          +from pathlib import Path
+          +import re
+          +import subprocess
+          +import sys
+          +
+          +apk = Path(sys.argv[1])
+          +mode = sys.argv[2]
+          +assert mode in ("debug", "release")
+          +sdk = os.environ.get("ANDROID_HOME") or os.environ["ANDROID_SDK_ROOT"]
+          +tools = sorted(glob.glob(str(Path(sdk) / "build-tools" / "*" / "apksigner")))[-1]
+          +result = subprocess.run([tools, "verify", "--print-certs", str(apk)], check=True, capture_output=True, text=True)
+          +certs = re.findall(r"Signer #\d+ certificate SHA-256 digest: ([0-9a-f]+)", result.stdout)
+          +assert len(certs) == 1
+          +if mode == "release":
+          +    assert certs[0] == Path("signing-certificate.sha256").read_text().strip(), "Wrong release signing certificate"
+          +badging = subprocess.run([str(Path(tools).with_name("aapt2")), "dump", "badging", str(apk)], check=True, capture_output=True, text=True).stdout
+          +package = re.search(r"package: name='([^']+)' versionCode='(\d+)' versionName='([^']+)'", badging)
+          +assert package and package[1] == "my.cleanmytv.app"
+          +metadata = dict(package=package[1], versionCode=int(package[2]), versionName=package[3], signing=mode, certificateSha256=certs[0])
+          +apk.with_name("release-info.json").write_text(json.dumps(metadata, indent=2) + "\n")
+          +apk.with_name("SIGNING_CERTIFICATE.txt").write_text(certs[0] + "\n")
+          +print(json.dumps(metadata))
+          diff --git a/signing-certificate.sha256 b/signing-certificate.sha256
+          new file mode 100644
+          index 0000000..861cfcc
+          --- /dev/null
+          +++ b/signing-certificate.sha256
+          @@ -0,0 +1 @@
+          +e9ef5b2f671315f82ccb020f07c5fcf4dc1c0ab491023d9b55ecab59cac04fae
+          PATCH
+          git apply --check /tmp/updates.patch
+          git apply --index /tmp/updates.patch
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Add bilingual app update controls and validated release checks'
+          git push origin HEAD:feature/app-updates
