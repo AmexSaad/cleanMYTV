@@ -65,12 +65,18 @@ internal fun CleanBrandFrame(content: @Composable () -> Unit) {
             val supportLabel = stringResource(R.string.clean_support)
             Button(
                 onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://sociabuzz.com/cleanmytv/tribe"))) },
-                modifier = Modifier.size(48.dp).semantics { contentDescription = supportLabel },
+                modifier = Modifier.height(48.dp).widthIn(min = 48.dp).semantics { contentDescription = supportLabel },
                 shape = RoundedCornerShape(14.dp),
-                contentPadding = PaddingValues(0.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp),
             ) {
-                Text("♥", Modifier.clearAndSetSemantics { }, style = CytTheme.type.titleMedium)
+                Text(
+                    if (context.resources.configuration.fontScale > 1.3f) "♥"
+                    else supportLabel.substringBefore("cleanMYTV").trim(),
+                    Modifier.clearAndSetSemantics { },
+                    style = CytTheme.type.labelMedium,
+                    maxLines = 1,
+                )
             }
         }
         Box(Modifier.weight(1f).fillMaxWidth().consumeWindowInsets(WindowInsets.statusBars)) { content() }
