@@ -28,6 +28,10 @@ def wait_text(text, timeout=60):
             adb("shell", "am", "force-stop", "com.google.android.apps.nexuslauncher")
             adb("shell", "am", "start", "-n", ACTIVITY)
         time.sleep(2)
+    OUT.joinpath("failure.xml").write_text(xml, encoding="utf-8")
+    adb("shell", "screencap", "-p", "/sdcard/cleanmytv-failure.png")
+    adb("pull", "/sdcard/cleanmytv-failure.png", str(OUT / "failure.png"))
+    OUT.joinpath("failure-logcat.txt").write_text(adb("logcat", "-d", "-t", "1000"), encoding="utf-8")
     raise AssertionError("Expected installed UI text: " + text)
 
 def tap(text):
