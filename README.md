@@ -1,29 +1,31 @@
-# cleanMYTV · 1.2.0 beta
+# cleanMYTV · 1.2.1 beta
 
-[Bahasa Melayu](#bahasa-melayu) · [English](#english) · [Muat turun APK](https://github.com/AmexSaad/cleanMYTV/releases/download/v1.2.0-beta1/cleanMYTV.apk) · [Sokong projek](https://sociabuzz.com/cleanmytv/tribe)
+[Bahasa Melayu](#bahasa-melayu) · [English](#english) · [Muat turun APK](https://github.com/AmexSaad/cleanMYTV/releases/download/v1.2.1-beta1/cleanMYTV.apk) · [Sokong projek](https://sociabuzz.com/cleanmytv/tribe)
 
 ## Bahasa Melayu
 
-Versi ini menggunakan sumber **Clean Your TV v0.4.6-beta2** sebagai asas fungsi, dengan reka bentuk cleanMYTV putih dan biru serta pilihan Bahasa Melayu / English.
+Versi ini menggunakan sumber **Clean Your TV v0.4.6-beta2** sebagai asas fungsi, dengan reka bentuk cleanMYTV Hitam + Limau serta pilihan Bahasa Melayu / English.
 
 1. Pasang `cleanMYTV.apk` pada **telefon Android 9 atau lebih baharu**. Telefon dan Android TV mesti berada dalam rangkaian yang sama.
 2. Sambung TV melalui carian automatik atau alamat TV. Ikut panduan debugging dan benarkan telefon pada TV.
 3. Semak hasil analisis dan pelan perubahan sebelum meneruskan. Pembersihan menyahaktif app; pakej sistem tidak dipadam.
 4. Pilihan skrin utama, susunan app, gaya, pemulihan dan laporan menggunakan aliran rujukan. Custom MyLauncher versi cleanMYTV lama telah digantikan dengan aliran skrin utama rujukan.
 
-**[📥 Muat turun cleanMYTV.apk](https://github.com/AmexSaad/cleanMYTV/releases/download/v1.2.0-beta1/cleanMYTV.apk)** · [Nota keluaran](https://github.com/AmexSaad/cleanMYTV/releases/tag/v1.2.0-beta1)
+**[📥 Muat turun cleanMYTV.apk](https://github.com/AmexSaad/cleanMYTV/releases/download/v1.2.1-beta1/cleanMYTV.apk)** · [Nota keluaran](https://github.com/AmexSaad/cleanMYTV/releases/tag/v1.2.1-beta1)
 
 Fail APK boleh dipasang terus, tanpa ekstrak ZIP. Ini ialah beta debug, bukan keluaran Play Store. Pautan Drive versi lama bukan binaan versi ini.
 
-Rekod cleanMYTV 1.1 disimpan pada telefon tetapi tidak diimport ke jurnal baharu. Pulihkan perubahan TV menggunakan versi lama dahulu sebelum menggantikan app, jika rekod itu masih diperlukan. Android mungkin menolak kemas kini jika tandatangan binaan debug berbeza; jangan nyahpasang versi lama sebelum menyelesaikan pemulihan yang diperlukan. Versi ini menaikkan keperluan telefon daripada Android 8 kepada Android 9 mengikut sumber rujukan. Keserasian dan sekatan firmware bergantung pada TV. Ujian automatik tidak menggantikan pengesahan pada TV fizikal.
+Rekod cleanMYTV 1.1 disimpan pada telefon tetapi tidak diimport ke jurnal baharu. Pulihkan perubahan TV menggunakan versi lama dahulu sebelum menggantikan app, jika rekod itu masih diperlukan. Tandatangan debug beta 1.2.1 berbeza daripada beta 1.2.0, jadi Android akan menolak kemas kini terus pada pemasangan tersebut; jangan nyahpasang versi lama sebelum menyelesaikan pemulihan yang diperlukan. Versi ini menaikkan keperluan telefon daripada Android 8 kepada Android 9 mengikut sumber rujukan. Keserasian dan sekatan firmware bergantung pada TV. Ujian automatik tidak menggantikan pengesahan pada TV fizikal.
 
 ## English
 
-This version uses **Clean Your TV v0.4.6-beta2** as its functional foundation, with cleanMYTV's white/blue interface and Malay/English selection. It retains the reference connection, discovery, analysis, plan review, cleaning, home-screen setup, layout, restore, backup, add-on and report flows.
+This version uses **Clean Your TV v0.4.6-beta2** as its functional foundation, with cleanMYTV's graphite/lime interface and Malay/English selection. It retains the reference connection, discovery, analysis, plan review, cleaning, home-screen setup, layout, restore, backup, add-on and report flows.
 
-[Download cleanMYTV.apk directly](https://github.com/AmexSaad/cleanMYTV/releases/download/v1.2.0-beta1/cleanMYTV.apk) for an **Android 9+ phone**. Keep the phone and Android TV on the same network, follow the debugging instructions, authorize the phone on the TV, and review the plan before applying changes. System packages are disabled rather than uninstalled. The reference's home confirmation and recovery guards remain in place.
+[Download cleanMYTV.apk directly](https://github.com/AmexSaad/cleanMYTV/releases/download/v1.2.1-beta1/cleanMYTV.apk) for an **Android 9+ phone**. Keep the phone and Android TV on the same network, follow the debugging instructions, authorize the phone on the TV, and review the plan before applying changes. System packages are disabled rather than uninstalled. The reference's home confirmation and recovery guards remain in place.
 
-This is a beta debug build. The previous custom MyLauncher is replaced by the reference home-screen flow. Legacy cleanMYTV records remain on disk but are not imported into the new journal; restore any needed TV changes with the old app before replacing it. Debug signing certificates can differ between builds, so Android may reject an in-place update; finish any needed recovery before uninstalling the old app. Previous Google Drive builds are not this version. Physical TV and firmware compatibility still require device testing.
+This is a beta debug build. The previous custom MyLauncher is replaced by the reference home-screen flow. Legacy cleanMYTV records remain on disk but are not imported into the new journal; restore any needed TV changes with the old app before replacing it. Beta 1.2.1 has a different debug signing certificate from beta 1.2.0, so Android rejects an in-place update from that installation; finish any needed recovery before uninstalling the old app. Previous Google Drive builds are not this version. Physical TV and firmware compatibility still require device testing.
+
+[Pengesahan binaan / Build validation](https://github.com/AmexSaad/cleanMYTV/actions/runs/40994750593): 2,625 ujian lulus, semakan tangkap layar lulus, APK dipasang dan paparan BM/EN dirakam pada emulator Android 15. / 2,625 tests passed, screenshots verified, APK installed and BM/EN screens captured on an Android 15 emulator.
 
 ## Paparan / Screenshots
 
