@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Clean Your TV, :feature:setup. English source strings.
+  Every string that takes an argument is ICU MessageFormat with NAMED arguments in braces,
+  formatted by the app's message helper (android.icu.text.MessageFormat). No printf placeholders,
+  no Android plurals elements. Counts go through the plural selector.
+  Screens: probing, S3, S3a, S3b, S4a, S4b, S4c, S4d, S4e, install failure, S5 Done, restart flow,
+  credential prompt, foreground notification. Strings that contain a percent sign are marked
+  formatted="false" so lint does not read them as printf.
+-->
+<resources>
+  <!-- Shared button words -->
+  <string name="action_back">Kembali</string>
+  <string name="action_cancel">Batal</string>
+  <string name="action_ok">OK</string>
+  <string name="action_done">Selesai</string>
+  <string name="action_undo">Pulihkan</string>
+  <!-- Credential prompt (D17) -->
+  <string name="gate_title">Sahkan itu anda</string>
+  <string name="gate_subtitle">Sebelum kita menukar apa-apa pada {tv}</string>
+  <string name="gate_negative">Batal</string>
+  <string name="gate_failed">Kami tidak dapat mengesahkan itu adalah anda, jadi tiada apa-apa yang diubah.</string>
+  <!-- Notifications (D18, D16) -->
+  <string name="notify_channel_name">Menyediakan TV</string>
+  <string name="notify_channel_description">Menunjukkan kemajuan semasa telefon menukar perkara pada TV anda dan memberitahu anda masa untuk melihat TV.</string>
+  <string name="notify_progress" formatted="false">Menyediakan {tv}, {percent}%</string>
+  <string name="notify_look">Tengok TV. Ketik untuk menjawab.</string>
+  <string name="notify_rationale">Kami akan memberitahu anda apabila tiba masanya untuk melihat TV. Benarkan pemberitahuan supaya berfungsi dengan telefon di dalam poket anda.</string>
+  <string name="notify_rationale_allow">Benarkan pemberitahuan</string>
+  <string name="notify_rationale_skip">Bukan sekarang</string>
+  <!-- S2d to S3: probing -->
+  <string name="probing_line">Membaca apa yang ada di TV...</string>
+  <string name="probing_progress_cd">Membaca apa yang ada di TV</string>
+  <!-- Stop: probe failure -->
+  <string name="stop_probe_failed_title">Kami tidak dapat membaca apa yang ada di TV</string>
+  <string name="stop_probe_failed_body">TV berhenti menjawab semasa kami membacanya. Tiada apa yang diubah. Semak sama ada ia masih hidup, kemudian cuba lagi.</string>
+  <string name="stop_probe_failed_primary">Cuba lagi</string>
+  <string name="stop_probe_failed_secondary">Belakang</string>
+  <string name="stop_probe_failed_tertiary">Tunjukkan butiran</string>
+  <string name="stop_plan_refused_title">Kami tidak dapat membuat rancangan selamat untuk TV ini</string>
+  <string name="stop_plan_refused_body">TV menjawab, tetapi apa yang kami temui padanya tidak sesuai dengan rancangan yang kami pasti selamat, jadi kami berhenti sebelum melakukan apa-apa. Tiada apa yang diubah. Laporkan masalah menghantar sebabnya kepada kami, jadi kami boleh membetulkannya.</string>
+  <!-- S3 What we found -->
+  <string name="found_title">{count, plural, =0 {Tiada item untuk dinyahaktif. Mahu skrin utama baharu?} one {Satu item boleh dinyahaktif} other {# item boleh dinyahaktif}}</string>
+  <string name="found_headline">{count, plural, =0 {Tiada item untuk dinyahaktif. Mahu skrin utama baharu?} one {item untuk dinyahaktif} other {item untuk dinyahaktif}}</string>
+  <string name="found_overline">Kami dapati</string>
+  <string name="found_zero_body">TV ini sudah kemas.</string>
+  <string name="found_group_ads">Iklan dan baris yang ditaja</string>
+  <string name="found_group_tracking">Penjejakan dan analitik</string>
+  <string name="found_group_nobody">App tambahan</string>
+  <string name="found_group_brand">{brand} tambahan</string>
+  <string name="found_group_shop">Mod kedai dan demo</string>
+  <string name="found_group_needed">Diperlukan untuk skrin utama baharu</string>
+  <string name="found_group_count_cd">{group}: {count, plural, one {# item} other {# item}}</string>
+  <string name="found_see_list">Lihat senarai</string>
+  <string name="found_keep_intro">Kami menyimpan semua yang anda gunakan:</string>
+  <string name="found_keep_paragraph">Kami menyimpan semua yang anda gunakan: {apps}, {fixed}.</string>
+  <string name="found_keep_paragraph_no_apps">Kami menyimpan semua yang anda gunakan: {fixed}.</string>
+  <string name="found_keep_fixed">TV langsung dan HDMI, alat kawalan jauh, papan kekunci, Chromecast, pembantu suara dan kemas kini perisian</string>
+  <string name="found_home_row">Skrin utama: {dock}</string>
+  <!-- The dock with rows under it: the dock's apps, then how many more sit in the rows -->
+  <string name="found_home_row_rows">Skrin utama: {dock}, serta {count, plural, one {# app} other {# app}} di bawah</string>
+  <string name="found_home_row_cd">Dok skrin utama: {dock}</string>
+  <string name="found_home_change">Tukar</string>
+  <!-- An empty dock: the row names the new home screen (UX 2 dock card title) instead of a blank list -->
+  <string name="found_home_row_empty">Skrin utama baharu anda</string>
+  <string name="found_safety">Titik pemulihan disimpan dahulu, jadi semuanya boleh disimpan semula.</string>
+  <string name="found_make_clean">Jadikan ia bersih</string>
+  <string name="found_customise">Sesuaikan</string>
+  <!-- D36 (RF-LAUNCHER-240 F1): the plan replaces a home screen app signed with another key -->
+  <string name="found_replaces_launcher">Menggantikan apl skrin utama yang sudah ada pada TV ini. Rupa, susunan apl, tetapan dan jawapan kadnya bermula baharu.</string>
+  <string name="found_tcl_remote_keys">Pada TCL Google TV, butang Tetapan (gear), Netflix dan YouTube alat kawalan jauh berhenti berfungsi dengan skrin utama baharu. Untuk mendapatkannya kembali, pilih Gunakan skrin utama TV sendiri dalam Urus.</string>
+  <string name="found_no_lock">Tiada kunci skrin pada telefon ini, jadi kami tidak boleh menyemak semula orang itu ialah anda.</string>
+  <!-- Unknown model (no profile) -->
+  <string name="found_unknown_title">{count, plural, =0 {Tiada item yang dapat dikenal pasti dengan yakin} one {Satu item dikenal pasti dengan yakin} other {# item dikenal pasti dengan yakin}}</string>
+  <string name="found_unknown_headline">{count, plural, =0 {Tiada item yang dapat dikenal pasti dengan yakin} one {item yang dikenal pasti dengan yakin} other {item yang dikenal pasti dengan yakin}}</string>
+  <string name="found_unknown_body">Kami tidak pernah menemui TV yang tepat ini sebelum ini, jadi kami berhati-hati. Lebih banyak lagi boleh dimatikan di bawah Sesuaikan setelah anda hidup dengannya.</string>
+  <string name="found_help_add_tv">Bantu tambahkan TV ini</string>
+  <!-- TV refuses other home screens (UX 4.6), shown in place of the home screen row -->
+  <string name="stop_tv_refuses_home_title">Skrin utama baharu tidak boleh dilakukan pada TV ini</string>
+  <string name="stop_tv_refuses_home_body">{brand} hanya membenarkannya sendiri. Kami akan mematikan iklan dan penjejakan, yang merupakan sebahagian besar daripada kemenangan.</string>
+  <string name="fire_tv_name" translatable="false">Fire TV</string>
+  <string name="found_home_old_android">Skrin utama baharu memerlukan Android 8 atau lebih baharu, jadi TV ini menyimpannya sendiri. Kami masih akan mematikan iklan dan penjejakan, yang merupakan sebahagian besar daripada kemenangan.</string>
+  <string name="found_home_changed">Skrin utama pada TV ini telah pun ditukar, oleh apl lain atau perubahan terdahulu, jadi kami biarkan ia seperti sedia ada. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <string name="found_home_unknown_stock">Kami tidak mengetahui skrin utama TV ini dengan cukup baik untuk menukarnya dengan selamat, jadi ia kekal. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <!-- RF-SAFETY-250: home screen switches skipped up front for safety, shown in place of the home screen row -->
+  <string name="found_home_wizard_wifi">Wi-Fi TV ini telah disimpan oleh wizard persediaannya. Skrin utama baharu memerlukan wizard dimatikan, yang akan melupakan Wi-Fi, dan dengan wizard yang ditinggalkan pada TV boleh ranap. Jadi ia menyimpan skrin utamanya sendiri. Kami masih akan mematikan iklan dan penjejakan. Untuk menukarnya kemudian, lupakan dan tambah semula rangkaian dalam Tetapan, atau gunakan kabel, kemudian jalankan Persediaan sekali lagi.</string>
+  <string name="found_home_wizard_wifi_unlisted">Wi-Fi TV ini telah disimpan oleh wizard persediaannya dan kami belum mengetahui TV ini dengan cukup baik untuk mematikan wizard dengan selamat. Dengan wizard dibiarkan dihidupkan, skrin utama baharu boleh ranapkan TV, jadi ia menyimpan skrin utamanya sendiri. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <string name="found_home_wizard_wifi_unknown">Kami tidak dapat menyemak siapa yang menyimpan Wi-Fi TV ini. Skrin utama baharu memerlukan wizard persediaan dimatikan, yang boleh melupakan Wi-Fi dan dengan wizard yang ditinggalkan pada TV boleh ranap. Jadi ia menyimpan skrin utamanya sendiri. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <string name="found_home_casting">Pada peranti Google ini, skrin utama baharu memerlukan wizard persediaan dimatikan dan tanpanya penghantaran dari telefon berhenti berfungsi selepas setiap permulaan semula. Jadi ia menyimpan skrin utamanya sendiri. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <string name="found_home_boot_loop">Pada keluarga TV ini, wizard persediaan datang semula pada setiap permulaan semula dan dengan skrin utama TV sendiri dimatikan yang boleh menghentikan TV dimulakan. Jadi ia menyimpan skrin utamanya sendiri. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <string name="found_home_remote_buttons">Pada TV ini, butang apl jauh (Netflix, YouTube, Prime Video dan YouTube Music) hanya berfungsi melalui skrin utamanya sendiri. Jadi ia menyimpan skrin utamanya sendiri. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <string name="found_home_wizard_stays_on">Kami tidak cukup mengenali TV ini untuk mematikan wizard persediaannya dan dengan wizard dibiarkan hidup dan skrin utama TV sendiri dimatikan, TV boleh ranap. Jadi ia menyimpan skrin utamanya sendiri. Kami masih akan mematikan iklan dan penjejakan.</string>
+  <!-- S3a Customise sheet -->
+  <string name="customise_title">Sesuaikan</string>
+  <string name="customise_live">{total, plural, other {{off} daripada # off}}</string>
+  <string name="customise_nothing_deleted">Tiada apa-apa yang dipadamkan; \"mati\" bermaksud tidur.</string>
+  <string name="customise_show_fewer">Tunjukkan lebih sedikit</string>
+  <string name="customise_group_voice">Pembantu suara</string>
+  <string name="customise_group_cast">Chromecast</string>
+  <string name="customise_group_updates">Kemas kini perisian</string>
+  <string name="customise_group_streaming">Menstrim apl yang anda tidak gunakan</string>
+  <string name="customise_group_brand_features">Ciri {brand}</string>
+  <string name="customise_updates_note">Dihidupkan supaya TV terus mendapat pembetulan keselamatan. Mematikan berhenti mengemas kini mengomel juga.</string>
+  <string name="customise_wizard_name">Wizard persediaan</string>
+  <string name="customise_wizard_line">Matikan wizard persediaan jalan pertama supaya skrin utama baharu boleh mengambil alih</string>
+  <string name="customise_wizard_note">Kami menghidupkannya semula jika anda pernah membuat asal atau menetapkan semula TV.</string>
+  <string name="customise_protected_title">Kami menyimpan ini</string>
+  <string name="customise_protected_pill">Dilindungi</string>
+  <string name="customise_protected_why_title">Mengapa kami menyimpan ini</string>
+  <string name="customise_group_home">Skrin utama</string>
+  <string name="customise_dock_row">Dok: {names}</string>
+  <string name="customise_dock_row_rows">Dock: {names}, serta {count, plural, one {# app} other {# app}} dalam {rows, plural, one {baris} other {baris}} di bawah</string>
+  <string name="customise_dock_row_empty">Dok</string>
+  <string name="customise_look_row">Lihat: {theme}</string>
+  <!-- 0.4.0: the look and its apps in a row, when that is not the look's own -->
+  <string name="customise_look_row_count">Gaya: {theme}, {count, plural, one {# app sebaris} other {# app sebaris}}</string>
+  <!-- look2: the photo crop in Setup's look step, under Use this crop (Setup has no Put it on the TV) -->
+  <string name="look_photo_after">Tiada apa-apa dihantar lagi. Ia pergi ke TV apabila anda mengetik Jadikan ia bersih.</string>
+  <!-- RFC-CURTAIN-1: Custom only; the TV shows the progress while the phone works -->
+  <string name="customise_group_tv">Pada TV</string>
+  <string name="customise_show_on_tv">Tunjukkan kemajuan pada TV</string>
+  <string name="customise_show_on_tv_note">TV menunjukkan setiap langkah, kemudian skrin utama baharu</string>
+  <string name="customise_group_afterwards">Selepas itu</string>
+  <string name="customise_keep_debugging">Teruskan nyahpepijat hidup</string>
+  <string name="customise_keep_debugging_warning">Orang lain pada Wi-Fi anda boleh meminta untuk menyambung</string>
+  <string name="customise_group_commands">Tunjukkan arahan</string>
+  <string name="customise_commands_intro">Setiap arahan yang akan kami jalankan, mengikut urutan.</string>
+  <string name="customise_copy_commands">Salin sebagai arahan</string>
+  <string name="customise_commands_copied">Disalin</string>
+  <string name="customise_snackbar_kept">{name} akan disimpan.</string>
+  <string name="customise_snackbar_off">{name} akan dimatikan.</string>
+  <!-- Themes (S3a theme picker) -->
+  <string name="theme_default">Lalai</string>
+  <string name="theme_aurora">Aurora</string>
+  <string name="theme_six_columns">Enam lajur</string>
+  <string name="theme_card_cd">{name}. {description}</string>
+  <string name="theme_card_selected_cd">{name}, dipilih. {description}</string>
+  <!-- S3b Your dock (sheet) -->
+  <string name="dock_title">Dok anda</string>
+  <string name="dock_body">Sehingga {count, spellout} di sepanjang bahagian bawah. Seret apl mengikut titiknya untuk menukar susunan.</string>
+  <!-- S4a Making it clean -->
+  <string name="working_title">Menjadikannya bersih</string>
+  <string name="working_step_restore_active">Menyimpan titik pemulihan...</string>
+  <string name="working_step_restore_done">Titik pemulihan disimpan</string>
+  <string name="working_group_ads">Iklan</string>
+  <string name="working_group_tracking">Penjejakan</string>
+  <string name="working_group_nobody">Apl yang tidak diminta oleh sesiapa</string>
+  <string name="working_group_brand">{brand} tambahan</string>
+  <string name="working_group_shop">Mod kedai dan demo</string>
+  <string name="working_step_group_active">{total, plural, other {{group}: {done} daripada #...}}</string>
+  <string name="working_step_group_done">{count, plural, other {{group} dimatikan (#)}}</string>
+  <string name="working_step_install_active">Memasang skrin utama baharu</string>
+  <string name="working_step_install_done">Skrin utama baharu dipasang</string>
+  <string name="working_step_replace_active">Menggantikan apl skrin utama</string>
+  <string name="working_step_replace_done">Apl skrin utama diganti</string>
+  <string name="working_step_home_active">Beralih ke Rumah</string>
+  <string name="working_step_home_done">Rumah ditukar</string>
+  <string name="working_step_done_cd">{step}, selesai</string>
+  <string name="working_thumbnail_caption">Langsung daripada TV</string>
+  <string name="working_thumbnail_cd">Langsung daripada TV</string>
+  <string name="working_keep_on">Pastikan TV dihidupkan. Anda boleh meletakkan telefon ke bawah; kami akan berdengung apabila tiba masanya untuk melihat TV.</string>
+  <string name="working_stop">Berhenti dan buat asal</string>
+  <string name="working_putting_back">Meletakkan semula skrin utama lama...</string>
+  <string name="working_stopping">Menghentikan dan membuat asal apa yang kami lakukan...</string>
+  <!-- S4b Can you see it? -->
+  <string name="check_overline">Tengok TV</string>
+  <string name="check_title">Bolehkah anda melihatnya?</string>
+  <string name="check_thumbnail_cd">{count, plural, =0 {TV memaparkan skrin utama baharu dengan dock kosong} one {TV memaparkan skrin utama baharu dengan satu app pada dock} other {TV memaparkan skrin utama baharu dengan # app pada dock}}</string>
+  <string name="check_dock_sentence">Skrin utama baharu, dengan {dock} di sepanjang bahagian bawah.</string>
+  <string name="check_dock_sentence_empty">Skrin utama baharu.</string>
+  <string name="check_press_home">Tekan hanya Laman Utama pada alat kawalan jauh, sekali. Jangan buka apa-apa lagi di TV.</string>
+  <string name="check_live_ok">Laman Utama membuka skrin baharu</string>
+  <string name="check_live_pending_cd">Belum disemak</string>
+  <string name="check_live_done_cd">Disemak</string>
+  <string name="check_countdown_text">Jika kami tidak mendapat sebarang maklum balas daripada anda, kami meletakkan semula skrin utama lama kami sendiri. Tiada apa yang perlu dirisaukan.</string>
+  <string name="check_thumbnail_note">Jika anda tidak dapat melihat TV, gambar di atas ialah yang dipaparkan sekarang.</string>
+  <string name="check_no_thumbnail_note">Kami tidak dapat mengambil gambar; sila tengok tv.</string>
+  <string name="check_yes">Ya, saya nampaknya</string>
+  <string name="check_no">Tidak, letakkan semula</string>
+  <!-- S4c Stopped: the old home screen is back (UX 4.7) -->
+  <string name="stop_show_details">Tunjukkan butiran</string>
+  <string name="stop_report">Laporkan masalah</string>
+  <string name="stop_home_wait_hint">Beri beberapa saat.</string>
+  <string name="stop_home_setupwraith_title">Skrin utama lama telah kembali</string>
+  <string name="stop_home_setupwraith_body">Wizard persediaan larian pertama TV ini berpegang pada butang Laman Utama. Pada model ini skrin utama baharu hanya berfungsi jika wizard juga dimatikan. Itu selamat untuk kegunaan harian; kami menghidupkannya semula jika anda membuat asal atau sebelum tetapan semula kilang.</string>
+  <string name="stop_home_setupwraith_primary">Cuba dengan wizard mati</string>
+  <string name="stop_home_setupwraith_secondary">Tinggalkan skrin utama lama</string>
+  <!-- D3: the wizard saved the TV's Wi-Fi (or the TV could not say), so it is never switched off. -->
+  <string name="stop_home_setupwraith_wifi_body">Wi-Fi TV anda telah disimpan oleh wizard persediaannya, jadi mematikan wizard akan melupakannya. Gunakan kabel, atau lupa dan tambahkan semula rangkaian dalam Tetapan, kemudian cuba lagi.</string>
+  <string name="stop_home_setupwraith_wifi_primary">Cuba lagi</string>
+  <!-- RF-LAUNCHER-240 F6: the TV could not say who saved its Wi-Fi, so the wizard stayed on. -->
+  <string name="stop_home_setupwraith_wifi_unknown_body">Kami tidak dapat menyemak siapa yang menyimpan Wi-Fi TV ini, jadi kami membiarkan wizard persediaannya untuk memastikan Wi-Fi selamat.</string>
+  <string name="stop_home_other_launcher_title">Skrin utama lama telah kembali</string>
+  <string name="stop_home_other_launcher_body">Satu lagi aplikasi skrin utama, {launcher}, bertanggungjawab ke atas Laman Utama. Kami tidak mematikan apl yang kami tidak tahu. Pilih mana satu yang anda mahu.</string>
+  <string name="stop_home_other_launcher_primary">Gunakan skrin utama baharu</string>
+  <string name="stop_home_other_launcher_secondary">Simpan {launcher}</string>
+  <!-- Issue #629: the check rolled back because a Settings page was open on the TV. -->
+  <string name="stop_home_settings_open_body">Halaman Tetapan dibuka pada TV semasa pemeriksaan, jadi kami meletakkan semula skrin utama lama supaya selamat. Tiada yang salah dengan TV anda. Cuba lagi, dan kali ini tekan hanya Laman Utama pada alat kawalan jauh.</string>
+  <string name="stop_home_unknown_title">Skrin utama lama telah kembali</string>
+  <string name="stop_home_unknown_body">Kami tidak dapat menjadikan skrin utama baharu mengambil alih pada TV ini, jadi kami meletakkan semula perkara itu. Semua perkara lain yang kami lakukan disimpan. Anda boleh mencuba lagi daripada Urus, atau hantarkan laporan kepada kami supaya kami boleh melihat model ini.</string>
+  <string name="stop_home_unknown_primary">Laporkan masalah</string>
+  <string name="stop_home_unknown_secondary">OK</string>
+  <string name="stop_home_user_said_no_title">Skrin utama lama telah kembali</string>
+  <string name="stop_home_user_said_no_body">Letakkan semula. Adakah sesuatu yang salah, atau adakah anda hanya mahu melihat dahulu?</string>
+  <string name="stop_home_user_said_no_primary">Cuba lagi</string>
+  <string name="stop_home_user_said_no_secondary">Sesuatu kelihatan tidak kena</string>
+  <string name="stop_home_timed_out_title">Skrin utama lama telah kembali</string>
+  <string name="stop_home_timed_out_body">Meletakkan semula skrin utama lama... Selesai. TV anda seperti sedia ada. Anda boleh mencuba lagi daripada Urus.</string>
+  <string name="stop_home_timed_out_body_off">{count, plural, one {Memundurkan skrin utama lama... Selesai. Perkara # masih dimatikan, dan skrin utama adalah seperti sedia ada. Anda boleh mencuba lagi dari Manage.} other {Meletakkan semula skrin utama lama... Selesai. Perkara # masih dimatikan, dan skrin utama adalah seperti sedia ada. Anda boleh mencuba lagi dari Manage.}}</string>
+  <string name="stop_home_timed_out_primary">OK</string>
+  <string name="stop_home_timed_out_secondary">Cuba lagi</string>
+  <!-- Stop: undone -->
+  <string name="stop_step_failed_title">Kami berhenti</string>
+  <string name="stop_step_failed_body">{total, plural, other {Satu langkah tidak berjaya, jadi kami berhenti selepas mematikan {done} daripada #. Tiada apa-apa lagi yang diubah.}}</string>
+  <string name="stop_undone_title">Kami membatalkan apa yang kami lakukan</string>
+  <string name="stop_undone_body">TV anda adalah seperti dahulu. Anda boleh mencuba lagi daripada Urus.</string>
+  <string name="stop_undone_primary">OK</string>
+  <string name="stop_undone_secondary">Tunjukkan butiran</string>
+  <!-- S4d Stopped: connection lost mid-plan (UX 4.14) -->
+  <string name="stop_connection_lost_title">TV berhenti menjawab</string>
+  <string name="stop_connection_lost_body">{total, plural, one {TV berhenti menjawab selepas kami mematikan {done} perkara #. Biasanya ia kembali dalam beberapa saat.} other {TV berhenti menjawab selepas kami mematikan {done} daripada perkara #. Biasanya ia kembali dalam beberapa saat.}}</string>
+  <string name="stop_connection_lost_reconnecting">Menyambung semula...</string>
+  <string name="stop_connection_lost_back">Belakang. teruskan?</string>
+  <string name="stop_connection_lost_primary">Teruskan dengan yang lain</string>
+  <string name="stop_connection_lost_secondary">Berhenti di sini</string>
+  <string name="stop_connection_lost_tertiary">Buat asal apa yang kami lakukan</string>
+  <string name="stop_connection_lost_suspect">Kami telah menghidupkan semula \"{name}\", nampaknya membawa Wi-Fi pada TV ini. Teruskan tanpanya.</string>
+  <string name="stop_connection_lost_gone_body">TV masih tidak menjawab. Semak sama ada ia dihidupkan dan pada Wi-Fi yang sama dengan telefon ini.</string>
+  <string name="stop_connection_lost_keep_trying">Teruskan mencuba</string>
+  <!-- S4e Resume after process death (UX 4.9, 4.14) -->
+  <string name="stop_resume_title">Kami sedang menyiapkan {tv}</string>
+  <string name="stop_resume_body">{total, plural, one {{done} daripada # perkara dimatikan; skrin utama belum ditukar lagi. Teruskan?} other {{done} daripada # perkara dimatikan; skrin utama belum ditukar lagi. Teruskan?}}</string>
+  <string name="stop_resume_primary">Teruskan</string>
+  <string name="stop_resume_secondary">Buat asal apa yang kami lakukan</string>
+  <string name="stop_resume_tertiary">Biarkan ia seperti sedia ada</string>
+  <string name="stop_resume_home_title">Kami meletakkan semula skrin utama lama</string>
+  <string name="stop_resume_home_body">Kami telah meletakkan semula skrin utama lama agar selamat. Cuba suis lagi?</string>
+  <string name="stop_resume_home_primary">Cuba suis sekali lagi</string>
+  <string name="stop_resume_home_secondary">Biarkan ia seperti sedia ada</string>
+  <string name="stop_resume_change_title">Kami berada di tengah-tengah perubahan pada {tv}</string>
+  <string name="stop_resume_change_body">Ia berhenti sebelum ia selesai. Teruskan dengan yang lain, atau buat asal apa yang kami lakukan?</string>
+  <string name="stop_reconnect_home_body">Sambung semula ke TV untuk meletakkan semula skrin utama lama. Kami akan melakukannya sebaik sahaja {tv} menjawab.</string>
+  <!-- Stop: install failure (UX 4.14) -->
+  <string name="stop_install_failed_title">Skrin utama baharu tidak dapat dipasang</string>
+  <string name="stop_install_failed_body">Ruang TV tidak mencukupi: {free, plural, other {# MB}} kosong, {needed, plural, other {# MB}} diperlukan. Cache telah dikosongkan dan pemasangan dicuba semula tetapi masih gagal. Pembersihan selesai. Kosongkan ruang melalui Tetapan &gt; Storan, kemudian cuba skrin utama dari Urus TV.</string>
+  <string name="stop_install_failed_generic_body">TV tidak akan menerima skrin utama baharu. Pembersihan dilakukan; anda boleh mencuba skrin utama sekali lagi kemudian daripada Urus.</string>
+  <string name="stop_install_failed_primary">OK</string>
+  <string name="stop_install_failed_secondary">Tunjukkan butiran</string>
+  <!-- Stop: the TV has not come back (UX 4.8) -->
+  <string name="stop_not_back_title">TV tidak kembali</string>
+  <string name="stop_not_back_body">Jika TV tersekat pada logonya: tahan butang kuasa pada TV itu sendiri (bukan alat kawalan jauh) selama 10 saat, kemudian hidupkannya semula. Jika skrin menunjukkan \"Tidak boleh memuatkan sistem Android\", pilih Cuba lagi. Jangan pilih tetapan semula kilang; ia tidak diperlukan.</string>
+  <string name="stop_not_back_auto">Sebaik sahaja TV dihidupkan semula pada Wi-Fi, kami akan menyambung semula dan meletakkan semula skrin utama lama secara automatik, supaya anda boleh memutuskan perkara yang perlu dilakukan dengan tenang.</string>
+  <string name="stop_not_back_primary">Ia dihidupkan semula</string>
+  <string name="stop_not_back_secondary">Bantu saya</string>
+  <!-- S5 Done -->
+  <string name="done_title">TV anda sudah sedia</string>
+  <string name="done_title_nothing">Tiada apa-apa yang diubah</string>
+  <string name="done_body_nothing">Tiada apa-apa lagi untuk dimatikan, jadi TV anda adalah seperti sedia ada.</string>
+  <string name="done_body_nothing_kept">Semua yang kami cuba matikan kekal dihidupkan, jadi TV anda adalah seperti sedia ada.</string>
+  <string name="done_body_nothing_stopped">Persediaan dihentikan sebelum apa-apa diubah, jadi TV anda adalah seperti sedia ada.</string>
+  <string name="done_body_nothing_unknown">Kami tidak pasti tentang apa-apa pada TV ini, jadi ia adalah seperti yang berlaku. Bantu tambahkan TV ini daripada Urus dan versi yang lebih baru boleh melakukan lebih banyak lagi.</string>
+  <string name="done_hero_cd">Skrin utama yang bersih dengan tanda semak kaca</string>
+  <string name="done_body">{count, plural, =0 {Skrin utama baharu dihidupkan. Semuanya boleh diletakkan semula.} one {# perkara dimatikan. Skrin utama baharu dihidupkan. Semuanya boleh diletakkan semula.} other {# perkara dimatikan. Skrin utama baharu dihidupkan. Semuanya boleh diletakkan semula.}}</string>
+  <string name="done_body_no_home">Perkara {count, plural, one {# dimatikan. Semuanya boleh diletakkan semula.} other {# perkara dimatikan. Semuanya boleh diletakkan semula.}}</string>
+  <string name="done_body_partial">{total, plural, other {{done} daripada # dimatikan; skrin utama tidak berubah. Semuanya boleh diletakkan semula.}}</string>
+  <string name="done_body_partial_home_on">{total, plural, other {{done} daripada # dimatikan. Skrin utama baharu dihidupkan. Semuanya boleh diletakkan semula.}}</string>
+  <string name="done_home_kept_timed_out">Skrin utama tidak berubah: pemeriksaan pada TV kehabisan masa, jadi skrin utama lama kembali. Anda boleh mencuba lagi daripada Urus.</string>
+  <string name="done_home_kept_said_no">Skrin utama tidak berubah: anda berkata yang baharu tidak kelihatan betul, jadi skrin utama lama kembali.</string>
+  <string name="done_home_kept">Skrin utama tidak berubah: skrin baharu tidak mengambil alih, jadi skrin utama lama kembali.</string>
+  <string name="done_restore_saved">Titik pemulihan yang disimpan pada telefon ini ({date})</string>
+  <string name="done_debug_note">Penyahpepijatan pada TV dimatikan apabila anda mengetik Selesai</string>
+  <string name="done_debug_kept">Penyahpepijatan pada TV kekal dihidupkan, seperti yang anda pilih</string>
+  <string name="done_skipped">{name} tidak akan dimatikan; ia tidak berbahaya.</string>
+  <!-- RF-LAUNCHER-250 F1 (owner copy): a switch-off the TV refused because the app runs the TV's inputs, on Done and in Manage -->
+  <string name="kept_tv_input">{name}. Disimpan: ia menjalankan input HDMI dan penala TV.</string>
+  <string name="done_skipped_many">Perkara {count, plural, one {# tidak akan dimatikan; ia tidak berbahaya.} other {# perkara tidak akan dimatikan; mereka tidak berbahaya.}}</string>
+  <string name="done_mibox_usb">Port USB anda dikuasakan semula.</string>
+  <string name="done_add_card_title">Tambahkan kad pada skrin utama</string>
+  <!-- Optional, never a step of Setup: the new home screen starts with module cards off (RFC-CARDS-1) -->
+  <string name="done_add_card_body">Pilihan. Anda boleh menambah kad kemudian dalam Urus.</string>
+  <string name="done_note_title">Simpan nota pemulihan untuk keluarga</string>
+  <string name="done_finish">Selesai</string>
+  <string name="done_finishing">Mematikan penyahpepijatan...</string>
+  <string name="done_finished">Mematikan penyahpepijatan... selesai.</string>
+  <!-- S5 restart card and flow (D24, UX 4.8) -->
+  <string name="restart_card_title">Mulakan semula TV untuk memeriksa semuanya melekat</string>
+  <string name="restart_card_recommended">2 minit, disyorkan</string>
+  <string name="restart_card_optional">Pilihan</string>
+  <string name="restart_button">Mulakan semula</string>
+  <string name="restart_getting_ready">{seconds, plural, other {Bersedia... # s}}</string>
+  <string name="restart_intro">Memulakan semula TV. Ia biasanya mengambil masa kira-kira satu minit. Kami sedang memerhatikannya.</string>
+  <string name="restart_progress_off">TV dimatikan...</string>
+  <string name="restart_progress_starting">Memulakan...</string>
+  <string name="restart_progress_found">Menemuinya pada {time}...</string>
+  <string name="restart_progress_home">Skrin utama ialah skrin baharu.</string>
+  <string name="restart_progress_good">Semuanya bagus.</string>
+  <string name="restart_came_back">Perkara {count, plural, one {# dihidupkan semula selepas dimulakan semula; dimatikan semula.} other {# perkara dihidupkan semula selepas dimulakan semula; dimatikan semula.}}</string>
+  <string name="restart_slow">Mengambil masa lebih lama daripada biasa. Sesetengah TV lambat untuk menyertai semula Wi-Fi. Jika TV menunjukkan logonya dan tiada yang lain, tunggu dua minit lagi.</string>
+  <string name="restart_back_safe">TV telah kembali. Kami telah memulihkan skrin utama lama agar selamat. Ingin mencuba yang baharu sekali lagi dengan wizard persediaan dimatikan?</string>
+  <string name="restart_back_try">Cuba dengan wizard mati</string>
+  <string name="restart_back_leave">Biarkan ia seperti sedia ada</string>
+  <!-- Stop and undo ask first (Confirmations): a question, one calm sentence, the verb and a way back -->
+  <string name="confirm_stop_title">Berhenti sekarang?</string>
+  <string name="confirm_stop_body">Kami berhenti di sini dan meletakkan kembali apa yang kami ubah setakat ini. TV anda kekal selamat.</string>
+  <string name="confirm_stop_button">Berhenti dan buat asal</string>
+  <string name="confirm_keep_going">Teruskan</string>
+  <string name="confirm_stop_here_title">Berhenti di sini?</string>
+  <string name="confirm_stop_here_body">Kami mengekalkan apa yang telah dilakukan dan tidak mengubah apa-apa lagi. TV anda kekal selamat.</string>
+  <string name="confirm_stop_here_button">Berhenti di sini</string>
+  <string name="confirm_undo_title">Buat asal perubahan pada TV?</string>
+  <string name="confirm_undo_body">Kami meletakkan kembali semua perubahan ini, jadi TV adalah seperti sebelum ini. Tiada apa-apa yang dipadamkan.</string>
+  <string name="confirm_undo_button">Buat asal perubahan</string>
+  <!-- Test build: the card before the plan when this TV's list is a candidate (made from reports, not tested yet). -->
+  <string name="candidate_overline">Binaan ujian</string>
+  <string name="candidate_title">Senarai TV ini baharu</string>
+  <string name="candidate_body">Kami membuat senarai untuk TV ini daripada laporan model yang sama, tetapi tiada siapa yang telah mengujinya lagi. Perkara yang dimatikan disenaraikan dalam pelan seperti biasa dan anda boleh meletakkan semula semuanya daripada titik Pemulihan.</string>
+  <string name="candidate_ask_issue">Jika anda mencubanya, sila beritahu kami dalam isu {issue} bagaimana ia berlaku selepas beberapa hari:</string>
+  <string name="candidate_ask">Jika anda mencubanya, sila beritahu kami dalam isu anda bagaimana ia berlaku selepas beberapa hari:</string>
+  <string name="candidate_check_wifi">Wi-Fi selepas dimulakan semula</string>
+  <string name="candidate_check_remote">Setiap butang pada alat kawalan jauh, Input dan suara juga</string>
+  <string name="candidate_check_hdmi">Setiap input HDMI</string>
+  <string name="candidate_check_live_tv">TV Langsung</string>
+  <string name="candidate_check_casting">Menghantar daripada telefon</string>
+  <string name="candidate_try">Cuba senarai ujian</string>
+  <string name="candidate_careful">Kekal berhati-hati, seperti dalam 0.3.4</string>
+  <string name="candidate_careful_note">Berhati-hati hanya bermaksud perkara yang kami pasti untuk TV jenama ini, sama seperti versi 0.3.4.</string>
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Clean Your TV, :feature:launcher. English source strings.
+  Every string that takes an argument is ICU MessageFormat with NAMED arguments in braces,
+  formatted by the app's message helper (android.icu.text.MessageFormat). No printf placeholders,
+  no Android plurals elements. Counts go through the plural selector.
+  Screens: M2 Home screen, the theme picker, the dock sheet (S3b, own copy in this module).
+-->
+<resources>
+  <!-- Shared button words -->
+  <string name="action_back">Kembali</string>
+  <string name="action_cancel">Batal</string>
+  <string name="action_done">Selesai</string>
+  <string name="action_undo">Pulihkan</string>
+  <!-- Credential prompt (D17), raised by "Send mine again" and "Use the TV's own home screen" -->
+  <string name="gate_title">Sahkan itu anda</string>
+  <string name="gate_subtitle">Sebelum kita menukar apa-apa pada {tv}</string>
+  <string name="gate_negative">Batal</string>
+  <string name="gate_failed">Kami tidak dapat mengesahkan ini adalah anda, jadi tiada apa-apa yang diubah.</string>
+  <!-- M2 Home screen -->
+  <string name="home_title">Skrin utama</string>
+  <string name="home_row_dock">Dok</string>
+  <!-- The Dock row's subtitle when rows sit under the dock: the dock's apps, then how many more -->
+  <string name="home_row_dock_rows">{names}, serta {count, plural, one {# app} other {# app}} di bawah</string>
+  <string name="home_row_look">Tengok</string>
+  <string name="home_tcl_remote_keys">Pada TCL Google TV, butang Tetapan (gear) alat jauh, Netflix dan YouTube tidak berfungsi dengan skrin utama baharu. Untuk mendapatkannya kembali, pilih Gunakan skrin utama TV sendiri.</string>
+  <string name="home_row_stock">Gunakan skrin utama TV sendiri</string>
+  <string name="home_row_stock_note">Mengembalikan skrin utama TV sendiri. Kami kekal dipasang, jadi anda boleh bertukar semula.</string>
+  <string name="home_drift_banner">Tetapan skrin utama pada TV berubah sejak anda menetapkannya.</string>
+  <string name="home_drift_restore">Hantar lombong sekali lagi</string>
+  <string name="home_applying">Mengemas kini skrin utama pada TV...</string>
+  <string name="home_snackbar_done">Selesai.</string>
+  <!-- 0.3.3 D2 (issue #3): the new home screen isn't on this TV, so there is no dock or look to change.
+         The lead, then why (the reason Setup recorded), then what can change it, when something can. -->
+  <string name="home_not_on_tv_lead">{tv} menyimpan skrin utamanya sendiri. Dok dan rupa milik skrin utama baharu dan ia tiada pada TV ini.</string>
+  <string name="home_not_on_tv_refuses">{brand} hanya membenarkan skrin utamanya sendiri, jadi Persediaan tidak menambahkan skrin kami. Pembersihan berfungsi tanpanya.</string>
+  <string name="home_not_on_tv_old_android">Skrin utama baharu memerlukan Android 8 atau lebih baharu, jadi Persediaan tidak menambahkannya. Pembersihan berfungsi tanpanya.</string>
+  <string name="home_not_on_tv_unknown_home">Kami tidak mengetahui skrin utama TV ini dengan cukup baik untuk menukarnya dengan selamat, jadi Persediaan membiarkannya sahaja.</string>
+  <string name="home_not_on_tv_wizard_wifi">Wi-Fi TV ini telah disimpan oleh wizard persediaannya. Skrin utama baharu memerlukan wizard dimatikan, yang akan melupakan Wi-Fi, dan dengan wizard yang ditinggalkan pada TV boleh ranap. Jadi Persediaan meninggalkan skrin utama sahaja.</string>
+  <string name="home_not_on_tv_wizard_wifi_unlisted">Wi-Fi TV ini telah disimpan oleh wizard persediaannya dan kami belum mengetahui TV ini dengan cukup baik untuk mematikan wizard dengan selamat. Dengan wizard dibiarkan hidup, skrin utama baharu boleh ranapkan TV, jadi Persediaan membiarkannya sahaja.</string>
+  <string name="home_not_on_tv_wizard_wifi_unknown">Kami tidak dapat menyemak siapa yang menyimpan Wi-Fi TV ini. Skrin utama baharu memerlukan wizard persediaan dimatikan, yang boleh melupakan Wi-Fi, jadi Persediaan meninggalkan skrin utama sahaja.</string>
+  <string name="home_not_on_tv_casting">Pada peranti Google ini, skrin utama baharu memerlukan wizard persediaan dimatikan, dan kemudian penghantaran dari telefon berhenti berfungsi selepas setiap permulaan semula. Jadi Persediaan meninggalkan skrin utama sahaja.</string>
+  <string name="home_not_on_tv_boot_loop">Pada keluarga TV ini, wizard persediaan datang semula pada setiap permulaan semula dan apabila skrin utama TV dimatikan, TV boleh gagal dimulakan. Jadi Persediaan meninggalkan skrin utama sahaja.</string>
+  <string name="home_not_on_tv_remote_buttons">Pada TV ini butang apl alat kawalan jauh hanya berfungsi melalui skrin utamanya sendiri, jadi Persediaan meninggalkan skrin utama sahaja.</string>
+  <string name="home_not_on_tv_wizard_stays_on">Kami tidak cukup mengenali TV ini untuk mematikan wizard persediaannya dan dengan wizard dibiarkan hidup dan skrin utama TV sendiri dimatikan, TV boleh ranap. Jadi Persediaan meninggalkan skrin utama sahaja.</string>
+  <string name="home_not_on_tv_home_changed">Skrin utama TV ini telah pun ditukar, oleh apl lain atau perubahan terdahulu, jadi Persediaan membiarkannya seperti sedia ada dan tidak menambahkan skrin kami. Pembersihan berfungsi tanpanya.</string>
+  <string name="home_not_on_tv_none">Skrin utama baharu tidak dipasang pada TV ini sekarang.</string>
+  <string name="home_not_on_tv_next_wifi">Untuk menukar ini, lupakan rangkaian Wi-Fi dalam Tetapan TV dan tambahkannya semula atau gunakan kabel rangkaian. Kemudian jalankan Persediaan sekali lagi.</string>
+  <string name="home_not_on_tv_next_check">Menjalankan Persediaan menyemak sekali lagi.</string>
+  <string name="home_not_on_tv_next_home_changed">Jika anda mahukan skrin utama baharu, tetapkan skrin utama TV sendiri kembali sebagai Laman Utama dalam tetapan TV, kemudian jalankan Persediaan sekali lagi.</string>
+  <string name="home_not_on_tv_next_setup">Jalankan Persediaan sekali lagi untuk menambahkannya.</string>
+  <string name="home_not_on_tv_next_list">Apa yang akan mengubah ini ialah senarai yang dibuat untuk TV ini. Hantarkan laporannya kepada kami dan kami akan membuatnya; versi kemudian mungkin menawarkan skrin utama baharu.</string>
+  <string name="home_run_setup_again">Jalankan Persediaan sekali lagi</string>
+  <string name="home_help_add_tv">Bantu tambahkan TV ini</string>
+  <!-- 0.4.6: opens the GitHub form with why the new home screen isn't on this TV filled in -->
+  <string name="home_report">Laporkan masalah</string>
+  <string name="home_fire_tv_name" translatable="false">Fire TV</string>
+  <!-- Under the Dock and Look rows (look2, spec 11.1): a send from the phone replaces what was
+         changed with the TV's own Launcher settings (launcher 2.4 and later). -->
+  <string name="home_tv_changes_note">Tetapan yang ditukar pada TV itu sendiri diganti apabila anda menghantar dari sini.</string>
+  <!-- look2 Look row: what was last sent, then how many apps in a row -->
+  <string name="home_row_look_summary_picture">{style} dengan {picture}</string>
+  <string name="home_row_look_summary_photo">{style} dengan foto anda</string>
+  <string name="home_row_look_summary_none">{style}, tiada gambar</string>
+  <string name="home_row_look_columns">Apl {count, plural, one {# berturut-turut} other {# apl berturut-turut}}</string>
+  <string name="home_row_look_sending">Menghantar...</string>
+  <!-- look2: a failed look send keeps the draft; Open Look reopens it -->
+  <string name="home_look_failed">Pandangan tidak sampai ke TV.</string>
+  <string name="home_look_failed_open">Pandangan Terbuka</string>
+  <!-- M2 Update the home screen (D4): a newer build of our home screen, installed over the old one -->
+  <string name="home_row_update">Kemas kini skrin utama</string>
+  <string name="home_row_update_note">Versi {version} sudah sedia. Dok dan penampilan anda kekal seperti sedia ada.</string>
+  <string name="home_update_preview_title">Kemas kini skrin utama?</string>
+  <string name="home_update_preview_body">Kami akan memasang versi {version} berbanding versi pada TV. Dok, rupa dan jawapan kad kekal. Jika ia adalah skrin utama TV sekarang, ia dimulakan semula sekali.</string>
+  <string name="home_update_confirm">Kemas kini</string>
+  <string name="home_update_done">Skrin utama adalah terkini: versi {version}.</string>
+  <!-- M2 Use the TV's own home screen: preview, then narration -->
+  <string name="home_stock_preview_title">Gunakan skrin utama TV sendiri?</string>
+  <string name="home_stock_preview_body">Kami akan menghidupkan semula skrin utama TV sendiri dan menetapkannya sebagai skrin utama. Skrin utama baharu kekal dipasang.</string>
+  <string name="home_stock_confirm">Gunakan TV sendiri</string>
+  <string name="home_stock_working">Meletakkan semula skrin utama TV sendiri...</string>
+  <string name="home_stock_done">Skrin utama TV sendiri telah kembali. Kami masih dipasang.</string>
+  <!-- M2 Look (theme picker) -->
+  <string name="theme_default">Lalai</string>
+  <string name="home_look_ended_banner">{picture} telah tamat. Letakkan semula gambar anda sebelum ini di TV?</string>
+  <string name="home_look_ended_restore">Letakkan semula</string>
+  <!-- S3b Your dock (sheet) -->
+  <string name="dock_title">Dok anda</string>
+  <string name="dock_body">Sehingga {count, spellout} di sepanjang bahagian bawah. Seret apl mengikut titiknya untuk menukar susunan.</string>
+  <string name="dock_waiting">Apl {count, plural, one {# menunggu} other {# apl tunggu}} dalam grid sehingga anda memilih lebih banyak apl dalam satu baris.</string>
+</resources>
