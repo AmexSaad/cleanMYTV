@@ -44,6 +44,8 @@ class FullStoreTest {
         }
     }
 
+    private fun release(tag: String): String = """[{"tag_name":"v$tag","draft":false,"prerelease":${'-' in tag},"assets":[{"name":"cleanMYTV.apk","state":"uploaded","size":100,"browser_download_url":"https://github.com/AmexSaad/cleanMYTV/releases/download/v$tag/cleanMYTV.apk"}]}]"""
+
     @Test fun thisIsTheFullBuild() {
         assertEquals("full", Store.flavour)
         assertEquals(StoreRules.FULL, Store.rules)
@@ -58,17 +60,17 @@ class FullStoreTest {
     }
 
     @Test fun theUpdateCheckAsksGithubForTheLatestRelease() = runBlocking {
-        val newer = OneAnswer(200, """{"tag_name": "v0.4.0", "name": "x"}""")
+        val newer = OneAnswer(200, release("0.4.0"))
         assertEquals("0.4.0", Store.updateChecker(newer).latestNewerThan("0.3.0"))
         assertEquals(listOf(Store.RELEASES_URL), newer.urls)
-        assertEquals("", Store.updateChecker(OneAnswer(200, """{"tag_name":"v0.3.0"}""")).latestNewerThan("0.3.0"))
+        assertEquals("", Store.updateChecker(OneAnswer(200, release("0.3.0"))).latestNewerThan("0.3.0"))
         assertEquals(null, Store.updateChecker(OneAnswer(404, "")).latestNewerThan("0.3.0"))
         assertEquals("https://github.com/AmexSaad/cleanMYTV/releases", Store.releasePage)
     }
 
     // Test build: 0.3.5-test1 is offered 0.3.5 and later, never the 0.3.4 it installs over.
     @Test fun aTestBuildIsOfferedOnlyANewerRelease() = runBlocking {
-        fun latest(tag: String, current: String) = runBlocking { Store.updateChecker(OneAnswer(200, "{\"tag_name\":\"v$tag\"}")).latestNewerThan(current) }
+        fun latest(tag: String, current: String) = runBlocking { Store.updateChecker(OneAnswer(200, release(tag))).latestNewerThan(current) }
         assertEquals("", latest("0.3.4", "0.3.5-test1"))
         assertEquals("0.3.5", latest("0.3.5", "0.3.5-test1"))
         assertEquals("0.4.0", latest("0.4.0", "0.3.5-test1"))

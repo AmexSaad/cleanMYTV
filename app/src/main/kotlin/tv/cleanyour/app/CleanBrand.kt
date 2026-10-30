@@ -42,7 +42,7 @@ internal object CleanLocale {
 }
 
 @Composable
-internal fun CleanBrandFrame(content: @Composable () -> Unit) {
+internal fun CleanBrandFrame(graph: AppGraph, content: @Composable () -> Unit) {
     val context = LocalContext.current
     var menu by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxSize().background(CytTheme.colors.bg)) {
@@ -81,6 +81,7 @@ internal fun CleanBrandFrame(content: @Composable () -> Unit) {
                 )
             }
         }
+        AppUpdateEntry(graph)
         Box(Modifier.weight(1f).fillMaxWidth().consumeWindowInsets(WindowInsets.statusBars)) { content() }
     }
 }

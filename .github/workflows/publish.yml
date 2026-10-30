@@ -30,7 +30,7 @@ jobs:
           assert run['conclusion']=='success' and run['status']=='completed'
           assert run['name']=='Build cleanMYTV'
           assert run['head_repository']['full_name']==os.environ['GITHUB_REPOSITORY']
-          assert run['head_branch'] in ('main','feature/reference-parity','feature/lime-ui')
+          assert run['head_branch'] in ('main','feature/reference-parity','feature/lime-ui','feature/app-updates')
           subprocess.run(['git','merge-base','--is-ancestor',run['head_sha'],'HEAD'],check=True)
           subprocess.run(['git','diff','--exit-code',run['head_sha'],'HEAD','--','.',':!.github',':!README.md',':!previews',':(exclude,glob)**/src/test/screenshots/*.png'],check=True)
           open('/tmp/validated-sha','w').write(run['head_sha'])
@@ -38,15 +38,22 @@ jobs:
           gh run download "$REVIEWED_RUN" --repo "$GITHUB_REPOSITORY" --name cleanMYTV-apk --dir dist
           test -s dist/cleanMYTV.apk
           sha256sum --check dist/SHA256SUMS.txt
+          python3 scripts/verify-app-package.py dist/cleanMYTV.apk release
+          python3 - <<'PY'
+          import json
+          info=json.load(open('dist/release-info.json'))
+          assert info['signing']=='release'
+          assert info['versionName']=='1.3.0-beta1' and info['versionCode']>=6
+          PY
           cat > /tmp/release-notes.md <<'NOTES'
-          cleanMYTV 1.2.2 beta1 — fungsi asas Clean Your TV v0.4.6-beta2, dengan reka bentuk Hitam + Limau, logo 03 Monogram pada ikon aplikasi dan dalam app, serta Bahasa Melayu / English.
+          cleanMYTV 1.3.0 beta1 — butang Kemas kini / Update dalam BM dan English, logo 03 Monogram dan tema Hitam + Limau.
 
-          Muat turun cleanMYTV.apk dan pasang pada telefon Android 9+. Telefon dan TV mesti menggunakan rangkaian yang sama. Panduan sambungan disediakan dalam app. Binaan ini ialah beta debug; keserasian TV fizikal masih perlu disahkan. Rekod versi lama kekal tetapi tidak diimport ke jurnal baharu. Pulihkan perubahan yang diperlukan menggunakan versi lama sebelum menggantikan app.
+          Semak versi GitHub termasuk beta, lihat nota perubahan dan muat turun APK daripada repo rasmi cleanMYTV. Buka fail yang dimuat turun dan sahkan pemasangan Android. Semakan tidak berjalan secara automatik ketika app dibuka. Muat turun dihalang apabila operasi TV belum selesai.
 
-          Download cleanMYTV.apk for an Android 9+ phone. This beta uses the reference connection, analysis, cleaning, home-screen and recovery flows with a graphite and lime BM/EN interface and the selected Monogram 03 logo on the launcher icon and in the app. Physical TV compatibility is not yet verified. Legacy records are retained but not imported into the new journal.
+          Keluaran ini menggunakan kunci tandatangan release tetap. Kemas kini seterusnya yang menggunakan kunci ini boleh dipasang tanpa menyahpasang app. Beta debug 1.2.x terdahulu mempunyai tandatangan berbeza: selesaikan pemulihan TV yang diperlukan dengan app lama sebelum menyahpasangnya untuk pemasangan pertama keluaran ini.
 
-          Tandatangan debug beta ini berbeza daripada beta terdahulu. Android menolak kemas kini terus jika tandatangan berbeza. Selesaikan pemulihan TV yang diperlukan menggunakan app lama sebelum menyahpasangnya. / This debug beta has a different signing certificate from earlier betas. Finish any needed TV restoration with the old app before uninstalling it.
+          This release adds an Update button, correct stable/beta version checks, release notes and direct APK download from the cleanMYTV repository. Android still asks the user to confirm installation. Downloads are blocked while a TV operation is unfinished. A permanent release signing identity replaces the earlier temporary debug certificates; future releases using this identity support in-place upgrades. Earlier 1.2.x debug betas require a one-time reinstall after completing any needed TV recovery with the old app.
 
-          Upstream MIT copyright and third-party notices are retained. See the README for source credits and upgrade information.
+          Android 9+ phone required. Core connection, analysis, cleaning and recovery functions remain in place. Physical TV compatibility still needs device testing. Upstream MIT copyright and third-party notices are retained.
           NOTES
-          gh release create v1.2.2-beta1 dist/cleanMYTV.apk dist/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.2.2 beta1' --notes-file /tmp/release-notes.md
+          gh release create v1.3.0-beta1 dist/cleanMYTV.apk dist/SHA256SUMS.txt dist/SIGNING_CERTIFICATE.txt dist/release-info.json --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.3.0 beta1' --notes-file /tmp/release-notes.md

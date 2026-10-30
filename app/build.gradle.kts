@@ -8,8 +8,10 @@ android {
     // (STORES-PLAN 0 and 3): GitHub, F-Droid and Google Play ship the same versionCode and versionName.
     defaultConfig {
         // cleanMYTV derivative of upstream v0.4.6-beta2; follows cleanMYTV 1.1.0 (code 2).
-        versionCode = 5
-        versionName = "1.2.2-beta1"
+        // CI installs this test-only predecessor, then upgrades to the normal signed APK.
+        val upgradeBase = providers.gradleProperty("cleanmytvUpgradeBase").orNull == "true"
+        versionCode = if (upgradeBase) 5 else 6
+        versionName = if (upgradeBase) "1.3.0-beta1-upgradecheck" else "1.3.0-beta1"
     }
     // STORES-PLAN 1: one codebase, two store builds, the same applicationId and signing certificate.
     // `full` (GitHub and F-Droid) checks GitHub for a newer release and offers the optional add-ons;
@@ -65,6 +67,7 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(project(":testing:fixtures"))

@@ -26,6 +26,7 @@ interface StorePorts {
     // Where "an update is available" opens; null when there is no update check.
     val releasePage: String?
     fun updateChecker(http: HttpFetcher): UpdateChecker
+    suspend fun releaseStatus(http: HttpFetcher, current: String): AppUpdateStatus = AppUpdateStatus.Failed
     // The add-on fetcher: `make` builds the real one (InstallableOnlyFetcher over the resumable
     // fetcher); a build without add-ons returns one that never downloads.
     fun addOnFetcher(make: () -> ArtifactFetcher): ArtifactFetcher
