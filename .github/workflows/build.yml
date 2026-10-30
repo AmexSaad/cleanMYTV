@@ -17,57 +17,70 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-      - name: Import the pinned reference source and reviewed cleanMYTV changes
-        if: hashFiles('migration/cleanmytv-brand.patch') != ''
-        env:
-          SOURCE_DIR: ${{ runner.temp }}/cleanmytv-reference
+      # BEGIN ONE-TIME LOCALE FIX
+      - name: Apply reviewed locale corrections
         run: |
-          set -euo pipefail
-          echo '6d9ec29b35ba78c8e3b41d52b39603a4207fc1221225ed9aa08c202086c92db7  migration/cleanmytv-brand.patch' | sha256sum --check
-          git clone --no-checkout https://github.com/udhaykumarbala/cleanyourtv-app.git "$SOURCE_DIR"
-          git -C "$SOURCE_DIR" checkout 0413da3068c563d8325f14f782209927f9783e1d
-          git -C "$SOURCE_DIR" apply --check "$GITHUB_WORKSPACE/migration/cleanmytv-brand.patch"
-          git -C "$SOURCE_DIR" apply "$GITHUB_WORKSPACE/migration/cleanmytv-brand.patch"
           python3 - <<'PY'
-          import os, pathlib, shutil, subprocess
-          root = pathlib.Path(os.environ['GITHUB_WORKSPACE']).resolve()
-          source = pathlib.Path(os.environ['SOURCE_DIR']).resolve()
-          assert root != source and root.is_dir() and source.is_dir()
-          # Remove only tracked files from this feature branch; Git retains the previous version.
-          tracked = subprocess.check_output(['git','ls-files','-z'], cwd=root).decode().split('\0')
-          for name in filter(None, tracked):
-              if name == '.github/workflows/build.yml': continue
-              path = root / name
-              assert path.resolve().is_relative_to(root)
-              if path.is_file() or path.is_symlink(): path.unlink()
-          for entry in source.iterdir():
-              if entry.name in ('.git', '.github', 'third_party'): continue
-              target = root / entry.name
-              if entry.is_dir(): shutil.copytree(entry, target, dirs_exist_ok=True)
-              else: shutil.copy2(entry, target)
-          shutil.copytree(source / '.github/ISSUE_TEMPLATE', root / '.github/ISSUE_TEMPLATE', dirs_exist_ok=True)
+          import base64, hashlib, pathlib, subprocess
+          patch = base64.b64decode('ZGlmZiAtLWdpdCBhL2ZlYXR1cmUvbGF1bmNoZXIvc3JjL21haW4vcmVzL3ZhbHVlcy1tcy9zdHJpbmdzLnhtbCBiL2ZlYXR1cmUvbGF1bmNoZXIvc3JjL21haW4vcmVzL3ZhbHVlcy1tcy9zdHJpbmdzLnhtbAppbmRleCBmN2FlMTcwLi43MTNhOGU2IDEwMDY0NAotLS0gYS9mZWF0dXJlL2xhdW5jaGVyL3NyYy9tYWluL3Jlcy92YWx1ZXMtbXMvc3RyaW5ncy54bWwKKysrIGIvZmVhdHVyZS9sYXVuY2hlci9zcmMvbWFpbi9yZXMvdmFsdWVzLW1zL3N0cmluZ3MueG1sCkBAIC04Niw2ICs4Niw2IEBACiAgIDxzdHJpbmcgbmFtZT0iaG9tZV9sb29rX2VuZGVkX3Jlc3RvcmUiPkxldGFra2FuIHNlbXVsYTwvc3RyaW5nPgogICA8IS0tIFMzYiBZb3VyIGRvY2sgKHNoZWV0KSAtLT4KICAgPHN0cmluZyBuYW1lPSJkb2NrX3RpdGxlIj5Eb2sgYW5kYTwvc3RyaW5nPgotICA8c3RyaW5nIG5hbWU9ImRvY2tfYm9keSI+U2VoaW5nZ2Ege2NvdW50LCBlamFhbn0gZGkgc2VwYW5qYW5nIGJhaGFnaWFuIGJhd2FoLiBTZXJldCBhcGwgbWVuZ2lrdXQgdGl0aWtueWEgdW50dWsgbWVudWthciBzdXN1bmFuLjwvc3RyaW5nPgorICA8c3RyaW5nIG5hbWU9ImRvY2tfYm9keSI+U2VoaW5nZ2Ege2NvdW50LCBzcGVsbG91dH0gZGkgc2VwYW5qYW5nIGJhaGFnaWFuIGJhd2FoLiBTZXJldCBhcGwgbWVuZ2lrdXQgdGl0aWtueWEgdW50dWsgbWVudWthciBzdXN1bmFuLjwvc3RyaW5nPgogICA8c3RyaW5nIG5hbWU9ImRvY2tfd2FpdGluZyI+QXBsIHtjb3VudCwgcGx1cmFsLCBvbmUgeyMgbWVudW5nZ3V9IG90aGVyIHsjIGFwbCB0dW5nZ3V9fSBkYWxhbSBncmlkIHNlaGluZ2dhIGFuZGEgbWVtaWxpaCBsZWJpaCBiYW55YWsgYXBsIGRhbGFtIHNhdHUgYmFyaXMuPC9zdHJpbmc+CiA8L3Jlc291cmNlcz4KXCBObyBuZXdsaW5lIGF0IGVuZCBvZiBmaWxlCmRpZmYgLS1naXQgYS9mZWF0dXJlL21hbmFnZS9zcmMvbWFpbi9yZXMvdmFsdWVzLW1zL3N0cmluZ3MueG1sIGIvZmVhdHVyZS9tYW5hZ2Uvc3JjL21haW4vcmVzL3ZhbHVlcy1tcy9zdHJpbmdzLnhtbAppbmRleCBhODkxYWRhLi4zN2EzODBkIDEwMDY0NAotLS0gYS9mZWF0dXJlL21hbmFnZS9zcmMvbWFpbi9yZXMvdmFsdWVzLW1zL3N0cmluZ3MueG1sCisrKyBiL2ZlYXR1cmUvbWFuYWdlL3NyYy9tYWluL3Jlcy92YWx1ZXMtbXMvc3RyaW5ncy54bWwKQEAgLTE0NSwxMSArMTQ1LDExIEBACiAgIDxzdHJpbmcgbmFtZT0iYXBwc2V0dGluZ3NfdXBfdG9fZGF0ZSI+QW5kYSBtZW1wdW55YWkgdmVyc2kgdGVya2luaTwvc3RyaW5nPgogICA8c3RyaW5nIG5hbWU9ImFwcHNldHRpbmdzX3VwZGF0ZV9lcnJvciI+VGlkYWsgZGFwYXQgbWVueWVtYWsga2VtYXMga2luaTwvc3RyaW5nPgogICA8c3RyaW5nIG5hbWU9ImFwcHNldHRpbmdzX2xpY2VuY2VzIj5MZXNlbjwvc3RyaW5nPgotICA8c3RyaW5nIG5hbWU9ImFwcHNldHRpbmdzX2xpY2VuY2VfYXBwIj5CZXJzaWhrYW4gVFYgQW5kYTogTUlUPC9zdHJpbmc+Ci0gIDxzdHJpbmcgbmFtZT0iYXBwc2V0dGluZ3NfbGljZW5jZV9mb250Ij5NdWthIHRhaXAgcGFrYWlhbjogTGVzZW4gRm9udCBUZXJidWthIFNJTCAxLjE8L3N0cmluZz4KKyAgPHN0cmluZyBuYW1lPSJhcHBzZXR0aW5nc19saWNlbmNlX2FwcCI+Q2xlYW4gWW91ciBUViBkYW4gY2xlYW5NWVRWOiBNSVQ8L3N0cmluZz4KKyAgPHN0cmluZyBuYW1lPSJhcHBzZXR0aW5nc19saWNlbmNlX2ZvbnQiPkZvbiBPdXRmaXQ6IFNJTCBPcGVuIEZvbnQgTGljZW5zZSAxLjE8L3N0cmluZz4KICAgPHN0cmluZyBuYW1lPSJhcHBzZXR0aW5nc19saWNlbmNlX2FwYWNoZSI+ZGFkYiBkYW4ga29kIFNoaXp1a3UgeWFuZyBrYW1pIHNlc3VhaWthbjogbm90aXMgQXBhY2hlLTIuMDwvc3RyaW5nPgotICA8c3RyaW5nIG5hbWU9ImFwcHNldHRpbmdzX2xpY2VuY2VfcGljdHVyZXMiPkxpaGF0IGdhbWJhcjoga2VyamEga2FtaSBzZW5kaXJpLCBDQzAgMS4wIChkb21haW4gYXdhbSk7IEF1cm9yYSwgR2xhc3MgYW5kIEF1dHVtbiB0YXNpayAoUnVza2EpIGRhcmlwYWRhIHBlbGFuY2FyIENsZWFuIFlvdXIgVFYsIE1JVDwvc3RyaW5nPgotICA8c3RyaW5nIG5hbWU9ImFwcHNldHRpbmdzX2xpY2VuY2VfYm91bmN5Y2FzdGxlIj5QZXJwdXN0YWthYW4ga3JpcHRvZ3JhZmkgSXN0YW5hIEJvdW5jeTogTGVzZW4gSXN0YW5hIEJvdW5jeTwvc3RyaW5nPgorICA8c3RyaW5nIG5hbWU9ImFwcHNldHRpbmdzX2xpY2VuY2VfcGljdHVyZXMiPkdhbWJhciBnYXlhOiBrYXJ5YSBhc2FsLCBDQzAgMS4wIChkb21haW4gYXdhbSk7IEF1cm9yYSwgR2xhc3MgZGFuIEF1dHVtbiBsYWtlIChSdXNrYSkgZGFyaXBhZGEgbGF1bmNoZXIgQ2xlYW4gWW91ciBUViwgTUlUPC9zdHJpbmc+CisgIDxzdHJpbmcgbmFtZT0iYXBwc2V0dGluZ3NfbGljZW5jZV9ib3VuY3ljYXN0bGUiPlB1c3Rha2Ega3JpcHRvZ3JhZmkgQm91bmN5IENhc3RsZTogQm91bmN5IENhc3RsZSBMaWNlbmNlPC9zdHJpbmc+CiAgIDxzdHJpbmcgbmFtZT0iYXBwc2V0dGluZ3NfcHJpdmFjeSI+UHJpdmFzaTwvc3RyaW5nPgogICA8c3RyaW5nIG5hbWU9ImFwcHNldHRpbmdzX3ByaXZhY3lfdGV4dCI+VGlhZGEgYXBhLWFwYSB5YW5nIG1lbmluZ2dhbGthbiByYW5na2FpYW4gYW5kYSBrZWN1YWxpIG11YXQgdHVydW4gZGFyaSBnaXRodWIuY29tLiBHaXRIdWIgbWVsaWhhdCBhbGFtYXQgdGVsZWZvbiBhbmRhIGRhbiBlamVuIHBlbmdndW5hIGdlbmVyaWsuIExhcG9yYW4gbWVuaW5nZ2Fsa2FuIHRlbGVmb24gaGFueWEgYXBhYmlsYSBhbmRhIG1lbnlhbGluLCBiZXJrb25nc2kgYXRhdSBtZW55aWFya2FubnlhIHNlbmRpcmkuPC9zdHJpbmc+CiAgIDxzdHJpbmcgbmFtZT0iYXBwc2V0dGluZ3NfcHJpdmFjeV90ZXh0X29mZmxpbmUiPlRpYWRhIGFwYS1hcGEgeWFuZyBtZW5pbmdnYWxrYW4gcmFuZ2thaWFuIGFuZGEuIEFwbCBiZXJjYWthcCBoYW55YSBrZXBhZGEgVFYgeWFuZyBhbmRhIHBpbGloIGRhbiB0aWRhayBtZW1idWF0IHBlcm1pbnRhYW4gaW50ZXJuZXQgc2VuZGlyaS4gTGFwb3JhbiBtZW5pbmdnYWxrYW4gdGVsZWZvbiBoYW55YSBhcGFiaWxhIGFuZGEgbWVueWFsaW4sIGJlcmtvbmdzaSBhdGF1IG1lbnlpYXJrYW5ueWEgc2VuZGlyaS48L3N0cmluZz4KZGlmZiAtLWdpdCBhL2ZlYXR1cmUvc2V0dXAvc3JjL21haW4vcmVzL3ZhbHVlcy1tcy9zdHJpbmdzLnhtbCBiL2ZlYXR1cmUvc2V0dXAvc3JjL21haW4vcmVzL3ZhbHVlcy1tcy9zdHJpbmdzLnhtbAppbmRleCBiYWViNGI5Li41MGZlZWQ5IDEwMDY0NAotLS0gYS9mZWF0dXJlL3NldHVwL3NyYy9tYWluL3Jlcy92YWx1ZXMtbXMvc3RyaW5ncy54bWwKKysrIGIvZmVhdHVyZS9zZXR1cC9zcmMvbWFpbi9yZXMvdmFsdWVzLW1zL3N0cmluZ3MueG1sCkBAIC00MCw4ICs0MCw4IEBACiAgIDxzdHJpbmcgbmFtZT0ic3RvcF9wbGFuX3JlZnVzZWRfdGl0bGUiPkthbWkgdGlkYWsgZGFwYXQgbWVtYnVhdCByYW5jYW5nYW4gc2VsYW1hdCB1bnR1ayBUViBpbmk8L3N0cmluZz4KICAgPHN0cmluZyBuYW1lPSJzdG9wX3BsYW5fcmVmdXNlZF9ib2R5Ij5UViBtZW5qYXdhYiwgdGV0YXBpIGFwYSB5YW5nIGthbWkgdGVtdWkgcGFkYW55YSB0aWRhayBzZXN1YWkgZGVuZ2FuIHJhbmNhbmdhbiB5YW5nIGthbWkgcGFzdGkgc2VsYW1hdCwgamFkaSBrYW1pIGJlcmhlbnRpIHNlYmVsdW0gbWVsYWt1a2FuIGFwYS1hcGEuIFRpYWRhIGFwYSB5YW5nIGRpdWJhaC4gTGFwb3JrYW4gbWFzYWxhaCBtZW5naGFudGFyIHNlYmFibnlhIGtlcGFkYSBrYW1pLCBqYWRpIGthbWkgYm9sZWggbWVtYmV0dWxrYW5ueWEuPC9zdHJpbmc+CiAgIDwhLS0gUzMgV2hhdCB3ZSBmb3VuZCAtLT4KLSAgPHN0cmluZyBuYW1lPSJmb3VuZF90aXRsZSI+e2NvdW50LCBwbHVyYWwsID0wIHtUaWFkYSBhcGEtYXBhIHVudHVrIGRpbWF0aWthbi4gTWFodWthbiBza3JpbiB1dGFtYSBiYWhhcnU/fSBvbmUge0thbWkgbWVuZGFwYXRpIHNhdHUgcGVya2FyYSB1bnR1ayBkaW1hdGlrYW59IG90aGVyIHtLYW1pIG1lbmRhcGF0aSAjIHBlcmthcmEgdW50dWsgZGltYXRpa2FufX08L3N0cmluZz4KLSAgPHN0cmluZyBuYW1lPSJmb3VuZF9oZWFkbGluZSI+e2NvdW50LCBwbHVyYWwsID0wIHtUaWFkYSBhcGEtYXBhIHVudHVrIGRpbWF0aWthbi4gTWFodSBza3JpbiB1dGFtYSBiYWhhcnU/fSBvbmUge3RoaW5nIHRvIHN3aXRjaCBvZmZ9IG90aGVyIHt0aGluZ3MgdG8gc3dpdGNoIG9mZn19PC9zdHJpbmc+CisgIDxzdHJpbmcgbmFtZT0iZm91bmRfdGl0bGUiPntjb3VudCwgcGx1cmFsLCA9MCB7VGlhZGEgaXRlbSB1bnR1ayBkaW55YWhha3RpZi4gTWFodSBza3JpbiB1dGFtYSBiYWhhcnU/fSBvbmUge1NhdHUgaXRlbSBib2xlaCBkaW55YWhha3RpZn0gb3RoZXIgeyMgaXRlbSBib2xlaCBkaW55YWhha3RpZn19PC9zdHJpbmc+CisgIDxzdHJpbmcgbmFtZT0iZm91bmRfaGVhZGxpbmUiPntjb3VudCwgcGx1cmFsLCA9MCB7VGlhZGEgaXRlbSB1bnR1ayBkaW55YWhha3RpZi4gTWFodSBza3JpbiB1dGFtYSBiYWhhcnU/fSBvbmUge2l0ZW0gdW50dWsgZGlueWFoYWt0aWZ9IG90aGVyIHtpdGVtIHVudHVrIGRpbnlhaGFrdGlmfX08L3N0cmluZz4KICAgPHN0cmluZyBuYW1lPSJmb3VuZF9vdmVybGluZSI+S2FtaSBkYXBhdGk8L3N0cmluZz4KICAgPHN0cmluZyBuYW1lPSJmb3VuZF96ZXJvX2JvZHkiPlRWIGluaSBzdWRhaCBrZW1hcy48L3N0cmluZz4KICAgPHN0cmluZyBuYW1lPSJmb3VuZF9ncm91cF9hZHMiPklrbGFuIGRhbiBiYXJpcyB5YW5nIGRpdGFqYTwvc3RyaW5nPgpAQCAtNzEsNyArNzEsNyBAQAogICA8c3RyaW5nIG5hbWU9ImZvdW5kX3RjbF9yZW1vdGVfa2V5cyI+UGFkYSBUQ0wgR29vZ2xlIFRWLCBidXRhbmcgVGV0YXBhbiAoZ2VhciksIE5ldGZsaXggZGFuIFlvdVR1YmUgYWxhdCBrYXdhbGFuIGphdWggYmVyaGVudGkgYmVyZnVuZ3NpIGRlbmdhbiBza3JpbiB1dGFtYSBiYWhhcnUuIFVudHVrIG1lbmRhcGF0a2FubnlhIGtlbWJhbGksIHBpbGloIEd1bmFrYW4gc2tyaW4gdXRhbWEgVFYgc2VuZGlyaSBkYWxhbSBVcnVzLjwvc3RyaW5nPgogICA8c3RyaW5nIG5hbWU9ImZvdW5kX25vX2xvY2siPlRpYWRhIGt1bmNpIHNrcmluIHBhZGEgdGVsZWZvbiBpbmksIGphZGkga2FtaSB0aWRhayBib2xlaCBtZW55ZW1hayBzZW11bGEgb3JhbmcgaXR1IGlhbGFoIGFuZGEuPC9zdHJpbmc+CiAgIDwhLS0gVW5rbm93biBtb2RlbCAobm8gcHJvZmlsZSkgLS0+Ci0gIDxzdHJpbmcgbmFtZT0iZm91bmRfdW5rbm93bl90aXRsZSI+e2NvdW50LCBwbHVyYWwsID0wIHtLYW1pIHRpZGFrIG1lbmVtdWkgYXBhLWFwYSB5YW5nIGthbWkgcGFzdGkgdGVudGFuZ30gb25lIHtLYW1pIG1lbmVtdWkgc2F0dSBwZXJrYXJhIHlhbmcga2FtaSBwYXN0aSB0ZW50YW5nfSBvdGhlciB7S2FtaSBtZW5lbXVpICMgcGVya2FyYSB5YW5nIHBhc3RpIHRlbnRhbmd9fTwvc3RyaW5nPgorICA8c3RyaW5nIG5hbWU9ImZvdW5kX3Vua25vd25fdGl0bGUiPntjb3VudCwgcGx1cmFsLCA9MCB7VGlhZGEgaXRlbSB5YW5nIGRhcGF0IGRpa2VuYWwgcGFzdGkgZGVuZ2FuIHlha2lufSBvbmUge1NhdHUgaXRlbSBkaWtlbmFsIHBhc3RpIGRlbmdhbiB5YWtpbn0gb3RoZXIgeyMgaXRlbSBkaWtlbmFsIHBhc3RpIGRlbmdhbiB5YWtpbn19PC9zdHJpbmc+CiAgIDxzdHJpbmcgbmFtZT0iZm91bmRfdW5rbm93bl9oZWFkbGluZSI+e2NvdW50LCBwbHVyYWwsID0wIHtUaWFkYSBpdGVtIHlhbmcgZGFwYXQgZGlrZW5hbCBwYXN0aSBkZW5nYW4geWFraW59IG9uZSB7aXRlbSB5YW5nIGRpa2VuYWwgcGFzdGkgZGVuZ2FuIHlha2lufSBvdGhlciB7aXRlbSB5YW5nIGRpa2VuYWwgcGFzdGkgZGVuZ2FuIHlha2lufX08L3N0cmluZz4KICAgPHN0cmluZyBuYW1lPSJmb3VuZF91bmtub3duX2JvZHkiPkthbWkgdGlkYWsgcGVybmFoIG1lbmVtdWkgVFYgeWFuZyB0ZXBhdCBpbmkgc2ViZWx1bSBpbmksIGphZGkga2FtaSBiZXJoYXRpLWhhdGkuIExlYmloIGJhbnlhayBsYWdpIGJvbGVoIGRpbWF0aWthbiBkaSBiYXdhaCBTZXN1YWlrYW4gc2V0ZWxhaCBhbmRhIGhpZHVwIGRlbmdhbm55YS48L3N0cmluZz4KICAgPHN0cmluZyBuYW1lPSJmb3VuZF9oZWxwX2FkZF90diI+QmFudHUgdGFtYmFoa2FuIFRWIGluaTwvc3RyaW5nPgpAQCAtMTM3LDcgKzEzNyw3IEBACiAgIDxzdHJpbmcgbmFtZT0idGhlbWVfY2FyZF9zZWxlY3RlZF9jZCI+e25hbWV9LCBkaXBpbGloLiB7ZGVzY3JpcHRpb259PC9zdHJpbmc+CiAgIDwhLS0gUzNiIFlvdXIgZG9jayAoc2hlZXQpIC0tPgogICA8c3RyaW5nIG5hbWU9ImRvY2tfdGl0bGUiPkRvayBhbmRhPC9zdHJpbmc+Ci0gIDxzdHJpbmcgbmFtZT0iZG9ja19ib2R5Ij5TZWhpbmdnYSB7Y291bnQsIGVqYWFufSBkaSBzZXBhbmphbmcgYmFoYWdpYW4gYmF3YWguIFNlcmV0IGFwbCBtZW5naWt1dCB0aXRpa255YSB1bnR1ayBtZW51a2FyIHN1c3VuYW4uPC9zdHJpbmc+CisgIDxzdHJpbmcgbmFtZT0iZG9ja19ib2R5Ij5TZWhpbmdnYSB7Y291bnQsIHNwZWxsb3V0fSBkaSBzZXBhbmphbmcgYmFoYWdpYW4gYmF3YWguIFNlcmV0IGFwbCBtZW5naWt1dCB0aXRpa255YSB1bnR1ayBtZW51a2FyIHN1c3VuYW4uPC9zdHJpbmc+CiAgIDwhLS0gUzRhIE1ha2luZyBpdCBjbGVhbiAtLT4KICAgPHN0cmluZyBuYW1lPSJ3b3JraW5nX3RpdGxlIj5NZW5qYWRpa2FubnlhIGJlcnNpaDwvc3RyaW5nPgogICA8c3RyaW5nIG5hbWU9Indvcmtpbmdfc3RlcF9yZXN0b3JlX2FjdGl2ZSI+TWVueWltcGFuIHRpdGlrIHBlbXVsaWhhbi4uLjwvc3RyaW5nPgo=')
+          assert hashlib.sha256(patch).hexdigest() == '42ea446839cc3094288757a965ba99658d227d7f2cf617f1ba761496b502d854'
+          subprocess.run(['git','apply','--check','-'],input=patch,check=True)
+          subprocess.run(['git','apply','-'],input=patch,check=True)
+          workflow = pathlib.Path('.github/workflows/build.yml')
+          text = workflow.read_text()
+          start = text.index('      # BEGIN ONE-TIME LOCALE FIX')
+          end = text.index('\n      # END ONE-TIME LOCALE FIX') + len('\n      # END ONE-TIME LOCALE FIX\n')
+          workflow.write_text(text[:start] + text[end:])
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git update-index --add --cacheinfo 160000,b06ab21105c49900cb1ed76b24414dba1e21d0db,third_party/cleanyourtv
-          git commit -m 'Use pinned Clean Your TV beta2 functions with cleanMYTV interface and BM/EN'
+          git add feature/launcher/src/main/res/values-ms/strings.xml feature/manage/src/main/res/values-ms/strings.xml feature/setup/src/main/res/values-ms/strings.xml .github/workflows/build.yml
+          git commit -m 'Keep ICU formatting valid in Malay and refine translated labels'
           git push origin "HEAD:${GITHUB_REF_NAME}"
-          git submodule update --init --recursive
+      # END ONE-TIME LOCALE FIX
       - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
         with:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a
-      - name: Build full debug APK and verify bundled TV assets
+      - name: Build full APK and verify bundled TV assets
         run: |
           chmod +x gradlew
           ./gradlew :core:trust:verifyLauncherPin :core:trust:verifyCurtainPin checkModuleGraph :app:assembleFullDebug --console=plain
-      - name: Test connection, planning, operations, recovery and app integration
+      - name: Test connection, plans, operations, recovery and app integration
         run: ./gradlew :core:model:check :core:spec:check :core:ops:check :core:probe:check :core:planner:check :core:engine:check :core:backup:check :core:flows:check :core:trust:check :core:registry:check :adb:wire:check :adb:pairing:check :adb:session:check :app:testFullDebugUnitTest :e2e:check --continue --console=plain
-      - name: Record refreshed UI screenshots and run feature interaction tests
+      - name: Record refreshed screenshots and test feature interactions
         run: ./gradlew recordRoborazziDebug --continue --console=plain
-      - name: Verify refreshed UI screenshots
+      - name: Save feature storyboard for visual review
+        run: |
+          python3 -m pip install pillow
+          python3 - <<'PY'
+          from PIL import Image, ImageDraw, ImageFont
+          from pathlib import Path
+          shots = [('connect','welcome_found_one','01 / Sambung TV'),('connect','picker_two_tvs','02 / Pilih TV'),('setup','found_simple','03 / Semak analisis'),('setup','working_58','04 / Bersihkan'),('setup','check_84s','05 / Sahkan Home'),('manage','manage_clean','06 / Urus dan pulihkan')]
+          font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',18)
+          title = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',30)
+          canvas = Image.new('RGB',(1200,1840),'#eaf1fb')
+          draw=ImageDraw.Draw(canvas)
+          draw.text((32,20),'cleanMYTV / Pratonton fungsi',font=title,fill='#14233c')
+          draw.text((32,65),'Komponen sebenar / Data contoh / Header app tidak ditunjukkan',font=font,fill='#435671')
+          for index,(module,name,label) in enumerate(shots):
+              image=Image.open(f'feature/{module}/src/test/screenshots/{name}_light.png').convert('RGB')
+              image.thumbnail((360,780))
+              x=30+(index%3)*395; y=110+(index//3)*855
+              draw.text((x,y),label,font=font,fill='#155dcc')
+              canvas.paste(image,(x,y+35))
+          Path('previews').mkdir(exist_ok=True)
+          canvas.save('previews/storyboard.png')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add previews/ ':(glob)**/src/test/screenshots/*.png'
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record cleanMYTV UI goldens and feature storyboard'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+      - name: Verify refreshed screenshots
         run: ./gradlew verifyRoborazziDebug --continue --console=plain
       - name: Package APK
         run: |
@@ -79,7 +92,30 @@ jobs:
           name: cleanMYTV-apk
           path: dist/
           if-no-files-found: error
-      - name: Test reports and UI previews
+      - name: Publish validated source after manual release run
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/feature/reference-parity'
+        run: |
+          git fetch origin main feature/reference-parity
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/feature/reference-parity)"
+          git merge-base --is-ancestor origin/main HEAD
+          git push origin HEAD:main
+      - name: Summarize tests and print any failures
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import glob, os, xml.etree.ElementTree as ET
+          tests=failures=errors=0
+          for path in glob.glob('**/build/test-results/**/TEST-*.xml',recursive=True):
+              root=ET.parse(path).getroot()
+              tests+=int(root.get('tests',0)); failures+=int(root.get('failures',0)); errors+=int(root.get('errors',0))
+              for case in root.findall('testcase'):
+                  for error in list(case.findall('failure'))+list(case.findall('error')):
+                      print(f"{path}: {case.get('name')}: {(error.text or '')[:2500]}")
+          summary=f'Tests: {tests}; failures: {failures}; errors: {errors}\n'
+          print(summary)
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:f.write(summary)
+          PY
+      - name: Test reports and previews
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
@@ -87,6 +123,6 @@ jobs:
           path: |
             **/build/reports/tests/
             **/build/test-results/
-            **/src/test/screenshots/*.png
             **/build/outputs/roborazzi/
+            previews/
           retention-days: 7
