@@ -1,6 +1,6 @@
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@android:color/white" />
+    <background android:drawable="@color/cleanmytv_icon_background" />
     <foreground>
-        <inset android:inset="16%" android:drawable="@drawable/cleanmytv_mark" />
+        <inset android:inset="6%" android:drawable="@drawable/cleanmytv_mark" />
     </foreground>
 </adaptive-icon>
