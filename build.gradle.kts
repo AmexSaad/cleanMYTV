@@ -1,5 +1,4 @@
+// Root project: module graph check and lifecycle wiring only. Everything else lives in build-logic.
 plugins {
-    id("com.android.application") version "8.7.3" apply false
-    id("org.jetbrains.kotlin.android") version "2.0.21" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.21" apply false
+    id("cleanyourtv.root")
 }

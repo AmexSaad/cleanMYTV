@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Clean Your TV, :feature:manage. English source strings.
+  Every string that takes an argument is ICU MessageFormat with NAMED arguments in braces,
+  formatted by the app's message helper (android.icu.text.MessageFormat). No printf placeholders,
+  no Android plurals elements. Counts go through the plural selector.
+  Screens: M1, M1a, M4, M5, M7, M8 and the credential prompt for the actions raised from them.
+-->
+<resources>
+  <!-- Shared button words -->
+  <string name="action_back">Kembali</string>
+  <string name="action_cancel">Batal</string>
+  <string name="action_ok">OK</string>
+  <string name="action_done">Selesai</string>
+  <string name="action_undo">Pulihkan</string>
+  <!-- Credential prompt (D17) -->
+  <string name="gate_title">Sahkan itu anda</string>
+  <string name="gate_subtitle">Sebelum kita menukar apa-apa pada {tv}</string>
+  <string name="gate_subtitle_reset_key">Sebelum kami menetapkan semula kunci telefon ini</string>
+  <string name="gate_subtitle_delete_all">Sebelum kami memadamkan semuanya</string>
+  <string name="gate_negative">Batal</string>
+  <string name="gate_failed">Kami tidak dapat mengesahkan itu adalah anda, jadi tiada apa yang diubah.</string>
+  <!-- M1 Manage -->
+  <string name="manage_title" translatable="false">TV anda</string>
+  <string name="manage_settings_cd">Tetapan apl</string>
+  <string name="manage_tv_title">{tv}, {room}</string>
+  <string name="manage_tv_title_noroom">{tv}</string>
+  <string name="manage_state_clean">Bersih</string>
+  <string name="manage_state_original">Asal</string>
+  <string name="manage_checked">Disemak {date}</string>
+  <string name="manage_tv_card_cd">{tv}. {state}. {checked}</string>
+  <string name="manage_thumbnail_cd">Gambar terakhir dari {tv}. Ketik untuk memuat semula.</string>
+  <string name="manage_clean_again">Bersihkannya semula</string>
+  <string name="manage_level_simple">Mudah</string>
+  <string name="manage_level_custom">Tersuai</string>
+  <string name="manage_level_simple_note">Mematikan kekacauan biasa dan menyimpan semua yang lain.</string>
+  <string name="manage_level_custom_note">Membolehkan anda memilih setiap item, dok dan rupa.</string>
+  <string name="manage_row_home">Skrin utama</string>
+  <string name="manage_row_home_own">TV menyimpannya sendiri. Lihat sebabnya</string>
+  <string name="manage_row_cards">Kad dan modul</string>
+  <string name="manage_row_cards_none">Tiada kad lagi</string>
+  <string name="manage_row_switched_off">{count, plural, other {Dimatikan (#)}}</string>
+  <string name="manage_row_switched_off_sub">Letakkan semula mana-mana daripadanya</string>
+  <string name="manage_row_better_back_on">Apl {count, plural, one {# lebih baik dihidupkan semula} other {# apl lebih baik dihidupkan semula}}</string>
+  <string name="manage_row_leftovers">Semak sisa makanan</string>
+  <string name="manage_row_leftovers_sub">Selepas kemas kini perisian TV</string>
+  <string name="manage_row_restore">Titik pemulihan</string>
+  <string name="manage_row_restore_sub">{date}. Buat asal semua dari sini.</string>
+  <string name="manage_row_tvsettings">Tetapan TV</string>
+  <string name="manage_add_tv">+ Sediakan TV lain</string>
+  <string name="manage_offline_banner">TV hilang. Adakah ia masih dihidupkan?</string>
+  <string name="manage_reconnect">Sambung semula</string>
+  <string name="manage_reconnecting">Menyambung semula...</string>
+  <!-- M1a Debugging step for a returning write (UX 4.3, returning) -->
+  <string name="debugstep_title">Untuk menukar perkara pada TV, penyahpepijatan perlu dihidupkan seketika.</string>
+  <string name="debugstep_body">Pada TV: Tetapan &gt; Keutamaan Peranti &gt; Pilihan pembangun &gt; Penyahpepijatan USB. Kami akan mengambilnya dari sana dan mematikannya semula apabila kami selesai.</string>
+  <string name="debugstep_note">Anda tidak perlu menekan Build lagi. Pilihan pembangun kekal tidak berkunci.</string>
+  <string name="debugstep_waiting">Menunggu TV...</string>
+  <string name="debugstep_connecting">Menyambung...</string>
+  <!-- A Manage write that paused and left its run open (R5-W8 O2) -->
+  <string name="openwrite_title">Perubahan pada {tv} tidak selesai</string>
+  <string name="openwrite_body_lost">TV berhenti menjawab separuh jalan. Teruskan dengan yang lain, atau buat asal apa yang kami lakukan. Sehingga itu tiada apa-apa lagi yang boleh berubah pada TV ini.</string>
+  <string name="openwrite_body">Kami berhenti separuh jalan. Teruskan dengan yang lain, atau buat asal apa yang kami lakukan. Sehingga itu tiada apa-apa lagi yang boleh berubah pada TV ini.</string>
+  <string name="openwrite_body_setup">Persediaan {tv} tidak selesai. Bukanya untuk meneruskan atau membatalkan apa yang kami lakukan.</string>
+  <string name="openwrite_not_taken">TV tidak menjawab. Semak sama ada ia dihidupkan dan pada Wi-Fi yang sama seperti telefon ini, kemudian cuba lagi.</string>
+  <string name="openwrite_busy">Mengusahakannya...</string>
+  <string name="openwrite_carry_on">Teruskan</string>
+  <string name="openwrite_title_stale">{tv} berubah sejak kali terakhir kami membacanya</string>
+  <string name="openwrite_body_stale_nothing">Sesuatu di TV berubah selepas kami membacanya, jadi kami berhenti sebelum menukar apa-apa. Tiada apa yang diubah. Periksa TV sekali lagi dan kami akan bermula dari apa yang ada sekarang.</string>
+  <string name="openwrite_body_stale">Sesuatu di TV berubah selepas kami membacanya, jadi kami berhenti di tengah-tengah. Semak TV sekali lagi untuk meneruskan daripada apa yang ada sekarang atau buat asal perkara yang kami lakukan.</string>
+  <string name="openwrite_check_again">Semak semula</string>
+  <string name="openwrite_undo">Buat asal apa yang kami lakukan</string>
+  <string name="openwrite_stop">Berhenti di sini</string>
+  <string name="openwrite_open_setup">Buka persediaan</string>
+  <string name="openwrite_later">Bukan sekarang</string>
+  <string name="openwrite_report">Laporkan masalah</string>
+  <string name="openwrite_title_took_home">{app} mengambil butang Laman Utama</string>
+  <string name="openwrite_body_took_home">Setelah {app} dihidupkan semula, TV memberikannya butang Laman Utama, jadi Laman Utama tidak lagi membuka skrin utama baharu. Matikan {app} sekali lagi untuk mendapatkan semula yang baharu, atau simpannya.</string>
+  <string name="openwrite_switch_off_again">Matikannya semula</string>
+  <string name="openwrite_keep_it">Simpan</string>
+  <!-- M4 Switched off -->
+  <string name="switchedoff_title">{count, plural, other {Dimatikan (#)}}</string>
+  <string name="switchedoff_intro">Setiap satu boleh diletakkan semula. Tiada apa-apa yang dipadamkan; \"mati\" bermaksud tidur.</string>
+  <string name="switchedoff_group_ads">Iklan dan baris yang ditaja</string>
+  <string name="switchedoff_group_tracking">Penjejakan dan analitik</string>
+  <string name="switchedoff_group_nobody">Apl yang tidak diminta oleh sesiapa</string>
+  <string name="switchedoff_group_brand">{brand} tambahan</string>
+  <string name="switchedoff_group_shop">Mod kedai dan demo</string>
+  <string name="switchedoff_group_needed">Diperlukan untuk skrin utama baharu</string>
+  <string name="switchedoff_group_other">Dipilih di bawah Sesuaikan</string>
+  <string name="switchedoff_put_back">Letakkan semula</string>
+  <string name="switchedoff_put_back_cd">Letakkan {name} kembali</string>
+  <string name="switchedoff_group_better">Lebih baik kembali</string>
+  <string name="switchedoff_better_kept">Senarai untuk TV ini kini menyimpannya.</string>
+  <string name="switchedoff_switch_back_on">Hidupkan semula</string>
+  <string name="switchedoff_switch_back_on_cd">Hidupkan semula {name}</string>
+  <string name="switchedoff_snackbar">{name} dihidupkan semula.</string>
+  <string name="switchedoff_empty">Tiada apa-apa yang dimatikan sekarang.</string>
+  <string name="switchedoff_empty_sub">Segala-galanya di TV dihidupkan.</string>
+  <!-- M5 Check for leftovers -->
+  <string name="leftovers_title">Semak sisa makanan</string>
+  <string name="leftovers_checking">Menyemak...</string>
+  <string name="leftovers_found">Perkara {count, plural, one {# kembali selepas kemas kini. Matikannya semula?} other {# perkara kembali selepas kemas kini. Matikannya sekali lagi?}}</string>
+  <string name="leftovers_switch_off">Matikan</string>
+  <string name="leftovers_not_now">Bukan sekarang</string>
+  <string name="leftovers_none">Tiada apa-apa yang kembali. Semua seperti anda meninggalkannya.</string>
+  <string name="leftovers_done">Dimatikan semula.</string>
+  <string name="leftovers_error">Kami tidak dapat menyemak sebentar tadi. Adakah TV masih menyala?</string>
+  <string name="leftovers_notice">{count, plural, one {# perkara muncul semula pada TV.} other {# perkara muncul semula pada TV.}}</string>
+  <string name="leftovers_notice_action">Semak</string>
+  <!-- M7 TV settings -->
+  <string name="tvsettings_title">Tetapan TV</string>
+  <string name="tvsettings_name_room">Nama dan bilik</string>
+  <string name="tvsettings_name_label">Nama</string>
+  <string name="tvsettings_room_label">Bilik</string>
+  <string name="tvsettings_level_label">Tahap</string>
+  <string name="tvsettings_level_simple">Mudah</string>
+  <string name="tvsettings_level_custom">Tersuai</string>
+  <string name="tvsettings_level_note">Kembali ke Mudah menyembunyikan pilihan tambahan. TV anda kekal seperti sedia ada.</string>
+  <string name="tvsettings_address">Alamat</string>
+  <string name="tvsettings_last_seen">Terakhir dilihat {date}</string>
+  <string name="tvsettings_forget">Lupakan TV ini</string>
+  <string name="tvsettings_forget_explain">Ini memadamkan rekod TV ini, jurnalnya dan titik pemulihannya daripada telefon ini. TV itu sendiri tidak diubah, tetapi anda tidak akan dapat membuat asal daripada telefon ini selepas itu.</string>
+  <string name="tvsettings_forget_title">Lupakan {tv}?</string>
+  <string name="tvsettings_forget_confirm">Lupakan TV ini</string>
+  <string name="tvsettings_forget_busy">Persediaan masih berfungsi pada TV ini. Tunggu sehingga selesai atau hentikan dahulu.</string>
+  <!-- M8 App settings -->
+  <string name="appsettings_title">Tetapan app</string>
+  <string name="appsettings_large_text">Teks besar mengikuti sistem</string>
+  <string name="appsettings_large_text_note">Saiz teks mengikut saiz yang ditetapkan dalam Tetapan telefon anda.</string>
+  <string name="appsettings_haptics">Haptics</string>
+  <string name="appsettings_haptics_note">Ketik kecil apabila sesuatu selesai atau memerlukan anda.</string>
+  <string name="appsettings_about">Tentang cleanMYTV</string>
+  <string name="appsettings_version">Versi {version}</string>
+  <string name="appsettings_launcher_pin_label">Apl skrin utama yang digabungkan</string>
+  <string name="appsettings_launcher_pin_line" translatable="false">{package} {version} · sha256 {digest}</string>
+  <string name="appsettings_key_label">Kunci telefon</string>
+  <string name="appsettings_key_strongbox">Disimpan dalam cip keselamatan khusus (StrongBox).</string>
+  <string name="appsettings_key_tee">Disimpan dalam perkakasan selamat telefon (TEE).</string>
+  <string name="appsettings_key_wrapped">Disimpan dalam perisian, dibalut dengan kunci daripada storan selamat telefon. Telefon ini tidak boleh menyimpannya dalam perkakasan.</string>
+  <string name="appsettings_check_updates">Semak kemas kini</string>
+  <string name="appsettings_checking">Menyemak...</string>
+  <string name="appsettings_update_available">{version} tersedia</string>
+  <string name="appsettings_update_open">Buka halaman keluaran</string>
+  <string name="appsettings_up_to_date">Anda mempunyai versi terkini</string>
+  <string name="appsettings_update_error">Tidak dapat menyemak kemas kini</string>
+  <string name="appsettings_licences">Lesen</string>
+  <string name="appsettings_licence_app">Bersihkan TV Anda: MIT</string>
+  <string name="appsettings_licence_font">Muka taip pakaian: Lesen Font Terbuka SIL 1.1</string>
+  <string name="appsettings_licence_apache">dadb dan kod Shizuku yang kami sesuaikan: notis Apache-2.0</string>
+  <string name="appsettings_licence_pictures">Lihat gambar: kerja kami sendiri, CC0 1.0 (domain awam); Aurora, Glass and Autumn tasik (Ruska) daripada pelancar Clean Your TV, MIT</string>
+  <string name="appsettings_licence_bouncycastle">Perpustakaan kriptografi Istana Bouncy: Lesen Istana Bouncy</string>
+  <string name="appsettings_privacy">Privasi</string>
+  <string name="appsettings_privacy_text">Tiada apa-apa yang meninggalkan rangkaian anda kecuali muat turun dari github.com. GitHub melihat alamat telefon anda dan ejen pengguna generik. Laporan meninggalkan telefon hanya apabila anda menyalin, berkongsi atau menyiarkannya sendiri.</string>
+  <string name="appsettings_privacy_text_offline">Tiada apa-apa yang meninggalkan rangkaian anda. Apl bercakap hanya kepada TV yang anda pilih dan tidak membuat permintaan internet sendiri. Laporan meninggalkan telefon hanya apabila anda menyalin, berkongsi atau menyiarkannya sendiri.</string>
+  <string name="appsettings_report">Laporkan masalah</string>
+  <string name="appsettings_report_note">Lihat laporan dahulu, kemudian kongsi atau siarkan pada GitHub</string>
+  <string name="appsettings_reset_key">Tetapkan semula kunci saya</string>
+  <string name="appsettings_reset_key_note">Setiap TV akan meminta untuk mempercayai telefon ini sekali lagi.</string>
+  <string name="appsettings_reset_key_title">Tetapkan semula kunci pada telefon ini?</string>
+  <string name="appsettings_reset_key_confirm">Tetapkan semula kunci saya</string>
+  <string name="appsettings_delete_all">Padamkan semuanya</string>
+  <string name="appsettings_delete_all_note">Memadamkan setiap rekod TV, jurnal, titik pemulihan, log diagnostik apl dan kunci daripada telefon ini. TV itu sendiri tidak ditukar dan anda tidak akan dapat membuat asal daripada telefon ini selepas itu.</string>
+  <string name="appsettings_delete_all_title">Padam semua pada telefon ini?</string>
+  <string name="appsettings_delete_all_confirm">Padamkan semuanya</string>
+  <string name="appsettings_delete_all_busy">Persediaan masih berfungsi pada {tv}. Tunggu sehingga selesai atau hentikan dahulu.</string>
+  <!-- Stop and undo ask first (Confirmations): a question, one calm sentence, the verb and a way back -->
+  <string name="confirm_stop_title">Berhenti sekarang?</string>
+  <string name="confirm_stop_body">Kami berhenti di sini dan meletakkan kembali apa yang kami ubah setakat ini. TV anda kekal selamat.</string>
+  <string name="confirm_stop_button">Berhenti dan buat asal</string>
+  <string name="confirm_keep_going">Teruskan</string>
+  <string name="confirm_stop_here_title">Berhenti di sini?</string>
+  <string name="confirm_stop_here_body">Kami mengekalkan apa yang telah dilakukan dan tidak mengubah apa-apa lagi. TV anda kekal selamat.</string>
+  <string name="confirm_stop_here_button">Berhenti di sini</string>
+  <string name="confirm_undo_title">Buat asal perubahan pada TV?</string>
+  <string name="confirm_undo_body">Kami meletakkan kembali semua perubahan ini, jadi TV adalah seperti sebelum ini. Tiada apa-apa yang dipadamkan.</string>
+  <string name="confirm_undo_button">Buat asal perubahan</string>
+  <!-- 0.3.2 B1: an unlisted TV on Manage -->
+  <string name="manage_help_add_tv_banner">Kami tidak pernah menemui TV tepat ini sebelum ini, jadi kami berhati-hati dengannya. Laporan ringkas daripada anda membantu kami menambahkannya.</string>
+  <string name="manage_help_add_tv">Bantu tambah TV ini</string>
+  <string name="manage_wizard_home_title">Wizard persediaan boleh mengambil butang Laman Utama</string>
+  <string name="manage_wizard_home_body">Hidupkan semula skrin utama TV sendiri supaya TV terus dimulakan seperti biasa.</string>
+  <string name="manage_wizard_home_button">Hidupkan semula</string>
+  <string name="manage_wizard_home_working">Menghidupkan semula skrin utama TV sendiri...</string>
+  <!-- 0.3.2 B1 and B2: the report preview -->
+  <string name="report_tv_title">Bantu tambahkan TV ini</string>
+  <string name="report_tv_body">Laporan ini menyatakan tentang TV ini dan apl yang disertakan bersamanya, jadi kami boleh membuat senarai untuknya. Apl yang anda pasang sendiri hanya dikira, tidak dinamakan.</string>
+  <string name="report_problem_title">Lapor masalah</string>
+  <string name="report_problem_body">Laporan ini mempunyai langkah yang kami jalankan dan ringkasan pendek TV, sebagai teks biasa. Alamat, nombor siri, kunci dan kod dikeluarkan terlebih dahulu. Langkah tersebut boleh menamakan apl yang kami matikan atau cuba.</string>
+  <string name="report_public">Ini terbuka jika anda menyiarkannya di GitHub. Apl tidak menghantar apa-apa sendiri: anda memilih ke mana ia pergi.</string>
+  <string name="report_preview_label">Laporan itu</string>
+  <string name="report_paste_hint">Kami menyalin laporan, kemudian membuka borang pada GitHub. Tampalkannya ke dalam kotak yang memintanya.</string>
+  <string name="report_copy_open">Salin dan buka GitHub</string>
+  <!-- 0.3.3 D1: the report fits in the link, so the form opens with it filled in -->
+  <string name="report_open">Buka GitHub</string>
+  <string name="report_in_link_hint">Borang pada GitHub dibuka dengan laporan ini sudah ada di dalamnya. Tambah beberapa perkataan jika anda suka, kemudian siarkannya. Kami menyalin laporan juga, sekiranya borang dibuka tanpanya.</string>
+  <!-- 0.4.6: the problem report is too long for the link, so the form gets its newest log lines -->
+  <string name="report_in_link_short_hint">Borang pada GitHub dibuka dengan laporan ini di dalamnya, dengan hanya baris terbaru log supaya ia muat. Tambah beberapa perkataan jika anda suka, kemudian siarkannya. Kami menyalin keseluruhan laporan juga, sekiranya kami meminta yang lain.</string>
+  <string name="report_too_long">Laporan ini terlalu panjang untuk dimasukkan ke dalam borang dengan sendirinya, jadi kami menyalinnya untuk anda. Pada GitHub, tekan lama kotak laporan, pilih Tampal, kemudian siarkannya.</string>
+  <string name="report_share">Kongsi</string>
+  <string name="report_loading">Membuat laporan</string>
+  <string name="report_unavailable">Kita perlu membaca TV ini sekali sebelum kita boleh membuat laporannya. Sediakan atau sambung kepadanya, kemudian cuba lagi.</string>
+</resources>

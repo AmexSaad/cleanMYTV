@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Every word the TV curtain shows (RFC-CURTAIN-1): the phone sends stage and group names and
+     numbers only, never text. English only in 0.1. -->
+<resources>
+  <string name="app_name">Bersihkan TV Anda</string>
+  <string name="caption">Bersihkan TV Anda</string>
+  <string name="hint">Pastikan TV dihidupkan. Telefon anda menunjukkan butiran.</string>
+  <string name="chip">Titik pemulihan</string>
+  <string name="all_clean">Semua bersih.</string>
+  <string name="stage_scan">Menyimpan titik pemulihan...</string>
+  <string name="stage_restore_saved">Titik pemulihan disimpan</string>
+  <string name="stage_off">Mematikan perkara: %1$d daripada %2$d...</string>
+  <string name="stage_off_group">%1$s: %2$d daripada %3$d...</string>
+  <string name="stage_group_done">%1$d dimatikan</string>
+  <string name="stage_group_done_group">%1$s dimatikan (%2$d)</string>
+  <string name="stage_install">Memasang skrin utama baharu</string>
+  <string name="stage_installed">Skrin utama baharu dipasang</string>
+  <string name="stage_finale">Beralih ke Rumah</string>
+  <string name="group_adverts">Iklan</string>
+  <string name="group_tracking">Penjejakan</string>
+  <string name="group_nobody">Apl yang tidak diminta oleh sesiapa</string>
+  <string name="group_brand">%1$s tambahan</string>
+  <string name="group_brand_unknown">Tambahan pembuat</string>
+  <string name="group_shop">Kedai dan mod demo</string>
+  <string name="group_other">Apl lain</string>
+</resources>

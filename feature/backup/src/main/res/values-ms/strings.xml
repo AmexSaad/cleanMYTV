@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Clean Your TV, :feature:backup. English source strings.
+  Every string that takes an argument is ICU MessageFormat with NAMED arguments in braces,
+  formatted by the app's message helper (android.icu.text.MessageFormat). No printf placeholders,
+  no Android plurals elements. Counts go through the plural selector.
+  Screens: M6 Restore point, the undo preview and confirmation (UX 4.13), export, before a factory reset.
+-->
+<resources>
+  <!-- Shared button words -->
+  <string name="action_back">Kembali</string>
+  <string name="action_cancel">Batal</string>
+  <string name="action_ok">OK</string>
+  <string name="action_done">Selesai</string>
+  <!-- Credential prompt (D17), raised by "Put everything back" -->
+  <string name="gate_title">Sahkan itu anda</string>
+  <string name="gate_subtitle">Sebelum kita menukar apa-apa pada {tv}</string>
+  <string name="gate_negative">Batal</string>
+  <string name="gate_failed">Kami tidak dapat mengesahkan itu adalah anda, jadi tiada apa yang diubah.</string>
+  <!-- M6 Restore point -->
+  <string name="restore_title">Titik pemulihan</string>
+  <string name="restore_current">Disimpan {date}</string>
+  <string name="restore_none">Tiada titik pemulihan lagi. Satu disimpan sebelum perubahan pertama.</string>
+  <string name="restore_read_failed">Kesilapan telah berlaku semasa membaca titik pemulihan</string>
+  <string name="restore_row_undo">Buat asal semua</string>
+  <string name="restore_row_undo_sub">Kembalikan TV kepada keadaan pada {date}</string>
+  <string name="restore_row_save">Simpan salinan</string>
+  <string name="restore_row_save_sub">Menyimpan fail zip ke tempat yang anda pilih.</string>
+  <string name="restore_row_factory">Sebelum tetapan semula kilang</string>
+  <string name="restore_row_factory_sub">Menghidupkan semula wizard persediaan, supaya TV boleh dimulakan dengan betul selepas ditetapkan semula.</string>
+  <!-- Undo everything: preview (UX 4.13) -->
+  <string name="restore_preview_title">Ini mengembalikan TV kepada keadaan pada {date}:</string>
+  <string name="restore_preview_things">{count, plural, one {Hidupkan # kembali } other {Hidupkan # kembali }}</string>
+  <string name="restore_preview_home">Skrin utama lama ({name}) bertanggungjawab semula</string>
+  <string name="restore_preview_wizard">Wizard persediaan dihidupkan semula</string>
+  <string name="restore_preview_screensaver">Penjimat skrin jam kembali ke TV sendiri</string>
+  <string name="restore_preview_keyboard">Papan kekunci kembali kepada TV sendiri</string>
+  <string name="restore_launcher_title">Skrin utama baharu</string>
+  <string name="restore_launcher_keep">Pastikan ia dipasang sebagai apl biasa</string>
+  <string name="restore_launcher_remove">Keluarkan ia daripada TV</string>
+  <string name="restore_launcher_remove_note">Mengalih keluarnya juga mengalih keluar kad modul jawapan yang diberikan pada TV.</string>
+  <string name="restore_preview_button">Letakkan semuanya kembali</string>
+  <!-- Undo everything: confirmation sheet -->
+  <string name="restore_confirm_title">Letakkan semuanya kembali?</string>
+  <string name="restore_confirm_body">Iklan dan penjejakan kembali juga. Anda sentiasa boleh menjalankan pembersihan sekali lagi.</string>
+  <string name="restore_confirm_button">Letakkan semuanya kembali</string>
+  <!-- Undo everything: narration and end -->
+  <string name="restore_working_title">Mengembalikan segala-galanya</string>
+  <string name="restore_working_things">{total, plural, other {Menghidupkan semula perkara: {done} daripada #...}}</string>
+  <string name="restore_working_home">Meletakkan semula skrin utama lama...</string>
+  <string name="restore_working_wizard">Menghidupkan semula wizard persediaan...</string>
+  <string name="restore_done_title">Semuanya kembali</string>
+  <string name="restore_done_body">TV anda adalah seperti pada {date}. Titik pemulihan disimpan sekiranya anda berubah fikiran.</string>
+  <string name="restore_clean_again">Bersihkan semula</string>
+  <!-- Before a factory reset -->
+  <string name="restore_factory_title">Sebelum tetapan semula kilang</string>
+  <string name="restore_factory_body">Tetapan semula kilang mengembalikan wizard persediaan TV, jadi kami menghidupkannya semula sekarang dan TV boleh dimulakan dengan betul selepas itu.</string>
+  <string name="restore_factory_button">Hidupkan semula wizard</string>
+  <string name="restore_factory_working">Menghidupkan semula wizard persediaan...</string>
+  <string name="restore_factory_done">Wizard persediaan dihidupkan semula. Anda boleh menetapkan semula TV sekarang.</string>
+  <!-- Save a copy (export) -->
+  <string name="restore_export_saved">Menyimpan salinan titik pemulihan.</string>
+  <string name="restore_export_failed">Kami tidak dapat menyimpan salinan. Cuba tempat lain.</string>
+</resources>

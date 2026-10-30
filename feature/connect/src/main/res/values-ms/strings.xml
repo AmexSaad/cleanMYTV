@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Clean Your TV, :feature:connect. English source strings.
+  Every string that takes an argument is ICU MessageFormat with NAMED arguments in braces,
+  formatted by the app's message helper (android.icu.text.MessageFormat). No printf placeholders,
+  no Android plurals elements. Counts go through the plural selector.
+  Screens: S1, S1b, S1c, S2a to S2d, S2x, the "I don't see it" sheet, the stop cards for finding
+  and reaching the TV. The Wi-Fi name is never shown (D19).
+-->
+<resources>
+  <!-- Shared button words -->
+  <string name="action_back">Kembali</string>
+  <string name="action_cancel">Batal</string>
+  <string name="action_ok">OK</string>
+  <!-- S1 Welcome. The overline is the product name, as on the TV launcher. -->
+  <string name="welcome_overline" translatable="false">cleanMYTV</string>
+  <string name="welcome_title">TV lebih kemas. Mula dengan mudah.</string>
+  <string name="welcome_body">Nyahaktif app yang tidak diperlukan, kekalkan app pilihan dan kemaskan skrin utama TV. Semak pelan dahulu; perubahan boleh dipulihkan.</string>
+  <string name="welcome_hero_cd">Skrin utama TV yang penuh dengan baris tajaan bertukar menjadi bersih dengan empat apl di sepanjang bahagian bawah</string>
+  <string name="welcome_looking">Mencari TV pada Wi-Fi anda...</string>
+  <string name="welcome_found_one">Dijumpai {name} ({room})</string>
+  <string name="welcome_found_one_noroom">Dijumpai {name}</string>
+  <string name="welcome_found_many">{count, plural, one {Temui # TV} other {Temui # TV}}</string>
+  <string name="welcome_none_yet">Belum ada TV. Teruskan, kami akan terus mencari.</string>
+  <string name="welcome_start">Sambung TV anda</string>
+  <string name="welcome_returning">Saya sudah pernah sambung TV</string>
+  <!-- S1b Which TV? -->
+  <string name="picker_title">TV yang mana?</string>
+  <string name="picker_body">Tidak pasti? TV yang anda pilih akan memaparkan mesej pada skrinnya dalam seketika.</string>
+  <string name="picker_row">{name}, {room} · {platform}</string>
+  <string name="picker_row_noroom">{name} · {platform}</string>
+  <string name="picker_name_with_suffix">{name} ...{suffix}</string>
+  <string name="picker_platform_android_tv">Android TV {version}</string>
+  <string name="picker_platform_google_tv">Google TV {version}</string>
+  <string name="picker_platform_fire_tv">Fire TV</string>
+  <string name="picker_footer">Telefon dan TV mesti menggunakan Wi-Fi yang sama.</string>
+  <string name="picker_primary">Gunakan {name}</string>
+  <string name="picker_tertiary">Masukkan alamat TV</string>
+  <!-- S1c Enter the TV's address (sheet) -->
+  <string name="address_title">Taip alamat TV</string>
+  <string name="address_body">Pada TV: Tetapan &gt; Rangkaian &gt; nama Wi-Fi anda menunjukkan alamat seperti 192.168.1.50.</string>
+  <string name="address_field_label">Alamat TV</string>
+  <string name="address_error">Itu bukan alamat pada rangkaian rumah anda</string>
+  <string name="address_connect">Sambung</string>
+  <!-- S2a Let the phone in (steps) -->
+  <string name="door_title">Benarkan sambungan telefon</string>
+  <string name="door_body">Gunakan alat kawalan jauh TV dan ikut langkah ini untuk membenarkan sambungan.</string>
+  <string name="door_step_cd">Langkah {current} daripada {total}</string>
+  <string name="door_next">Seterusnya</string>
+  <string name="door_menu_names_vary">Nama menu mungkin berbeza sedikit pada TV anda.</string>
+  <string name="door_same_wifi">Telefon dan TV mesti menggunakan Wi-Fi yang sama.</string>
+  <string name="door_waiting">Menunggu TV...</string>
+  <string name="door_connecting">Menyambung...</string>
+  <string name="door_still_waiting">Masih menunggu. Adakah penyahpepijatan USB dihidupkan? Sesetengah TV memerlukan penyahpepijatan Rangkaian juga.</string>
+  <string name="door_still_waiting_show_me">Tunjukkan saya</string>
+  <string name="door_change_model">Bukan {model}? Tukar model</string>
+  <string name="door_change_model_generic">Bukan TV ini? Tukar model</string>
+  <!-- Round 3: the S1b tertiary's words, for a door Start opened on the one device found -->
+  <string name="door_not_this_tv">Bukan TV ini? Masukkan alamat TV</string>
+  <string name="door_brand_prompt">Jenama yang mana?</string>
+  <string name="door_brand_xiaomi">Xiaomi</string>
+  <string name="door_brand_tcl">TCL</string>
+  <string name="door_brand_sony">Sony</string>
+  <string name="door_brand_hisense">Hisense</string>
+  <string name="door_brand_philips">Philips</string>
+  <string name="door_brand_google">Google</string>
+  <string name="door_brand_amazon">Amazon</string>
+  <string name="door_brand_other">Lain-lain</string>
+  <!-- After the TCL chip: China-market TCL firmware and TCL's Android TV or Google TV need different steps. -->
+  <string name="door_tcl_menus_prompt">Menu yang manakah ditayangkan oleh TV?</string>
+  <string name="door_tcl_menus_global">Menu dalam bahasa Inggeris atau bahasa saya</string>
+  <string name="door_tcl_menus_chinese">Menu dalam bahasa Cina</string>
+  <!-- 0.3.6: the TV's port answered but the connection failed; {kind} is a short code such as unreachable -->
+  <string name="door_connect_failed_title">TV menjawab, tetapi telefon ini tidak dapat disambungkan</string>
+  <string name="door_connect_failed_body">Sambungan gagal ({kind}). Kami akan terus mencuba semasa skrin ini dibuka.</string>
+  <string name="door_connect_failed_hint">Jika ADB daripada komputer berfungsi tetapi apl ini tidak dapat mencapai TV, sesuatu pada telefon mungkin menghalang: had rangkaian setiap apl (MIUI, Samsung), VPN, DNS Peribadi atau data mudah alih. Matikan seketika dan cuba lagi.</string>
+  <string name="door_copy_error">Ralat salin</string>
+  <string name="door_error_copied">Disalin. Tampalkannya ke dalam isu anda.</string>
+  <!-- 0.4.6: under a connect that failed; opens the GitHub form with the phone's side filled in. The wording of every report button. -->
+  <string name="connect_report">Laporkan masalah</string>
+  <string name="door_unknown_note">Kami tidak pernah bertemu dengan TV yang tepat ini sebelum ini. Langkahnya selalunya sama.</string>
+  <!-- S2a step cards by platform family (UX 2 table). Note to translators: match the TV's own menu names. -->
+  <!-- Android TV 9 to 11 -->
+  <string name="family_atv_step1">Pada TV, buka Tetapan (gear, bahagian atas kanan), kemudian Keutamaan Peranti &gt; Perihal. Tekan OK pada \"Bina\" tujuh kali sehingga TV menyatakan \"Anda kini seorang pembangun\".</string>
+  <string name="family_atv_step2">Kembali satu skrin. Buka pilihan Pembangun dan hidupkan penyahpepijatan USB. Jika TV juga menunjukkan \"Penyahpepijatan rangkaian\" atau \"penyahpepijatan ADB\", hidupkannya juga.</string>
+  <string name="family_atv_step3">Biarkan TV pada skrin ini. Telefon anda akan bersambung sendiri.</string>
+  <string name="family_atv_extra_shield">Pada Perisai, \"Penyahpepijatan rangkaian\" ialah yang penting.</string>
+  <!-- Google TV 12 to 14 -->
+  <string name="family_gtv_step1">Pada TV, buka Tetapan, kemudian Sistem &gt; Perihal. Tekan OK pada \"Android TV OS build\" tujuh kali sehingga TV menyatakan \"Anda kini seorang pembangun\".</string>
+  <string name="family_gtv_step2">Kembali satu skrin. Buka Sistem &gt; Pilihan pembangun dan hidupkan penyahpepijatan USB, kemudian juga penyahpepijatan wayarles.</string>
+  <string name="family_gtv_step3">Biarkan TV pada skrin ini. Telefon anda akan bersambung sendiri.</string>
+  <!-- Fire TV (Fire OS 7) -->
+  <string name="family_fire_step1">Pada TV, buka Tetapan &gt; My Fire TV &gt; Perihal. Pilih nama peranti tujuh kali sehingga TV menyatakan \"Anda kini seorang pembangun\".</string>
+  <string name="family_fire_step2">Kembali satu skrin. Buka pilihan Pembangun dan hidupkan penyahpepijatan ADB.</string>
+  <string name="family_fire_step3">Biarkan TV pada skrin ini. Telefon anda akan bersambung sendiri.</string>
+  <!-- TCL China (Android 9) -->
+  <string name="family_tcl_step1">Pada TV, buka Tetapan &gt; Perihal &gt; 本机信息, kemudian tekan Atas, Bawah, Kiri, Kanan pada alat kawalan jauh.</string>
+  <string name="family_tcl_step2">Tetingkap kecil \"ADB\" muncul dengan alamat. Biarkan ia terbuka.</string>
+  <string name="family_tcl_step3">Biarkan TV pada skrin ini. Telefon anda akan bersambung sendiri.</string>
+  <!-- TCL outside China (menus in English or the person's language): the Android TV steps plus these lines on steps 1 and 2 -->
+  <string name="family_tcl_extra_gtv_step1">Pada Google TV: Sistem &gt; Perihal, kemudian tekan OK pada \"Android TV OS build\" tujuh kali.</string>
+  <string name="family_tcl_extra_gtv">Pada Google TV, hidupkan juga penyahpepijatan Wayarles.</string>
+  <!-- Unknown brand: the generic Android TV path -->
+  <string name="family_unknown_step1">Pada TV, buka Tetapan (gear, bahagian atas kanan), kemudian Keutamaan Peranti &gt; Perihal. Tekan OK pada \"Bina\" tujuh kali sehingga TV menyatakan \"Anda kini seorang pembangun\".</string>
+  <string name="family_unknown_step2">Kembali satu skrin. Buka pilihan Pembangun dan hidupkan penyahpepijatan USB. Jika TV juga menunjukkan \"Penyahpepijatan rangkaian\" atau \"penyahpepijat ADB\", hidupkan itu juga.</string>
+  <string name="family_unknown_step3">Biarkan TV pada skrin ini. Telefon anda akan bersambung sendiri.</string>
+  <!-- S2a profile banners (UX 2 and 4.15) -->
+  <string name="banner_fire">Fire TV membolehkan kami mematikan iklan dan penjejakan tetapi mengekalkan skrin utamanya sendiri. Anda masih mendapat pembersihan.</string>
+  <string name="banner_tcl">TV ini menyimpan skrin utamanya sendiri (TCL tidak membenarkan orang lain). Anda masih mendapat pembersihan.</string>
+  <string name="banner_mibox_usb">Semasa nyahpepijat dihidupkan, kotak ini mematikan port USBnya. Pembesar suara atau pemacu USB akan berhenti sehingga kami selesai (kami mematikan penyahpepijatan semula pada penghujungnya).</string>
+  <!-- S2c Look at the TV (Allow) -->
+  <string name="allow_title">Tengok TV</string>
+  <string name="allow_body">TV bertanya sama ada hendak mempercayai telefon ini. Tandai \"Sentiasa benarkan\", kemudian pilih OK.</string>
+  <!-- The two parts of allow_body shown in text.primary; each must appear in allow_body exactly. -->
+  <string name="allow_body_emphasis_always">\"Sentiasa benarkan\"</string>
+  <string name="allow_body_emphasis_ok">OK.</string>
+  <string name="allow_code_label">Kod pada TV berakhir dengan</string>
+  <string name="allow_code_caption">Itulah telefon ini.</string>
+  <string name="allow_waiting">Menunggu ketukan anda pada TV...</string>
+  <string name="allow_still_waiting">Masih menunggu OK di TV.</string>
+  <string name="allow_trusted">Dipercayai</string>
+  <string name="allow_dont_see">Saya tidak melihatnya di TV</string>
+  <string name="allow_art_cd">Kotak penyahpepijatan USB Benarkan TV. Cap jari berakhir dengan {tail}.</string>
+  <!-- S2c sheet: I don't see it on the TV (UX 4.4) -->
+  <string name="notseen_title">Saya tidak melihatnya di TV</string>
+  <string name="notseen_hidden">Kotak boleh bersembunyi di sebalik skrin lain. Tekan Laman Utama pada alat kawalan jauh, kemudian Kembali sekali. Jika masih tiada, kami akan bertanya kepada TV sekali lagi.</string>
+  <string name="notseen_cancelled">Jika seseorang memilih Batal: matikan dan hidupkan penyahpepijatan USB sekali lagi pada TV, kemudian ketik \"Tanya TV sekali lagi\".</string>
+  <string name="notseen_greyed">Jika \"Sentiasa benarkan\" dikelabukan pada TV, OK sahaja tidak mengapa; kami akan bertanya lagi lain kali.</string>
+  <string name="notseen_ask_again">Tanya TV sekali lagi</string>
+  <string name="notseen_asking">Bertanya pada TV sekali lagi...</string>
+  <string name="notseen_restart">TV tidak menerima telefon. Ini berlaku pada beberapa model apabila penyahpepijatan dihidupkan sebelum TV selesai dimulakan. Mulakan semula TV, hidupkan penyahpepijatan semula dan kembali.</string>
+  <string name="notseen_restarted">Saya telah memulakannya semula</string>
+  <!-- S2d Connected, and the identity check "Is this your TV?" (D38) -->
+  <string name="connected_title">Disambungkan ke {tv}</string>
+  <string name="connected_cd">Bersambung</string>
+  <string name="identity_question">Adakah ini TV anda?</string>
+  <string name="identity_detail">{name}, pengakhiran bersiri {serial}</string>
+  <string name="identity_body">Semak sama ada gambar itu adalah yang ditunjukkan oleh TV anda sekarang.</string>
+  <string name="identity_screenshot_cd">Perkara yang dipaparkan oleh TV sekarang</string>
+  <string name="identity_yes">Ya, itu milik saya</string>
+  <string name="identity_no">Tidak</string>
+  <!-- S2x Pairing needed (D9). The three commands are code and are not translated. -->
+  <string name="pairing_title">TV ini memerlukan kod berpasangan</string>
+  <string name="pairing_body">Versi ini belum boleh menaip kod gandingan lagi; yang seterusnya akan. Jika anda mempunyai komputer, pasangkan sekali dengan adb dan jalankan adb tcpip 5555, kemudian kembali; telefon mengambilnya dari sana.</string>
+  <string name="pairing_show_steps">Tunjukkan saya langkah-langkah komputer</string>
+  <string name="pairing_steps_title">Pasangkan sekali daripada komputer</string>
+  <string name="pairing_steps_intro">Pada TV, buka Pilihan Pembangun &gt; Penyahpepijatan wayarles &gt; Pasangkan peranti dengan kod berpasangan. Kemudian jalankan tiga arahan ini pada komputer, satu demi satu.</string>
+  <string name="pairing_steps_cmd_pair" translatable="false">adb pair ADDRESS:PAIR_PORT</string>
+  <string name="pairing_steps_cmd_connect" translatable="false">adb connect ADDRESS:CONNECT_PORT</string>
+  <string name="pairing_steps_cmd_tcpip" translatable="false">adb -s ADDRESS:CONNECT_PORT tcpip 5555</string>
+  <string name="pairing_steps_note">Gunakan alamat, port dan kod enam digit rancangan TV. Apabila arahan terakhir telah dijalankan, kembali ke apl ini. Selepas TV dimulakan semula, jalankan dua arahan terakhir sekali lagi dengan port yang ditunjukkan oleh TV kemudian; tidak perlu berpasangan lagi.</string>
+  <!-- Stop: TV not found (UX 4.1, no Wi-Fi name, D19) -->
+  <string name="stop_tv_not_found_title">TV belum ditemui</string>
+  <string name="stop_tv_not_found_body">Pastikan TV dihidupkan dan pada Wi-Fi yang sama seperti telefon ini. TV boleh mengambil masa seminit untuk dipaparkan selepas mereka bangun.</string>
+  <string name="stop_tv_not_found_primary">Teruskan mencari</string>
+  <string name="stop_tv_not_found_secondary">Masukkan alamat TV</string>
+  <string name="stop_tv_not_found_tertiary">Bantuan</string>
+  <string name="stop_tv_not_found_help_title">Mengapa TV mungkin tidak dipaparkan</string>
+  <string name="stop_tv_not_found_help_isolation">Wi-Fi tetamu, atau penghala yang memisahkan peranti. Minta penghala untuk \"pengasingan AP\" atau \"pengasingan klien\" dan matikannya.</string>
+  <string name="stop_tv_not_found_help_ethernet">TV menggunakan Ethernet manakala telefon menggunakan Wi-Fi. Itu bagus pada kebanyakan penghala, tetapi ada yang memisahkan keduanya. Menaip alamat TV akan mengelilinginya.</string>
+  <string name="stop_tv_not_found_help_mesh">Sistem mesh dengan rangkaian tetamu yang berasingan. Sertai telefon ke rangkaian utama.</string>
+  <!-- Stop: wrong network (UX 4.2 with D19 copy) -->
+  <string name="stop_wrong_network_title">Telefon dan TV berada pada rangkaian yang berbeza</string>
+  <string name="stop_wrong_network_body">TV kali terakhir dilihat pada rangkaian yang berbeza. Sertai Wi-Fi yang sama seperti TV dan kami akan meneruskan.</string>
+  <string name="stop_wrong_network_primary">Buka tetapan Wi-Fi</string>
+  <string name="stop_wrong_network_secondary">Saya di sebelah kanan, lihat sekali lagi</string>
+  <string name="stop_wrong_network_off_title">Telefon ini tiada pada Wi-Fi</string>
+  <string name="stop_wrong_network_off_body">Wi-Fi dimatikan. TV hanya boleh dihubungi melalui Wi-Fi yang sama.</string>
+  <!-- Stop: identity changed (D37) -->
+  <string name="stop_identity_changed_title">TV berbeza menjawab di alamat ini</string>
+  <string name="stop_identity_changed_body">TV di alamat ini bukanlah TV yang kami sediakan sebagai {name}. Alamatnya mungkin telah berubah, atau TV lain telah mengambilnya. Kami berhenti sebelum menukar apa-apa.</string>
+  <string name="stop_identity_changed_primary">Cari lagi</string>
+  <string name="stop_identity_changed_secondary">Belakang</string>
+  <!-- Stop: shell v2 missing (F1) -->
+  <string name="stop_tv_not_supported_title">TV ini belum boleh disediakan dari telefon lagi</string>
+  <string name="stop_tv_not_supported_body">Sambungan penyahpepijatan TV ini terlalu asas untuk telefon membuat perubahan dengan selamat, jadi kami berhenti sebelum menyentuh apa-apa. Tiada apa-apa pun di TV diubah.</string>
+  <string name="stop_tv_not_supported_primary">Belakang</string>
+</resources>

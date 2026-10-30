@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Clean Your TV, :feature:modules. English source strings.
+  Every string that takes an argument is ICU MessageFormat with NAMED arguments in braces,
+  formatted by the app's message helper (android.icu.text.MessageFormat). No printf placeholders,
+  no Android plurals elements. Counts go through the plural selector.
+  Screens: M3, M3a, M3b, M3c, update re-consent, the index and fetch failure lines.
+  Module names, publisher handles and index text are data and are never put in these strings.
+-->
+<resources>
+  <!-- Shared button words -->
+  <string name="action_back">Kembali</string>
+  <string name="action_cancel">Batal</string>
+  <string name="action_ok">OK</string>
+  <string name="action_done">Selesai</string>
+  <string name="action_undo">Pulihkan</string>
+  <!-- Credential prompt (D17), raised by "Add to {tv}" -->
+  <string name="gate_title">Sahkan itu anda</string>
+  <string name="gate_subtitle">Sebelum kita menukar apa-apa pada {tv}</string>
+  <string name="gate_negative">Batal</string>
+  <string name="gate_failed">Kami tidak dapat mengesahkan itu adalah anda, jadi tiada apa-apa yang diubah.</string>
+  <!-- M3 Cards and modules -->
+  <string name="modules_title">Kad dan modul</string>
+  <string name="modules_state_shown">Ditunjukkan</string>
+  <string name="modules_state_hidden">Tersembunyi</string>
+  <string name="modules_state_over_limit">Melebihi had</string>
+  <string name="modules_over_limit_note">Skrin utama menunjukkan sehingga lapan kad.</string>
+  <string name="modules_remove">Alih keluar daripada TV</string>
+  <string name="modules_show_card">Tunjukkan kadnya</string>
+  <string name="modules_cards_off_note">Kad dimatikan pada skrin utama TV ini. Tunjukkan satu dan TV meminta anda mengesahkan.</string>
+  <string name="modules_update">Kemas kini</string>
+  <string name="modules_add">Tambah</string>
+  <string name="modules_update_available">{version} tersedia</string>
+  <string name="modules_empty">Tiada kad lagi. Tambahkan satu untuk meletakkannya pada skrin utama.</string>
+  <string name="modules_normal_app_note">Pada TV ini ia kelihatan sebagai apl biasa</string>
+  <string name="modules_remove_title">Alih keluar {name} daripada {tv}?</string>
+  <string name="modules_remove_body">Ini mengeluarkan apl daripada TV. Skrin utama anda dan kad anda yang lain kekal seperti sedia ada.</string>
+  <string name="modules_remove_confirm">Alih keluar</string>
+  <string name="modules_removed">{name} telah dialih keluar.</string>
+  <string name="modules_state_cd">{name}: {state}</string>
+  <!-- Update re-consent (UX 5.4) -->
+  <string name="modules_update_consent">{name} {version} kini juga mahu: {permissions}. Benarkan versi ini?</string>
+  <string name="modules_update_skip">Langkau versi ini</string>
+  <!-- M3a Add to {tv} -->
+  <string name="addmodule_title">Tambahkan pada {tv}</string>
+  <string name="addmodule_search_hint">Cari</string>
+  <string name="addmodule_search_cd">Cari modul</string>
+  <string name="addmodule_open_source">Sumber terbuka</string>
+  <string name="addmodule_size">{size, plural, other {# MB}}</string>
+  <string name="addmodule_tier_community">Komuniti</string>
+  <string name="addmodule_tier_verified">Disahkan</string>
+  <string name="addmodule_tier_paused">Dijeda</string>
+  <string name="addmodule_loading">Memuatkan senarai...</string>
+  <string name="addmodule_empty">Tiada modul yang sepadan dengan carian anda.</string>
+  <string name="addmodule_refresh">Muat semula</string>
+  <string name="addmodule_footer">Semua modul dibuat oleh orang dalam komuniti dan disemak secara automatik.</string>
+  <string name="addmodule_footer_link">Siapa yang membuat setiap satu</string>
+  <string name="addmodule_tiers_title">Siapa yang membuat setiap satu</string>
+  <string name="addmodule_tiers_community">Komuniti: dibuat oleh seseorang di luar apl ini dan disemak secara automatik terhadap perkara yang diterbitkan oleh pengarang.</string>
+  <string name="addmodule_tiers_verified">Disahkan: orang yang dinamakan telah menyemak versi itu.</string>
+  <string name="addmodule_tiers_paused">Dijeda: penyelenggara telah berhenti menawarkannya buat masa ini.</string>
+  <!-- M3b Module detail -->
+  <string name="module_what_title">APA YANG IA BOLEH LAKUKAN PADA TV</string>
+  <string name="module_who_title">SIAPA YANG MEMBUATNYA</string>
+  <string name="module_runs_background">Berjalan di latar belakang: {reason}</string>
+  <string name="module_no_background">Tiada perkhidmatan latar belakang</string>
+  <string name="module_perm_can_cd">{statement}. Ia boleh melakukan ini.</string>
+  <string name="module_perm_cannot_cd">{statement}. Ia tidak melakukan ini.</string>
+  <string name="module_maker">{handle} pada GitHub</string>
+  <string name="module_version_line">Versi {version}, dikeluarkan {date}</string>
+  <string name="module_checks">{count, plural, =0 {Disemak secara automatik: fail sepadan dengan terbitan pembangun dan tidak meminta kebenaran.} one {Disemak secara automatik: fail sepadan dengan terbitan pembangun dan hanya meminta # kebenaran yang disenaraikan di atas.} other {Disemak secara automatik: fail sepadan dengan terbitan pembangun dan hanya meminta # kebenaran yang disenaraikan di atas.}}</string>
+  <string name="module_not_reviewed">Disemak secara automatik. Belum disemak oleh seseorang.</string>
+  <string name="module_key_line">Kunci {key}, sama seperti pada TV</string>
+  <string name="module_source">Kod sumber</string>
+  <string name="module_report">Laporkan masalah</string>
+  <string name="module_hero_badge">Kadnya pada TV anda</string>
+  <string name="module_add">Tambahkan pada {tv}</string>
+  <!-- Shown before the first add-on download (F-Droid Inclusion Policy, security item 5). -->
+  <string name="module_outside_store">Alat tambah dimuat turun daripada keluaran GitHub pengarangnya, di luar mana-mana gedung aplikasi dan tidak dibina atau disemak oleh F-Droid.</string>
+  <string name="module_add_turns_cards_on">Menambahnya menghidupkan kad untuk skrin utama TV ini; TV bertanya sebelum kad ditunjukkan.</string>
+  <string name="module_paused_reason">Dijeda oleh penyelenggara: {reason}</string>
+  <string name="module_install_adding">Menambah {name}...</string>
+  <string name="module_install_downloading">{size, plural, other {Memuat turun (# MB)...}}</string>
+  <string name="module_install_checking">Menyemak ia sepadan dengan salinan pengarang...</string>
+  <string name="module_install_installing">Memasang pada TV...</string>
+  <string name="module_install_asking">Meminta TV menunjukkan soalannya...</string>
+  <string name="module_install_failed">{name} tidak dapat dipasang pada TV. Tiada apa-apa lagi yang diubah.</string>
+  <!-- M3c Look at the TV (card prompt, D1 and D45) -->
+  <string name="cardprompt_title">Tengok TV</string>
+  <string name="cardprompt_art_keep">Simpan tersembunyi</string>
+  <string name="cardprompt_art_cd">TV bertanya: {name} mahukan kad pada skrin utama anda. Kunci {key}. Pilihannya ialah Simpan tersembunyi dan Tunjukkan kad.</string>
+  <string name="cardprompt_body">TV menyemak semula dengan anda supaya tiada apl boleh meletakkan dirinya pada skrin utama tanpa bertanya.</string>
+  <string name="cardprompt_instruction">Pilih \"Tunjukkan kad\" dengan alat kawalan jauh. Kunci pada TV sepatutnya membaca {key}, sama seperti di sini.</string>
+  <string name="cardprompt_waiting">Menunggu jawapan anda di TV...</string>
+  <string name="cardprompt_later">Lakukan kemudian: tahan OK pada pil Tetapan TV untuk mencari kad Modul.</string>
+  <string name="cardprompt_shown">{name} berada pada skrin utama.</string>
+  <string name="cardprompt_hidden">{name} dipasang dan disembunyikan. Ia masih kelihatan sebagai aplikasi biasa. Anda boleh menunjukkan kad pada bila-bila masa daripada Kad dan modul.</string>
+  <string name="cardprompt_signer_changed">Versi baharu {name} ditandatangani dengan kunci yang berbeza daripada sebelumnya. Itu luar biasa; TV bertanya lagi dengan sengaja. Jika anda tidak menjangkakan kemas kini, pilih Simpan tersembunyi.</string>
+  <!-- Module list (index) failures. Calm, never blame the user. -->
+  <string name="index_failure_bad_signature">Kami tidak dapat mengesahkan senarai modul adalah tulen, jadi kami tidak menggunakannya. Tiada apa-apa di TV disentuh.</string>
+  <string name="index_failure_unknown_key">Senarai modul ditandatangani dengan kunci yang tidak kami kenali, jadi kami tidak menggunakannya. Tiada apa-apa di TV disentuh.</string>
+  <string name="index_failure_revoked_key">Senarai modul ditandatangani dengan kunci yang telah ditarik balik, jadi kami tidak menggunakannya. Tiada apa-apa di TV disentuh.</string>
+  <string name="index_failure_bad_keys_file">Senarai kunci yang dipercayai tidak lulus semakan kami, jadi kami tidak menggunakan senarai modul. Tiada apa-apa di TV disentuh.</string>
+  <string name="index_failure_expired">Senarai modul sudah lapuk. Sambung ke internet dan muat semula.</string>
+  <string name="index_failure_rollback">Senarai modul yang kami terima adalah lebih lama daripada yang telah kami miliki, jadi kami mengekalkan yang lebih baharu.</string>
+  <string name="index_failure_malformed">Kami tidak dapat membaca senarai modul. Cuba lagi sebentar lagi.</string>
+  <string name="index_stale_warning">Senarai modul mungkin sudah lapuk; muat semula apabila anda dalam talian</string>
+  <!-- Download (fetch) failures -->
+  <string name="fetch_failure_offline">Telefon ini tiada sambungan internet sekarang. Sambung dan cuba lagi.</string>
+  <string name="fetch_failure_host_not_allowed">Muat turun itu bukan dari tempat yang kami gunakan, jadi kami berhenti. Tiada apa-apa dipasang.</string>
+  <string name="fetch_failure_http_error">Tapak muat turun menjawab dengan ralat ({code}). Cuba lagi sebentar lagi.</string>
+  <string name="fetch_failure_too_large">Muat turun itu lebih besar daripada yang dijangkakan, jadi kami berhenti. Tiada apa-apa dipasang.</string>
+  <string name="fetch_failure_hash_mismatch">Muat turun tidak sepadan dengan salinan pengarang, jadi kami tidak memasangnya.</string>
+  <string name="fetch_failure_size_mismatch">Muat turun bukan saiz yang dinyatakan dalam senarai, jadi kami berhenti. Tiada apa-apa dipasang.</string>
+  <string name="fetch_failure_signer_mismatch">Apl ini ditandatangani oleh seseorang selain pengarang dalam senarai, jadi kami tidak memasangnya.</string>
+  <string name="fetch_failure_try_again">Cuba lagi</string>
+</resources>
