@@ -87,7 +87,7 @@ class GithubReleasesTest {
         }
     }
 
-    @Test fun cancellationIsNotSwallowed() = runBlocking {
+    @Test fun cancellationIsNotSwallowed(): Unit = runBlocking {
         val http = object : HttpFetcher {
             override suspend fun get(url: String, etag: String?, rangeFrom: Long?): HttpResponse = throw CancellationException("closed dialog")
         }
