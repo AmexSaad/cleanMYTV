@@ -8,8 +8,8 @@ android {
     // (STORES-PLAN 0 and 3): GitHub, F-Droid and Google Play ship the same versionCode and versionName.
     defaultConfig {
         // cleanMYTV derivative of upstream v0.4.6-beta2; follows cleanMYTV 1.1.0 (code 2).
-        versionCode = 4
-        versionName = "1.2.1-beta1"
+        versionCode = 5
+        versionName = "1.2.2-beta1"
     }
     // STORES-PLAN 1: one codebase, two store builds, the same applicationId and signing certificate.
     // `full` (GitHub and F-Droid) checks GitHub for a newer release and offers the optional add-ons;
