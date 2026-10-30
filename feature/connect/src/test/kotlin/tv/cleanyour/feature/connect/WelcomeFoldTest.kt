@@ -56,7 +56,7 @@ class WelcomeFoldTest {
         compose.onNodeWithText("Start").assertIsDisplayed()
         // The promise and its body fit above the pinned bar too (mockup 01), and Welcome has the
         // mockup's two actions only: address entry lives on S1b, the not-found card and the door.
-        compose.onNodeWithText("Your TV, tidied up.").assertIsDisplayed()
+        compose.onNodeWithText("A cleaner TV. A simpler start.").assertIsDisplayed()
         compose.onNodeWithText("Switch off the clutter", substring = true).assertIsDisplayed()
         compose.onNodeWithText("I've set up a TV before").assertIsDisplayed()
         compose.onNodeWithText("Enter the TV's address").assertDoesNotExist()
