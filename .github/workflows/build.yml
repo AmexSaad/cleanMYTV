@@ -57,6 +57,7 @@ jobs:
           git add previews/ ':(glob)**/src/test/screenshots/*.png'
           if ! git diff --cached --quiet; then
             git commit -m 'Record cleanMYTV UI goldens and feature storyboard'
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - name: Verify refreshed screenshots
@@ -158,6 +159,7 @@ jobs:
           git add previews/phone-en.png previews/phone-ms.png
           if ! git diff --cached --quiet; then
             git commit -m 'Capture installed cleanMYTV on Android 15 in BM and English'
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
