@@ -13,8 +13,8 @@ assert mode in ("debug", "release")
 sdk = os.environ.get("ANDROID_HOME") or os.environ["ANDROID_SDK_ROOT"]
 tools = sorted(glob.glob(str(Path(sdk) / "build-tools" / "*" / "apksigner")))[-1]
 result = subprocess.run([tools, "verify", "--print-certs", str(apk)], check=True, capture_output=True, text=True)
-certs = re.findall(r"Signer #\d+ certificate SHA-256 digest: ([0-9a-f]+)", result.stdout)
-assert len(certs) == 1
+certs = sorted(set(value.lower() for value in re.findall(r"^Signer[^\r\n]*certificate SHA-256 digest:\s*([0-9a-fA-F]{64})\s*$", result.stdout + "\n" + result.stderr, re.MULTILINE)))
+assert len(certs) == 1, "Expected one signing certificate:\n" + result.stdout + result.stderr
 if mode == "release":
     assert certs[0] == Path("signing-certificate.sha256").read_text().strip(), "Wrong release signing certificate"
 badging = subprocess.run([str(Path(tools).with_name("aapt2")), "dump", "badging", str(apk)], check=True, capture_output=True, text=True).stdout
