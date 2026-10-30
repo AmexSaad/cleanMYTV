@@ -30,7 +30,7 @@ jobs:
           assert run['conclusion']=='success' and run['status']=='completed'
           assert run['name']=='Build cleanMYTV'
           assert run['head_repository']['full_name']==os.environ['GITHUB_REPOSITORY']
-          assert run['head_branch'] in ('main','feature/reference-parity')
+          assert run['head_branch'] in ('main','feature/reference-parity','feature/lime-ui')
           subprocess.run(['git','merge-base','--is-ancestor',run['head_sha'],'HEAD'],check=True)
           subprocess.run(['git','diff','--exit-code',run['head_sha'],'HEAD','--','.',':!.github',':!README.md',':!previews',':(exclude,glob)**/src/test/screenshots/*.png'],check=True)
           open('/tmp/validated-sha','w').write(run['head_sha'])
@@ -39,12 +39,12 @@ jobs:
           test -s dist/cleanMYTV.apk
           sha256sum --check dist/SHA256SUMS.txt
           cat > /tmp/release-notes.md <<'NOTES'
-          cleanMYTV 1.2.0 beta1 — fungsi asas Clean Your TV v0.4.6-beta2, dengan reka bentuk putih/biru dan Bahasa Melayu / English.
+          cleanMYTV 1.2.1 beta1 — fungsi asas Clean Your TV v0.4.6-beta2, dengan reka bentuk Hitam + Limau dan Bahasa Melayu / English.
 
           Muat turun cleanMYTV.apk dan pasang pada telefon Android 9+. Telefon dan TV mesti menggunakan rangkaian yang sama. Panduan sambungan disediakan dalam app. Binaan ini ialah beta debug; keserasian TV fizikal masih perlu disahkan. Rekod versi lama kekal tetapi tidak diimport ke jurnal baharu. Pulihkan perubahan yang diperlukan menggunakan versi lama sebelum menggantikan app.
 
-          Download cleanMYTV.apk for an Android 9+ phone. This beta uses the reference connection, analysis, cleaning, home-screen and recovery flows with a refreshed BM/EN interface. Physical TV compatibility is not yet verified. Legacy records are retained but not imported into the new journal.
+          Download cleanMYTV.apk for an Android 9+ phone. This beta uses the reference connection, analysis, cleaning, home-screen and recovery flows with a graphite and lime BM/EN interface. Physical TV compatibility is not yet verified. Legacy records are retained but not imported into the new journal.
 
           Upstream MIT copyright and third-party notices are retained. See the README for source credits and upgrade information.
           NOTES
-          gh release create v1.2.0-beta1 dist/cleanMYTV.apk dist/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.2.0 beta1' --notes-file /tmp/release-notes.md
+          gh release create v1.2.1-beta1 dist/cleanMYTV.apk dist/SHA256SUMS.txt --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.2.1 beta1' --notes-file /tmp/release-notes.md
