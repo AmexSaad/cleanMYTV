@@ -16,7 +16,7 @@
   <string name="welcome_overline" translatable="false">cleanMYTV</string>
   <string name="welcome_title">TV lebih kemas. Mula dengan mudah.</string>
   <string name="welcome_body">Nyahaktif app yang tidak diperlukan, kekalkan app pilihan dan kemaskan skrin utama TV. Semak pelan dahulu; perubahan boleh dipulihkan.</string>
-  <string name="welcome_hero_cd">Skrin utama TV yang penuh dengan baris tajaan bertukar menjadi bersih dengan empat apl di sepanjang bahagian bawah</string>
+  <string name="welcome_hero_cd">TV dengan jalur limau pada skrin gelap</string>
   <string name="welcome_looking">Mencari TV pada Wi-Fi anda...</string>
   <string name="welcome_found_one">Dijumpai {name} ({room})</string>
   <string name="welcome_found_one_noroom">Dijumpai {name}</string>

@@ -1,7 +1,7 @@
 name: Build cleanMYTV
 on:
   push:
-    branches: [main, feature/reference-parity]
+    branches: [main, feature/reference-parity, feature/lime-ui]
   workflow_dispatch:
 permissions:
   contents: write
@@ -39,15 +39,15 @@ jobs:
           shots = [('connect','welcome_found_one','01 / Sambung TV'),('connect','picker_two_tvs','02 / Pilih TV'),('setup','found_simple','03 / Semak analisis'),('setup','working_58','04 / Bersihkan'),('setup','check_84s','05 / Sahkan Home'),('manage','manage_clean','06 / Urus dan pulihkan')]
           font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',18)
           title = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',30)
-          canvas = Image.new('RGB',(1200,1840),'#eaf1fb')
+          canvas = Image.new('RGB',(1200,1840),'#090d0b')
           draw=ImageDraw.Draw(canvas)
-          draw.text((32,20),'cleanMYTV / Pratonton fungsi',font=title,fill='#14233c')
-          draw.text((32,65),'Komponen sebenar / Data contoh / Header app tidak ditunjukkan',font=font,fill='#435671')
+          draw.text((32,20),'cleanMYTV / Pratonton fungsi',font=title,fill='#f5f8f2')
+          draw.text((32,65),'Komponen sebenar / Data contoh / Header app tidak ditunjukkan',font=font,fill='#b8c4b8')
           for index,(module,name,label) in enumerate(shots):
-              image=Image.open(f'feature/{module}/src/test/screenshots/{name}_light.png').convert('RGB')
+              image=Image.open(f'feature/{module}/src/test/screenshots/{name}_dark.png').convert('RGB')
               image.thumbnail((360,780))
               x=30+(index%3)*395; y=110+(index//3)*855
-              draw.text((x,y),label,font=font,fill='#155dcc')
+              draw.text((x,y),label,font=font,fill='#d6ff38')
               canvas.paste(image,(x,y+35))
           Path('previews').mkdir(exist_ok=True)
           canvas.save('previews/storyboard.png')
@@ -57,6 +57,7 @@ jobs:
           git add previews/ ':(glob)**/src/test/screenshots/*.png'
           if ! git diff --cached --quiet; then
             git commit -m 'Record cleanMYTV UI goldens and feature storyboard'
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - name: Verify refreshed screenshots
@@ -158,6 +159,7 @@ jobs:
           git add previews/phone-en.png previews/phone-ms.png
           if ! git diff --cached --quiet; then
             git commit -m 'Capture installed cleanMYTV on Android 15 in BM and English'
+            git pull --rebase origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

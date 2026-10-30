@@ -18,7 +18,7 @@
     <string name="welcome_overline" translatable="false">cleanMYTV</string>
     <string name="welcome_title">A cleaner TV. A simpler start.</string>
     <string name="welcome_body">Switch off the clutter, keep the apps you use, and get a calm home screen. Five minutes. Everything can be put back.</string>
-    <string name="welcome_hero_cd">A TV home screen full of sponsored rows turns into a clean one with four apps along the bottom</string>
+    <string name="welcome_hero_cd">A TV with a lime ribbon across a graphite screen</string>
     <string name="welcome_looking">Looking for TVs on your Wi-Fi...</string>
     <string name="welcome_found_one">Found {name} ({room})</string>
     <string name="welcome_found_one_noroom">Found {name}</string>

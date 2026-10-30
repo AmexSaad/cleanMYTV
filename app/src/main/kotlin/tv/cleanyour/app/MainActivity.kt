@@ -29,15 +29,15 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Dark system icons over the light cleanMYTV surface.
+        // Light system icons over the graphite cleanMYTV surface.
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
         )
         super.onCreate(savedInstanceState)
         graph.credentialGate.attach(this)
         setContent {
-            CytTheme(darkTheme = false) {
+            CytTheme(darkTheme = true) {
                 var start by remember { mutableStateOf<Dest?>(null) }
                 LaunchedEffect(Unit) {
                     graph.tvs.load()

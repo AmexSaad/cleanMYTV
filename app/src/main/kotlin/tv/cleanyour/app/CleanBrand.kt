@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -63,12 +64,13 @@ internal fun CleanBrandFrame(content: @Composable () -> Unit) {
                 }
             }
             val supportLabel = stringResource(R.string.clean_support)
-            Button(
+            OutlinedButton(
                 onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://sociabuzz.com/cleanmytv/tribe"))) },
                 modifier = Modifier.height(48.dp).widthIn(min = 48.dp).semantics { contentDescription = supportLabel },
                 shape = RoundedCornerShape(14.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, CytTheme.colors.primary),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = CytTheme.colors.primary),
                 contentPadding = PaddingValues(horizontal = 12.dp),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp),
             ) {
                 Text(
                     if (context.resources.configuration.fontScale > 1.3f) "♥"
