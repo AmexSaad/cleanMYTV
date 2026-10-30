@@ -8,6 +8,7 @@ import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import java.util.Locale
 import tv.cleanyour.ui.design.theme.CytTheme
@@ -56,12 +60,17 @@ internal fun CleanBrandFrame(content: @Composable () -> Unit) {
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(text = { Text("Bahasa Melayu") }, onClick = { menu = false; CleanLocale.select(context, "ms") })
                     DropdownMenuItem(text = { Text("English") }, onClick = { menu = false; CleanLocale.select(context, "en") })
-                    HorizontalDivider()
-                    DropdownMenuItem(text = { Text(stringResource(R.string.clean_support)) }, onClick = {
-                        menu = false
-                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://sociabuzz.com/cleanmytv/tribe")))
-                    })
                 }
+            }
+            val supportLabel = stringResource(R.string.clean_support)
+            Button(
+                onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://sociabuzz.com/cleanmytv/tribe"))) },
+                modifier = Modifier.size(48.dp).semantics { contentDescription = supportLabel },
+                shape = RoundedCornerShape(14.dp),
+                contentPadding = PaddingValues(0.dp),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp, pressedElevation = 8.dp),
+            ) {
+                Text("♥", Modifier.clearAndSetSemantics { }, style = CytTheme.type.titleMedium)
             }
         }
         Box(Modifier.weight(1f).fillMaxWidth().consumeWindowInsets(WindowInsets.statusBars)) { content() }
