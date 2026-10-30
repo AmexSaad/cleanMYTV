@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 }
                 val s = start
                 if (s == null) Box(Modifier.fillMaxSize().background(CytTheme.colors.bg))
-                else CleanBrandFrame { AppRoot(graph, s, onExit = { finish() }) }
+                else CleanBrandFrame(graph) { AppRoot(graph, s, onExit = { finish() }) }
             }
         }
     }

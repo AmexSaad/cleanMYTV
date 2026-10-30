@@ -11,4 +11,18 @@
     <string name="app_channel_setup_description">Shows progress while the phone changes things on your TV, and tells you when to look at the TV.</string>
     <string name="app_restore_read_failed">Something went wrong reading the restore point</string>
     <string name="clean_support">Support cleanMYTV</string>
+    <string name="clean_update_button">Update</string>
+    <string name="clean_update_title">App update</string>
+    <string name="clean_update_current">Installed version:</string>
+    <string name="clean_update_checking">Checking GitHub for updates…</string>
+    <string name="clean_update_latest">You are using the latest available version.</string>
+    <string name="clean_update_failed">Unable to check for updates. Check your internet connection and try again.</string>
+    <string name="clean_update_tv_busy">Finish or recover the current TV operation before updating the phone app.</string>
+    <string name="clean_update_available">New version:</string>
+    <string name="clean_update_notes">What is new</string>
+    <string name="clean_update_no_notes">No release notes provided.</string>
+    <string name="clean_update_install_hint">Download the APK from our GitHub release. Open the downloaded file and confirm installation in Android. Updates do not run silently.</string>
+    <string name="clean_update_download">Download APK</string>
+    <string name="clean_update_retry">Try again</string>
+    <string name="clean_update_later">Close</string>
 </resources>

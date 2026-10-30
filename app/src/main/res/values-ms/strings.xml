@@ -11,4 +11,18 @@
   <string name="app_channel_setup_description">Menunjukkan kemajuan semasa telefon menukar perkara pada TV anda dan memberitahu anda masa untuk melihat TV.</string>
   <string name="app_restore_read_failed">Kesilapan telah berlaku semasa membaca titik pemulihan</string>
   <string name="clean_support">Sokong cleanMYTV</string>
+  <string name="clean_update_button">Kemas kini</string>
+  <string name="clean_update_title">Kemas kini app</string>
+  <string name="clean_update_current">Versi semasa:</string>
+  <string name="clean_update_checking">Menyemak kemas kini di GitHub…</string>
+  <string name="clean_update_latest">Anda menggunakan versi tersedia yang terkini.</string>
+  <string name="clean_update_failed">Tidak dapat menyemak kemas kini. Semak sambungan internet dan cuba lagi.</string>
+  <string name="clean_update_tv_busy">Selesaikan atau pulihkan operasi TV semasa sebelum mengemas kini app telefon.</string>
+  <string name="clean_update_available">Versi baharu:</string>
+  <string name="clean_update_notes">Perubahan baharu</string>
+  <string name="clean_update_no_notes">Tiada nota keluaran disediakan.</string>
+  <string name="clean_update_install_hint">Muat turun APK daripada keluaran GitHub kami. Buka fail yang dimuat turun dan sahkan pemasangan di Android. Kemas kini tidak dipasang secara senyap.</string>
+  <string name="clean_update_download">Muat turun APK</string>
+  <string name="clean_update_retry">Cuba lagi</string>
+  <string name="clean_update_later">Tutup</string>
 </resources>
