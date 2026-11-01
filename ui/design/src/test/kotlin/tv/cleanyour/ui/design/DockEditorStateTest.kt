@@ -13,6 +13,32 @@ import kotlin.test.assertTrue
 class DockEditorStateTest {
     private val apps = List(12) { DockApp("com.example.app$it", "App $it") }
 
+    @Test fun addingAppsAutomaticallyStartsTheNextRowUntilCapacity() {
+        val s = DockEditorState(apps.take(4), 4)
+        assertFalse(s.hasRoom)
+        assertTrue(s.canAddApp)
+        s.add(apps[4])
+        assertEquals(apps.take(5), s.apps)
+        assertEquals(2, s.rowCount)
+        apps.drop(5).forEach(s::add)
+        assertEquals(apps, s.apps)
+        assertEquals(3, s.rowCount)
+        assertFalse(s.canAddApp)
+        s.add(DockApp("com.example.extra", "Extra"))
+        assertEquals(apps, s.apps)
+        s.remove(apps[0].key)
+        assertTrue(s.canAddApp)
+        s.add(apps[0])
+        assertEquals(apps.drop(1) + apps[0], s.apps)
+    }
+
+    @Test fun addingADuplicateDoesNotCreateAnEmptyRow() {
+        val s = DockEditorState(apps.take(4), 4)
+        s.add(apps[0])
+        assertEquals(apps.take(4), s.apps)
+        assertEquals(1, s.rowCount)
+    }
+
     @Test fun removingRowTwoPullsRowThreeUp() {
         val s = DockEditorState(apps, 4)
         assertEquals(3, s.rowCount)

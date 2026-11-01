@@ -107,7 +107,7 @@ class AppGraphTest {
         g.documents.write("tvs/${tvId.value}/home.txt", "dock=com.netflix.ninja\n".encodeToByteArray())
     }
 
-    private fun tree(dir: File): List<String> = dir.walkTopDown().filter { it != dir }.map { it.relativeTo(dir).path }.sorted().toList()
+    private fun tree(dir: File): List<String> = dir.walkTopDown().filter { it != dir }.map { it.relativeTo(dir).invariantSeparatorsPath }.sorted().toList()
 
     @Test fun forgetThisTvLeavesNothingUnderItsFolder() {
         val g = graph()

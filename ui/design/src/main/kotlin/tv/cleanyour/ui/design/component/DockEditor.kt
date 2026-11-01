@@ -79,7 +79,7 @@ class DockSnapshot internal constructor(internal val apps: List<DockApp>, intern
 // the next are Row 2 and Row 3 under it on the TV's home screen. The launcher sorts its grid by
 // the same list, so a row can only hold apps once the rows above it are full; the list cannot
 // have a gap, and taking an app out pulls the next one up, as the TV would. A row under the dock
-// opens only when the person asks for it ("Add a row under the dock") and the rows above are full,
+// opens when an app needs it, or with "Add a row under the dock" when the rows above are full,
 // and goes again with "Remove row" (the dock itself is never removed).
 @Stable
 class DockEditorState(initial: List<DockApp>, columns: Int, val maxRows: Int = MAX_ROWS) {
@@ -100,6 +100,8 @@ class DockEditorState(initial: List<DockApp>, columns: Int, val maxRows: Int = M
 
     val hasRoom: Boolean get() = apps.size < maxOf(rowCount, 1) * columns
 
+    val canAddApp: Boolean get() = apps.size < capacity
+
     val canAddRow: Boolean get() = apps.isNotEmpty() && !extraRow && apps.size % columns == 0 && apps.size < capacity
 
     fun rowOf(index: Int): Int = index / columns
@@ -107,7 +109,7 @@ class DockEditorState(initial: List<DockApp>, columns: Int, val maxRows: Int = M
     fun rowApps(row: Int): List<DockApp> = apps.drop(row * columns).take(columns)
 
     fun add(app: DockApp) {
-        if (!hasRoom || apps.any { it.key == app.key }) return
+        if (!canAddApp || apps.any { it.key == app.key }) return
         apps = apps + app
         extraRow = false
     }
@@ -353,7 +355,7 @@ fun DockEditor(
         if (others.isNotEmpty()) {
             Overline(stringResource(R.string.cyt_dock_others), Modifier.padding(start = 4.dp, top = 16.dp, bottom = 8.dp))
             ListGroup {
-                val room = state.hasRoom
+                val room = state.canAddApp
                 val targetRow = state.rowOf(state.apps.size)
                 others.forEachIndexed { i, app ->
                     if (i > 0) ListDivider()

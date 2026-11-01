@@ -1,5 +1,8 @@
 package tv.cleanyour.core.flows
 
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonPrimitive
+
 import tv.cleanyour.core.model.BlobRef
 import tv.cleanyour.core.model.LauncherState
 import tv.cleanyour.core.model.PackageName
@@ -33,7 +36,7 @@ import tv.cleanyour.core.store.BlobStore
 // apps they picked, and the Look sheet's preview draws the space as empty band.
 // look2: a choice in the new form (HomeChoice.style) is built from scratch by LookKeys.build from
 // its resolved LookSpec and PictureKeys (LookRules), spec 7.1; a legacy choice (style null) keeps
-// the frozen 0.4.0 path (LegacyLook) byte for byte until the next send.
+// the frozen 0.4.0 style path (LegacyLook). Explicit sends also enable HomeAppLibrary.
 internal class Look(val doc: LauncherConfigDoc, val digest: Sha256, val config: BlobRef, val wallpaper: BlobRef?) {
     companion object {
         suspend fun encode(encoder: ConfigEncoder, blobs: BlobStore, theme: Theme?, dock: List<PackageName>, cards: Boolean, picture: LookPicture? = null,
@@ -44,8 +47,9 @@ internal class Look(val doc: LauncherConfigDoc, val digest: Sha256, val config: 
 
         // A doc and its wallpaper as the push sends them, encoded and stored.
         suspend fun encode(encoder: ConfigEncoder, blobs: BlobStore, doc: LauncherConfigDoc, wallpaper: BlobRef?): Look {
-            val bytes = encoder.encode(doc)
-            return Look(doc, sha256Of(bytes), blobs.putBytes(bytes), wallpaper)
+            val home = HomeAppLibrary.applyTo(doc)
+            val bytes = encoder.encode(home)
+            return Look(home, sha256Of(bytes), blobs.putBytes(bytes), wallpaper)
         }
 
         // The doc and the wallpaper a 0.4.0 choice pushes, without storing anything (LegacyLook).
@@ -64,9 +68,24 @@ internal class Look(val doc: LauncherConfigDoc, val digest: Sha256, val config: 
     }
 }
 
-// The 0.4.0 path, frozen: a saved 0.4.0 look sends exactly these bytes until the person sends a
-// new look (spec 8.2, C16), so neither the TV nor the drift check sees a change nobody made. The
-// legacy-looks fixtures (LookMigrationTest) hold it to the bytes 0.4.0 sent.
+// The bundled launcher already supports phone-only apps, but only after they are added to its
+// library. Seed the phone's selected apps as well as enabling the remote's Home picker. Apply
+// this when sending, so merely reading an older saved look does not change its drift digest.
+internal object HomeAppLibrary {
+    fun applyTo(doc: LauncherConfigDoc): LauncherConfigDoc {
+        val seeded = (doc.unknown["library_apps"] as? JsonArray).orEmpty()
+        val selected = doc.dockApps.orEmpty().map { JsonPrimitive(it.value) }
+        return doc.copy(appLibrary = true, unknown = doc.unknown + mapOf(
+            "library_button" to JsonPrimitive(true),
+            "show_library_pill" to JsonPrimitive(true),
+            "app_library_selection" to JsonPrimitive(true),
+            "library_apps" to JsonArray((seeded + selected).distinct()),
+        ))
+    }
+}
+
+// The frozen 0.4.0 style path. Reading a saved look preserves its original bytes and digest;
+// an explicit send additionally applies HomeAppLibrary. The legacy fixtures protect the style.
 internal object LegacyLook {
     fun docOf(theme: Theme?, dock: List<PackageName>, cards: Boolean, picture: LookPicture?, columns: Int? = null): Pair<LauncherConfigDoc, BlobRef?> {
         val base = DockLayers.applyTo(theme?.doc ?: LauncherConfigDoc(), dock, columns).copy(moduleCards = cards, fillDock = false)
@@ -82,7 +101,7 @@ internal object LegacyLook {
 // goldens and the emulator byte dump), so they draw and send exactly the doc a push makes.
 object LookDocs {
     fun of(theme: Theme?, dock: List<PackageName>, cards: Boolean, picture: LookPicture? = null, columns: Int? = null): Pair<LauncherConfigDoc, BlobRef?> =
-        Look.docOf(theme, dock, cards, picture, columns)
+        Look.docOf(theme, dock, cards, picture, columns).let { (doc, wallpaper) -> HomeAppLibrary.applyTo(doc) to wallpaper }
 }
 
 // The picture a look shows instead of its own (HomeChoice.picture).

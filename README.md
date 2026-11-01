@@ -19,6 +19,8 @@ Fail APK boleh dipasang terus, tanpa ekstrak ZIP. Ini ialah beta dengan tandatan
 
 **Kemas kini app:** Tekan **Kemas kini** di bawah logo. App menyemak keluaran GitHub termasuk beta, memaparkan versi dan nota perubahan, kemudian menawarkan **Muat turun APK**. Buka fail itu dan sahkan pemasangan Android. Muat turun dihalang ketika operasi TV belum selesai.
 
+**Tambah app pada menu Android box (perubahan sumber):** Pada telefon, buka skrin utama TV dan tekan **+ Tambah app ke menu utama**, pilih app dan simpan. Baris baharu dibuka secara automatik apabila baris sebelumnya penuh, sehingga tiga baris. Selepas menyimpan app atau gaya, launcher pada box menyediakan butang **App library** di bahagian atas serta selepas baris app. Buka dengan remote dan tekan **OK** pada app untuk tambah/buang daripada menu utama. Senarai merangkumi app TV dan app Android biasa yang mempunyai pintasan untuk dibuka. App yang ditambah pada box disimpan oleh launcher; susunan dalam telefon masih menunjukkan pilihan terakhir yang dihantar telefon. Fungsi ini memerlukan binaan dengan perubahan ini dan belum tersedia dalam APK keluaran yang dipautkan di atas.
+
 Keluaran ini memulakan tandatangan release tetap. Beta debug 1.2.x terdahulu memerlukan pemasangan semula sekali: selesaikan pemulihan TV yang diperlukan menggunakan app lama sebelum menyahpasangnya. Kemas kini seterusnya yang menggunakan kunci sama boleh dipasang terus. Rekod cleanMYTV 1.1 tidak diimport ke jurnal baharu. Keserasian firmware masih memerlukan pengesahan pada TV fizikal.
 
 ## English
@@ -28,6 +30,8 @@ This version uses **Clean Your TV v0.4.6-beta2** as its functional foundation, w
 [Download cleanMYTV.apk directly](https://github.com/AmexSaad/cleanMYTV/releases/download/v1.3.0-beta1/cleanMYTV.apk) for an **Android 9+ phone**. Keep the phone and Android TV on the same network, follow the debugging instructions, authorize the phone on the TV, and review the plan before applying changes. System packages are disabled rather than uninstalled. The reference's home confirmation and recovery guards remain in place.
 
 **Update the app:** Tap **Update** below the logo to check GitHub releases, including betas, read the changes and download the repository APK. Open the downloaded file and confirm Android installation. Downloads are blocked during unfinished TV operations.
+
+**Add apps on an Android box (source change):** Open the TV's Home screen on the phone, tap **+ Add apps to Home**, choose apps and save. Adding an app automatically starts the next row when needed, up to three rows. Saving apps or a look enables **App library** on the box, both in the top bar and after the app rows. Open it with the remote and press **OK** to add/remove Home shortcuts, including ordinary Android apps with a launcher entry. Box-side choices persist in the launcher; the phone still shows its last sent arrangement. This requires a build containing this change; the release APK linked above does not include it yet.
 
 This beta starts a permanent release signing identity. Earlier 1.2.x debug betas require a one-time reinstall after completing any needed TV recovery with the old app. Future releases using this same key can update in place. Legacy 1.1 records are not imported into the new journal. This is not a Play Store release; physical TV and firmware compatibility still require device testing. See [update and signing details](UPDATES.md).
 
@@ -50,6 +54,12 @@ Butang dan dialog kemas kini / Update control and dialog:
 Aliran utama dengan data contoh / Main flow with sample data:
 
 ![cleanMYTV storyboard](previews/storyboard.png)
+
+## Waktu solat & azan (pilihan / optional, source beta)
+
+Pada skrin utama TV dalam app telefon, tekan **+ Tambah waktu solat & azan**. Modul ditambah hanya apabila dipilih; azan tidak dihidupkan oleh pemasangan. Pada TV, buka **Waktu Solat**, tambah fungsi, pilih **Malaysia → negeri → daerah/zon**, kemudian hidupkan azan jika mahu. Terdapat 60 zon Malaysia, audio **Subuh berasingan** dan audio biasa untuk empat waktu lain. Syuruk tidak berbunyi. Pilihan paparan penuh menutup app lain sepanjang audio, tertakluk pada kebenaran Android dan firmware. Butang percubaan menguji kedua-dua audio; pengguna boleh matikan atau buang fungsi. [Panduan, kebenaran dan had keserasian](tv/prayer/README.md) · [Kredit audio percuma CC BY 3.0](tv/prayer/ATTRIBUTION.md).
+
+The phone's TV Home screen offers an explicit **Add prayer times & azan** action. The signed companion is bundled and pinned inside the full phone build; no install or sound happens automatically. Select a Malaysian state/zone on the TV and enable sound separately. Fajr uses its own bundled recording. Optional full-screen playback is an overlay, not universal device lockdown. The local phone preview can be built with `-PcleanmytvPrayerPreview=true` to install beside the existing release without replacing its recovery records. This feature is not in the existing linked GitHub release APK.
 
 ## Build
 

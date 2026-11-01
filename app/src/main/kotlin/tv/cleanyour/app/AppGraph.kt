@@ -220,6 +220,15 @@ class AppGraph(context: Context, val appVersion: String = versionOf(context), va
         store = store.rules,       // STORES-PLAN 1
         about = about, homeDecisions = homeDecisions,   // 0.3.2 B1, B2
         redact = Redactor::redact,                      // 0.4.6: what a card puts into a problem report
+        bundledPrayer = if (!store.rules.addOns) null else ({
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                val blob = blobs.bundled("cleanmytv-prayer.apk")
+                val pin = org.json.JSONObject(app.assets.open("bundled/cleanmytv-prayer.json").bufferedReader().use { it.readText() })
+                val info = requireNotNull(inspector.inspect(blob))
+                require(info.sha256.hex == pin.getString("sha256") && info.signer.hex == pin.getString("signer"))
+                tv.cleanyour.core.flows.BundledPrayer.of(info, blob)
+            }
+        }),
     )
 
     init {

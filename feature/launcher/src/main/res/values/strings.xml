@@ -7,6 +7,11 @@
   Screens: M2 Home screen, the theme picker, the dock sheet (S3b, own copy in this module).
 -->
 <resources>
+    <string name="home_add_prayer">+ Add prayer times &amp; azan</string>
+    <string name="home_remove_prayer">Remove prayer times &amp; azan</string>
+    <string name="home_prayer_note">Optional. After adding, open Waktu Solat on the TV to select a Malaysian zone and enable azan. Separate Fajr audio is included.</string>
+    <string name="home_add_apps">+ Add apps to Home</string>
+    <string name="home_add_apps_tv">After saving your apps or look, open App library on the box. Press OK to add or remove an app from Home, including ordinary Android apps.</string>
 
     <!-- Shared button words -->
     <string name="action_back">Back</string>
