@@ -19,12 +19,15 @@ object DockCandidates {
         profile?.stockLaunchers?.mapTo(homes) { it.pkg }
         profile?.setupWraith?.let { homes += it }
         homes += Launcher.pkg
-        return snap.packages.filter { (pkg, st) ->
+        // A newly installed app may not be in the saved snapshot yet. The live launcher query
+        // is also evidence of installation; intersecting it with the snapshot hid those apps.
+        return (snap.packages.keys + launchable.orEmpty()).filterTo(linkedSetOf()) { pkg ->
+            val st = snap.packages[pkg]
             val category = facts.lookup(pkg)?.category
-            val on = st.enabled != EnabledState.DISABLED && st.enabled != EnabledState.DISABLED_USER
-            val shown = if (launchable != null) pkg in launchable else !st.system || category == "streaming"
+            val on = st?.enabled != EnabledState.DISABLED && st?.enabled != EnabledState.DISABLED_USER
+            val shown = if (launchable != null) pkg in launchable else st?.system == false || category == "streaming"
             on && shown && pkg !in homes && category != "launcher" && category != "home" && !isProvider(pkg)
-        }.keys
+        }
     }
 
     // com.android.providers.calendar, com.example.contentprovider and the like.

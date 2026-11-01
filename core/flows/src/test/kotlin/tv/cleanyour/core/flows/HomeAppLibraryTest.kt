@@ -24,6 +24,7 @@ class HomeAppLibraryTest {
         val tv = h.knownTv()
         val systemApp = PackageName("com.example.systemplayer")
         val phoneApp = PackageName("com.example.phoneplayer")
+        val newlyInstalled = PackageName("com.example.newplayer")
         val disabled = PackageName("com.example.disabled")
         val provider = PackageName("com.android.providers.calendar")
         fun state(system: Boolean, enabled: EnabledState = EnabledState.ENABLED) =
@@ -31,12 +32,15 @@ class HomeAppLibraryTest {
         h.snapshots.save(Samples.snapshot(packages = Samples.miTvPackages() + mapOf(
             systemApp to state(true), phoneApp to state(false), provider to state(true),
             disabled to state(false, EnabledState.DISABLED_USER)), takenAtMs = Samples.NOW_MS + 1))
-        val deps = h.manageDeps(launchable = LaunchableApps { setOf(systemApp, phoneApp, provider, disabled) })
+        val deps = h.manageDeps(launchable = LaunchableApps { setOf(systemApp, phoneApp, newlyInstalled, provider, disabled) })
+        HomePrefs(h.documents).save(tv.id, HomeChoice(listOf(newlyInstalled), null))
         val home = HomeScreenMachine(deps, backgroundScope, tv.id)
         settle()
         val apps = home.state.value.apps.map { it.pkg }
         assertTrue(systemApp in apps)
         assertTrue(phoneApp in apps)
+        assertTrue(newlyInstalled in apps, "live apps must not disappear because the snapshot predates installation")
+        assertTrue(newlyInstalled in home.state.value.dock.map { it.pkg }, "a saved new app must remain visible in the dock editor")
         assertFalse(disabled in apps)
         assertFalse(provider in apps)
 

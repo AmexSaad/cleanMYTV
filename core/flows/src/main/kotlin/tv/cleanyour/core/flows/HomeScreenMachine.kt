@@ -295,7 +295,9 @@ class HomeScreenMachine(
         // later ones move up a slot, as the launcher does. 0.4.0: at the saved apps in a row, else the
         // look's own; the saved apps beyond what that shows wait (waitingApps).
         val columns = choice?.columns ?: DockLayers.columnsOf(theme(lookId)?.doc)
-        val shown = { p: PackageName -> snap == null || packages[p]?.enabled.let { it != null && it != EnabledState.DISABLED && it != EnabledState.DISABLED_USER } }
+        val shown = { p: PackageName -> snap == null || packages[p]?.enabled.let {
+            if (it == null) p in launchable.orEmpty() else it != EnabledState.DISABLED && it != EnabledState.DISABLED_USER
+        } }
         fun named(p: PackageName) = AppChoice(p, d.nameOf(p, packages[p]?.label))
         val dock = DockLayers.decode(choice?.dock.orEmpty(), shown, columns).map(::named)
         val waiting = DockLayers.keep(choice?.dock.orEmpty().filter(shown)).drop(DockLayers.capacity(columns)).map(::named)
