@@ -29,3 +29,8 @@ Emulator Android 37.1 sendiri, paparan 1280 × 720. Modul kod versi 2 dinaik tar
 **Loklok QA (ujian sahaja)** ialah fixture dalam `tv/prayer/src/androidTest`, bukan APK Loklok sebenar. Ia sengaja tiada LEANBACK_LAUNCHER untuk menguji masalah kelas app Android biasa. Tiada TV fizikal pengguna bersambung dalam sesi ini. Bukti ini tidak menjanjikan kiosk mutlak, semua butang firmware, atau semua varian APK Loklok di semua box.
 
 Ujian native Home/pemilih app, jadual/poster, planner, probe, engine dan flows dijalankan. Keputusan binaan release dan SHA APK ditambah selepas pengesahan GitHub selesai.
+
+## Pilihan Home Android
+
+Pilih **Prayer Time** dan sahkan **Change/Tukar** sekali sahaja. [Screenshot pilihan sebenar pada emulator](tv-home-choice-beta4.png).
+
