@@ -27,3 +27,6 @@ Keputusan akhir GitHub: **1,159 ujian, 0 kegagalan, 0 ralat**. Job APK dan phone
 
 APK: 1.3.0-beta3, versionCode 8, pakej my.cleanmytv.app. SHA-256: 99f7aff4db1bd6f2142aabf33c7e5bffdc993afecb6630a8f0b277c2fb438439. Sijil release SHA-256: e9ef5b2f671315f82ccb020f07c5fcf4dc1c0ab491023d9b55ecab59cac04fae.
 
+
+Release diterbitkan: https://github.com/AmexSaad/cleanMYTV/releases/tag/v1.3.0-beta3 . Workflow penerbitan mengesahkan APK/hash/sijil tetapi GitHub menolak penciptaan release oleh integration (HTTP 403). Release lengkap kemudian diterbitkan melalui akses pengguna yang telah dibenarkan, menggunakan APK tepat daripada binaan yang lulus. Digest aset GitHub sepadan dengan SHA-256 di atas. Keluaran beta3 muncul dalam feed kemas kini app.
+
