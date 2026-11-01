@@ -41,25 +41,27 @@ jobs:
           test -s dist/cleanMYTV.apk
           sha256sum --check dist/SHA256SUMS.txt
           python3 scripts/verify-app-package.py dist/cleanMYTV.apk release
+          python3 scripts/extract-tv-package.py dist/cleanMYTV.apk
           python3 - <<'PY'
           import json
           info=json.load(open('dist/release-info.json'))
           assert info['signing']=='release'
-          assert info['versionName']=='1.3.0-beta3' and info['versionCode']==8
+          assert info['versionName']=='1.3.0-beta4' and info['versionCode']==9
           PY
           cat > /tmp/release-notes.md <<'NOTES'
-          cleanMYTV 1.3.0 beta3 — Prayer Time dengan poster azan dinamik, reka bentuk masjid biru malam pilihan pengguna.
+          cleanMYTV 1.3.0 beta4 — Menu TV lengkap: + tambah app, widget waktu solat hidup dan Prayer Time.
 
-          Dalam cleanMYTV lama, tekan Kemas kini untuk mendapatkan APK ini. Nama pakej dan kunci release kekal; versi kod 8 boleh dipasang terus ke atas beta2 tanpa membuang app atau rekod.
+          DOWNLOAD: cleanMYTV.apk untuk telefon Android 9+. Prayer-Time-TV.apk ialah modul/menu untuk Android TV/box Android 8+ dan juga disertakan dalam APK telefon.
 
-          Baharu: akses Prayer Time & azan terus pada dashboard telefon. Tambah atau kemas kini modul sedia ada, kemudian buka Prayer Time pada TV untuk memilih zon dan mengaktifkan audio/paparan penuh. Nama dan ikon/banner modul turut dikemas kini.
+          WAJIB SEKALI: Update app telefon, buka Menu TV & Prayer Time dan tekan Kemas kini menu TV & Prayer Time. Pada TV, buka tetapan Home, pilih Prayer Time dan sahkan Change/Tukar. Selepas itu butang Home membuka menu baharu. Launcher lama kekal dipasang sebagai pilihan kembali.
 
-          Poster: satu latar masjid malam ringan; teks nama solat, waktu jadual sebenar hari itu dan kawasan/zon pilihan berubah secara automatik. Bukan gambar dengan teks contoh kekal. Tiada video, YouTube, iklan atau muat turun media. Latar WebP sekitar 180 KB. Audio Subuh berasingan dikekalkan. Popup ditutup selepas audio tamat; percubaan kelima-lima waktu disediakan dan dilabel sebagai pratonton. Pilihan hidup/mati kekal, dengan audio serta paparan penuh dimatikan secara lalai.
+          Baharu: butang + Tambah app terus dalam dock; carian nama/pakej membaca app TV dan app Android biasa terus daripada box; widget Home memaparkan zon, kelima-lima waktu solat dan waktu seterusnya; ikon Prayer Time muncul pada dock dan widget. Pilihan dock disimpan pada box. Menghantar gambar/dock tidak mematikan azan dengan force-stop.
 
-          App dock: app yang baru dipasang pada TV tidak lagi hilang daripada senarai hanya kerana rekod TV lama. App TV dan app Android biasa yang mempunyai pintasan boleh dipilih. Tiada perubahan launcher untuk widget hidup pada Home atau butang + dalam slot kosong dalam keluaran ini.
+          Poster nombor 2 dan teks dinamik dikekalkan, bersama audio Subuh berasingan. Tiada video atau iklan. Pilih zon Malaysia dan hidupkan audio/paparan penuh jika mahu. Popup menutup app biasa sehingga audio tamat; ujian emulator meliputi Home, Back dan app QA lain. Bukan mod kiosk mutlak semua firmware; ujian fizikal box pengguna belum tersedia.
 
-          Jadual JAKIM melalui Solat.my, 60 zon Malaysia. Penggera menggunakan waktu Malaysia, bukan zon masa telefon. Paparan penuh memerlukan kebenaran overlay dan bukan kunci mutlak semua firmware. Existing Update controls discover this signed beta; Android still asks before installation, and unfinished TV operations block downloads. After updating the phone app, use Prayer Time on the dashboard to update the TV companion too.
+          Cara guna dan screenshot: https://github.com/AmexSaad/cleanMYTV/blob/main/tv/prayer/HOME.md
+          Nota penuh: https://github.com/AmexSaad/cleanMYTV/blob/main/CHANGELOG.md
 
           Android 9+ phone required. Core connection, analysis, cleaning and recovery functions remain in place. Physical TV compatibility still needs device testing. Upstream MIT copyright and third-party notices are retained.
           NOTES
-          gh release create v1.3.0-beta3 dist/cleanMYTV.apk dist/SHA256SUMS.txt dist/SIGNING_CERTIFICATE.txt dist/release-info.json --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.3.0 beta3 — Prayer Time: Poster Azan Dinamik' --notes-file /tmp/release-notes.md
+          gh release create v1.3.0-beta4 dist/cleanMYTV.apk dist/Prayer-Time-TV.apk dist/SHA256SUMS.txt dist/TV-SHA256SUMS.txt dist/SIGNING_CERTIFICATE.txt dist/release-info.json dist/tv-release-info.json --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease --title 'cleanMYTV 1.3.0 beta4 — Menu TV: + App, Widget & Prayer Time' --notes-file /tmp/release-notes.md

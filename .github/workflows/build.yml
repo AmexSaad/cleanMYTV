@@ -104,6 +104,7 @@ jobs:
             cp app/build/outputs/apk/full/debug/app-full-debug.apk dist/cleanMYTV.apk
           fi
           python3 scripts/verify-app-package.py dist/cleanMYTV.apk "$CLEANMYTV_SIGNING_MODE"
+          python3 scripts/extract-tv-package.py dist/cleanMYTV.apk
           sha256sum dist/cleanMYTV.apk > dist/SHA256SUMS.txt
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

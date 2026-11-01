@@ -39,4 +39,7 @@ interface ConfigTransport {   // R0: 1 moved from :core:engine: the planner emit
     val kind: ConfigTransportKind
     suspend fun readDigest(session: TvSession): Sha256?
     fun writePlanSteps(config: BlobRef, wallpaper: BlobRef?): List<Op>   // config = LauncherConfigCodec.encode(doc) stored in the BlobStore; mkdir, push, verify read, restart home
-    fun resetPlanSteps(): List<Op> }
+    fun resetPlanSteps(): List<Op>
+    // Additive seam: transports that support the optional cleanMYTV Home may route its own files.
+    fun forLauncher(home: Component): ConfigTransport = this
+}

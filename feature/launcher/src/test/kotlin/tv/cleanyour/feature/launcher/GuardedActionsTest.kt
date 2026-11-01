@@ -47,9 +47,9 @@ class GuardedActionsTest {
     @Test fun prayerInstallAndUpdateAreExplicitAndGuarded() {
         val hits=mutableListOf<HomeScreenIntent>()
         compose.showColumn { PrayerScreen(HomeScreenState(prayerAvailable=true,prayerInstalled=true,prayerUpdateAvailable=true),{hits+=it},{}) }
-        compose.tap("Update Prayer Time",OBSCURED)
+        compose.tap("Update TV menu & Prayer Time",OBSCURED)
         assertEquals(emptyList<HomeScreenIntent>(),hits)
-        compose.tap("Update Prayer Time",0)
+        compose.tap("Update TV menu & Prayer Time",0)
         assertEquals(listOf(HomeScreenIntent.AddPrayer),hits)
     }
 

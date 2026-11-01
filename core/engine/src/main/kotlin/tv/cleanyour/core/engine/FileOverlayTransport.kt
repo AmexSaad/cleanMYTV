@@ -20,23 +20,38 @@ class FileOverlayTransport(
     private val prober: Prober,
     private val launcher: Component = Component(PackageName("com.gathin.tvhome"), ".MainActivity"),
 ) : ConfigTransport {
+    private val directory = if (launcher.pkg.value == "tv.cleanmytv.prayer") RemoteDir.PRAYER_HOME else RemoteDir.OVERLAY
+    private val configPath = RemotePath(directory, listOf("config.json"))
+    private val wallpaperPath = RemotePath(directory, listOf("wallpaper.jpg"))
     override val kind: ConfigTransportKind = ConfigTransportKind.FILE_OVERLAY
 
-    override suspend fun readDigest(session: TvSession): Sha256? = prober.fileSha256(session, CONFIG)
+    override fun forLauncher(home: Component): ConfigTransport {
+        require(home == launcher || (home.pkg.value == "tv.cleanmytv.prayer" && home.cls in setOf(".HomeActivity", "tv.cleanmytv.prayer.HomeActivity")))
+        return FileOverlayTransport(prober, home)
+    }
+
+    override suspend fun readDigest(session: TvSession): Sha256? {
+        val home = runCatching { prober.homeNow(session).resolved }.getOrNull()
+        val path = if (home?.pkg?.value == "tv.cleanmytv.prayer" && home.cls in setOf(".HomeActivity", "tv.cleanmytv.prayer.HomeActivity"))
+            RemotePath(RemoteDir.PRAYER_HOME,listOf("config.json")) else configPath
+        return prober.fileSha256(session, path)
+    }
 
     override fun writePlanSteps(config: BlobRef, wallpaper: BlobRef?): List<Op> {
         require(config.size in 1..MAX_CONFIG_BYTES) { "config.json must be 1 to $MAX_CONFIG_BYTES bytes" }
         require(wallpaper == null || wallpaper.size in 1..MAX_WALLPAPER_BYTES) { "wallpaper.jpg must be 1 to $MAX_WALLPAPER_BYTES bytes" }
         return listOf(
             Op.StartActivity(launcher, wait = true),
-            Op.Mkdir(RemoteDir.OVERLAY),
-            Op.PushAsset(config, CONFIG, config.sha256),
-            if (wallpaper != null) Op.PushAsset(wallpaper, WALLPAPER, wallpaper.sha256) else Op.RemoveFile(WALLPAPER),
-            Op.RestartHome(launcher),
+            Op.Mkdir(directory),
+            Op.PushAsset(config, configPath, config.sha256),
+            if (wallpaper != null) Op.PushAsset(wallpaper, wallpaperPath, wallpaper.sha256) else Op.RemoveFile(wallpaperPath),
+            // The companion also owns azan playback/alarms: never force-stop it for a dock change.
+            if (directory == RemoteDir.PRAYER_HOME) Op.StartActivity(launcher, wait = true) else Op.RestartHome(launcher),
         )
     }
 
-    override fun resetPlanSteps(): List<Op> = listOf(Op.RemoveFile(CONFIG), Op.RemoveFile(WALLPAPER), Op.RestartHome(launcher))
+    override fun resetPlanSteps(): List<Op> = listOf(Op.RemoveFile(configPath), Op.RemoveFile(wallpaperPath),
+        if (directory == RemoteDir.PRAYER_HOME) Op.StartActivity(launcher,wait=true) else Op.RestartHome(launcher))
 
     companion object {
         val CONFIG = RemotePath(RemoteDir.OVERLAY, listOf("config.json"))

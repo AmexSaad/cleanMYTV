@@ -16,7 +16,7 @@ import tv.cleanyour.ui.design.theme.Glow
 @Composable
 fun PrayerScreen(state: HomeScreenState, onIntent: (HomeScreenIntent) -> Unit, onBack: () -> Unit) {
     ScreenScaffold(Glow.Tv, topBar = { CytTopBar(onBack = onBack) }) {
-        ScreenTitle("Prayer Time", Modifier.padding(top = 20.dp))
+        ScreenTitle(stringResource(R.string.prayer_title), Modifier.padding(top = 20.dp))
         Body(stringResource(R.string.home_prayer_note), Modifier.padding(top = 16.dp))
         Body(stringResource(R.string.prayer_poster_note), Modifier.padding(top = 12.dp))
         val busy = state.busy

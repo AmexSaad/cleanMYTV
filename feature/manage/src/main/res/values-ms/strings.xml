@@ -7,8 +7,8 @@
   Screens: M1, M1a, M4, M5, M7, M8 and the credential prompt for the actions raised from them.
 -->
 <resources>
-    <string name="manage_row_prayer">Prayer Time &amp; azan</string>
-    <string name="manage_row_prayer_sub">Tambah atau kemas kini • Zon solat Malaysia</string>
+    <string name="manage_row_prayer">Menu TV &amp; Prayer Time</string>
+    <string name="manage_row_prayer_sub">+ Tambah app, widget waktu solat &amp; azan</string>
   <!-- Shared button words -->
   <string name="action_back">Kembali</string>
   <string name="action_cancel">Batal</string>

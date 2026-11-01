@@ -33,6 +33,7 @@ import tv.cleanyour.core.ops.Rendered
 import tv.cleanyour.core.ops.UndoOrder
 import tv.cleanyour.core.ops.Watchdog
 import tv.cleanyour.core.spec.AppNames
+import tv.cleanyour.core.spec.CleanHome
 import tv.cleanyour.core.spec.FactsTable
 import tv.cleanyour.core.spec.KnownLaunchers
 import tv.cleanyour.core.spec.ProfileCategory
@@ -608,7 +609,7 @@ class DefaultPlanner(
         }
 
         fun applyTheme(config: BlobRef, wallpaper: BlobRef?) {
-            if (!installed(launcher.pkg)) { refuse("the new home screen is not installed"); return }
+            if (!installed(launcher.pkg) && cleanHome() == null) { refuse("the new home screen is not installed"); return }
             look(config, wallpaper, overlayGone = false, pushPolicy = FailurePolicy.STOP_AND_ROLLBACK)
         }
 
@@ -618,13 +619,19 @@ class DefaultPlanner(
         // both pushes record that the files were absent and Undo everything removes them again.
         // Otherwise the config prior is the overlay the probe read and the wallpaper's is unknown.
         // `pushPolicy` is the pushes' failure policy; the other steps always CONTINUE.
-        fun look(config: BlobRef, wallpaper: BlobRef?, overlayGone: Boolean, pushPolicy: FailurePolicy) {
+        private fun cleanHome(): Component? = snapshot.home.resolved?.takeIf {
+            it.pkg.value == CleanHome.PACKAGE && it.cls in setOf(".HomeActivity", "tv.cleanmytv.prayer.HomeActivity") &&
+                state(it.pkg)?.signer?.hex == CleanHome.SIGNER_SHA256
+        }
+
+        fun look(config: BlobRef, wallpaper: BlobRef?, overlayGone: Boolean, pushPolicy: FailurePolicy, home: Component? = cleanHome()) {
             val ops = try {
-                configTransport.writePlanSteps(config, wallpaper)
+                (if (home != null) configTransport.forLauncher(home) else configTransport).writePlanSteps(config, wallpaper)
             } catch (e: IllegalArgumentException) {
                 refuse("the look cannot be sent to the TV: ${e.message}"); return
             }
-            val overlayPrior = if (overlayGone) Prior(present = false) else Prior(present = snapshot.launcherOverlay != null, overlay = snapshot.launcherOverlay)
+            val overlayPrior = if (home != null && home.pkg != snapshot.home.resolved?.pkg) Prior()
+                else if (overlayGone) Prior(present = false) else Prior(present = snapshot.launcherOverlay != null, overlay = snapshot.launcherOverlay)
             val otherFile = Prior(present = if (overlayGone) false else null)
             for (op in ops) {
                 val (prior, narration, policy) = when (op) {
@@ -683,12 +690,16 @@ class DefaultPlanner(
             // the TV; the same steps, priors and failure policy as ApplyTheme. Without the new home
             // screen on the TV there is nothing to read it, so the add goes without it.
             val config = req.config
-            if (config != null && installed(launcher.pkg)) look(config, req.wallpaper, overlayGone = false, pushPolicy = FailurePolicy.STOP_AND_ROLLBACK)
-            step(Op.PressHome, null, GROUP_MODULE, "Showing the home screen", FailurePolicy.CONTINUE)
+            val cleanMenu = module.pkg.value == CleanHome.PACKAGE && version.versionCode >= 3 && version.artifact.signer.hex == CleanHome.SIGNER_SHA256
+            val menu = Component(module.pkg,".HomeActivity")
+            if (config != null && (installed(launcher.pkg) || cleanMenu)) look(config, req.wallpaper, overlayGone = false,
+                pushPolicy = FailurePolicy.STOP_AND_ROLLBACK, home = if (cleanMenu) menu else cleanHome())
+            step(if (cleanMenu) Op.StartActivity(menu,wait=true) else Op.PressHome, null, GROUP_MODULE, "Showing the home screen", FailurePolicy.CONTINUE)
         }
 
         fun removeModule(pkg: PackageName) {
             val current = state(pkg) ?: return   // already gone
+            if (snapshot.home.resolved?.pkg == pkg) { refuse("use the TV's own home screen first or choose another Home in Android settings before removing the current home screen"); return }
             if (current.system) { refuse("${name(pkg)} is part of the TV's system and cannot be removed"); return }
             val ours = current.installedByUs || journals.any { (it.op as? Op.Install)?.pkg == pkg || (it.op as? Op.InstallStream)?.pkg == pkg }
             if (!ours) { refuse("${name(pkg)} was not installed by this app"); return }

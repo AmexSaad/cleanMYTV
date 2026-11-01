@@ -1,6 +1,6 @@
 {
-  "versionCode": 2,
-  "sha256": "73c00d0e84c63ef5a1a145de281fc61cd1753f2cce1171ff3617eddaf843308e",
-  "package": "tv.cleanmytv.prayer",
-  "signer": "48c25741767909d84e0b225334fe96bb9afb65985b6e62ed0ee6eb24b29ac03f"
+  "signer": "48c25741767909d84e0b225334fe96bb9afb65985b6e62ed0ee6eb24b29ac03f",
+  "sha256": "574404ca039d0bd587efe1226c41c72844ff02cc0bb37ed01afec91060eb3200",
+  "versionCode": 3,
+  "package": "tv.cleanmytv.prayer"
 }

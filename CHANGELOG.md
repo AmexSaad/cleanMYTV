@@ -1,5 +1,19 @@
 # Catatan kemas kini / Changelog
 
+## 1.3.0-beta4 — Menu TV lengkap: + app, widget & Prayer Time
+
+- **Butang + Tambah app dalam dock TV**, di sebelah app yang dipin. Baris seterusnya dibuka apabila perlu; sehingga 24 pintasan.
+- Pemilih app membaca PackageManager pada box, termasuk app TV, app Android biasa dan entry MAIN yang boleh dibuka. Boleh cari nama sebenar atau nama pakej. Tiada pergantungan pada rekod telefon lama atau senarai app terpilih sahaja.
+- **Widget waktu solat hidup pada Home**, memaparkan zon pilihan, Subuh, Zohor, Asar, Maghrib, Isyak dan waktu seterusnya. Tekan widget untuk tetapan. Widget tidak menghidupkan audio tanpa pilihan pengguna.
+- **Ikon Prayer Time dipaparkan dalam dock dan widget**, dengan ikon/banner juga dinyatakan pada activity TV.
+- Menu TV baharu disertakan dalam modul Prayer Time versi kod 3, menggunakan pakej dan sijil modul yang sama. Launcher lama tidak dibuang atau dimatikan.
+- **Pengaktifan sekali sahaja:** selepas kemas kini modul, buka tetapan Home pada TV, pilih **Prayer Time**, kemudian sahkan **Change/Tukar**. Selepas itu butang Home membuka menu baharu.
+- Dashboard telefon kini menyatakan **Menu TV & Prayer Time**, dengan tindakan tambah/kemas kini menu yang jelas. Konfigurasi dock dan gambar dihantar ke folder menu yang betul apabila menu ini digunakan.
+- Menghantar dock/gambar tidak melakukan force-stop pada modul azan. Penggera disusun semula apabila Home dibuka, dan modul Home yang sedang menjadi default tidak boleh dibuang sebelum pengguna memilih Home lain.
+- Poster nombor 2, teks dinamik, audio Subuh berasingan, pilihan zon Malaysia serta kawalan hidup/mati dikekalkan.
+
+Screenshot, cara guna dan bukti ujian: [Menu TV baharu](tv/prayer/HOME.md). Ujian menggunakan emulator dan app QA Android biasa yang dilabel dengan jelas; APK Loklok sebenar pada box pengguna tidak tersedia untuk ujian fizikal. Popup diuji menutup menu dan app QA selepas Home/Back, kemudian tutup sendiri selepas audio tamat. Ia masih overlay Android, bukan pengurusan kiosk mutlak pada semua firmware.
+
 ## 1.3.0-beta3 — Prayer Time: poster azan dinamik
 
 - Reka bentuk masjid biru malam (pilihan nombor 2), dengan satu gambar latar WebP sekitar 180 KB.

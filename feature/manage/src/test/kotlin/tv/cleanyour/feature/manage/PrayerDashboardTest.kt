@@ -34,7 +34,7 @@ class PrayerDashboardTest {
         } }
         compose.waitForIdle()
         compose.onRoot().captureRoboImage("build/prayer-dashboard.png")
-        compose.onNodeWithText("Prayer Time & azan").performClick()
+        compose.onNodeWithText("TV menu & Prayer Time").performClick()
         Assert.assertEquals(listOf(ManageIntent.Open(ManageSection.PRAYER)),hits)
     }
 }

@@ -6,6 +6,7 @@ import tv.cleanyour.core.model.AdbError
 import tv.cleanyour.core.model.AdbException
 import tv.cleanyour.core.model.BlobRef
 import tv.cleanyour.core.model.Component
+import tv.cleanyour.core.model.RemoteDir
 import tv.cleanyour.core.model.DeviceFacts
 import tv.cleanyour.core.model.EnabledState
 import tv.cleanyour.core.model.HdmiSource
@@ -132,7 +133,9 @@ class AdbProber(
         val screensaver = secure["screensaver_components"]?.split(',')?.mapNotNull { component(it.trim()) } ?: emptyList()
 
         onStage(ProbeStage.LAUNCHER)
-        val overlay = pullOrNull(session, ProbeScripts.overlayConfig, OVERLAY_CAP)
+        val cleanHome = home.resolved?.let { it.pkg.value == "tv.cleanmytv.prayer" && it.cls in setOf(".HomeActivity", "tv.cleanmytv.prayer.HomeActivity") } == true
+        val overlayPath = if (cleanHome) RemotePath(RemoteDir.PRAYER_HOME,listOf("config.json")) else ProbeScripts.overlayConfig
+        val overlay = pullOrNull(session, overlayPath, OVERLAY_CAP)
 
         val signers = signed.filter { pkg -> all.any { it.name == pkg.value } }.associateWith { signerOf(session, it) }
 
@@ -308,7 +311,7 @@ class AdbProber(
         const val SCREENSHOT_CAP = 2L * 1024 * 1024
         const val SIGNER_APK_CAP = 16L * 1024 * 1024
         private val random = java.security.SecureRandom()
-        val SIGNED_PACKAGES: Set<PackageName> = setOf(PackageName("com.gathin.tvhome"), PackageName("tv.cleanyour.curtain"))
+        val SIGNED_PACKAGES: Set<PackageName> = setOf(PackageName("com.gathin.tvhome"), PackageName("tv.cleanyour.curtain"), PackageName("tv.cleanmytv.prayer"))
         private val ZERO = Sha256("0".repeat(64))
         private val BOOT_ID_RE = Regex("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
         private val PNG_SIGNATURE = byteArrayOf(0x89.toByte(), 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A)

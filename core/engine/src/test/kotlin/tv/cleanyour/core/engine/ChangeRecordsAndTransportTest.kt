@@ -50,6 +50,18 @@ class ChangeRecordsTest {
 }
 
 class FileOverlayTransportTest {
+    @Test fun cleanHomeUsesItsOwnDirectoryAndRejectsAnArbitraryTarget() = runTest(timeout = TEST_TIMEOUT) {
+        val h=Harness(this);val base=FileOverlayTransport(h.prober)
+        val home=tv.cleanyour.core.model.Component(PackageName("tv.cleanmytv.prayer"),".HomeActivity")
+        val cfg=BlobRef(Sha256("c".repeat(64)),100,"cfg")
+        val steps=base.forLauncher(home).writePlanSteps(cfg,null)
+        assertEquals(Op.StartActivity(home,true),steps.first())
+        assertEquals(Op.StartActivity(home,true),steps.last())
+        assertTrue(steps.none { it is Op.RestartHome },"a dock update must not force-stop azan or cancel its alarms")
+        assertTrue(steps.filterIsInstance<Op.PushAsset>().all { it.dest.dir == RemoteDir.PRAYER_HOME })
+        assertTrue(steps.none { it is Op.Mkdir && it.dir == RemoteDir.OVERLAY })
+        assertFailsWith<IllegalArgumentException>{base.forLauncher(tv.cleanyour.core.model.Component(PackageName("com.example.foreign"),".MainActivity"))}
+    }
     @Test fun stepsMatchThemeSh() = runTest(timeout = TEST_TIMEOUT) {
         val h = Harness(this)
         val t = FileOverlayTransport(h.prober)
@@ -78,11 +90,11 @@ class SingleCallSiteLintTest {
     private val root = Fixtures.repoRoot
     private val mainSources: List<File> by lazy {
         root.walkTopDown()
-            .filter { it.isFile && it.extension == "kt" && it.path.contains("/src/main/") && !it.path.contains("/build/") && !it.path.contains("/third_party/") }
+            .filter { it.isFile && it.extension == "kt" && it.invariantSeparatorsPath.contains("/src/main/") && !it.invariantSeparatorsPath.contains("/build/") && !it.invariantSeparatorsPath.contains("/third_party/") }
             .toList()
     }
 
-    private fun rel(f: File) = f.relativeTo(root).path
+    private fun rel(f: File) = f.relativeTo(root).invariantSeparatorsPath
 
     @Test fun execIsCalledFromOnePlaceInTheEngineAndOnlyByTheProbeAndTheSessionElsewhere() {
         val allowed = listOf(

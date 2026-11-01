@@ -7,7 +7,7 @@ import tv.cleanyour.core.model.*
 data class BundledPrayer(val module: Module, val version: ModuleVersion, val blob: BlobRef) {
     companion object {
         val PKG = PackageName("tv.cleanmytv.prayer")
-        const val VERSION_CODE = 2L
+        const val VERSION_CODE = 3L
         fun of(info: ApkInfo, blob: BlobRef): BundledPrayer {
             require(info.pkg == PKG && info.sha256 == blob.sha256 && info.size == blob.size)
             val version = ModuleVersion(info.versionCode, info.versionName, "2026-11-01",
@@ -16,7 +16,7 @@ data class BundledPrayer(val module: Module, val version: ModuleVersion, val blo
                     PermissionStatement("android.permission.SYSTEM_ALERT_WINDOW", "Paparan penuh semasa azan, jika dipilih"),
                     PermissionStatement("android.permission.SCHEDULE_EXACT_ALARM", "Azan mengikut waktu yang dipilih")),
                 "Jadual e-Solat JAKIM melalui solat.my; audio disertakan tanpa muat turun", 26, emptyList(), emptyList())
-            val module = Module("cleanmytv-prayer", "Prayer Time", "Pilihan zon Malaysia dan dua rakaman azan",
+            val module = Module("cleanmytv-prayer", "Prayer Time", "Menu TV + tambah app, widget solat Malaysia dan azan",
                 "Fungsi pilihan; azan dimatikan sehingga pengguna menghidupkannya pada TV.", PKG, "app", Tier.COMMUNITY,
                 "cleanMYTV", "https://github.com/AmexSaad/cleanMYTV", "MIT; audio CC BY 3.0", "#D6FF38", null, listOf(version))
             return BundledPrayer(module, version, blob)

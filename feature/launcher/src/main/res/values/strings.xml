@@ -7,12 +7,13 @@
   Screens: M2 Home screen, the theme picker, the dock sheet (S3b, own copy in this module).
 -->
 <resources>
-    <string name="home_add_prayer">+ Add Prayer Time &amp; azan</string>
-    <string name="home_update_prayer">Update Prayer Time</string>
-    <string name="prayer_installed">Prayer Time is installed. Open it on the TV to choose your zone, enable azan and test the popup.</string>
-    <string name="prayer_poster_note">Night mosque poster with automatic prayer name, scheduled time and selected area. No video or ads. Separate Subuh audio. Try all five prayer popups on the TV.</string>
+    <string name="prayer_title">TV menu &amp; Prayer Time</string>
+    <string name="home_add_prayer">+ Add TV menu &amp; Prayer Time</string>
+    <string name="home_update_prayer">Update TV menu &amp; Prayer Time</string>
+    <string name="prayer_installed">TV menu and Prayer Time are installed. Open Prayer Time on the TV, open the new TV menu and select Prayer Time in Android Home settings once.</string>
+    <string name="prayer_poster_note">Includes an inline + Add app tile, live prayer widget and Prayer Time icon. The app picker reads TV and ordinary Android apps directly from the box. Night mosque azan poster, separate Subuh audio, no video or ads.</string>
     <string name="home_remove_prayer">Remove prayer times &amp; azan</string>
-    <string name="home_prayer_note">Optional. After adding, open Prayer Time on the TV to select a Malaysian zone and enable azan. Separate Fajr audio is included.</string>
+    <string name="home_prayer_note">Optional. After installation, select Prayer Time in Android Home settings once to use the new dock and widget. Your old Home stays installed. Open Prayer Time to choose a Malaysian zone and enable azan if wanted.</string>
     <string name="home_add_apps">+ Add apps to Home</string>
     <string name="home_add_apps_tv">After saving your apps or look, open App library on the box. Press OK to add or remove an app from Home, including ordinary Android apps.</string>
 

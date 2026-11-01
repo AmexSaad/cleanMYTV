@@ -282,6 +282,36 @@ class PlannerTest {
         return m to v
     }
 
+    @Test fun cleanMenuInstallSeedsItsOwnHomeAndNeverChangesDefaultHomeOrRemovesTheOldLauncher() {
+        val (base,v)=module();val pkg=PackageName(tv.cleanyour.core.spec.CleanHome.PACKAGE)
+        val version=v.copy(artifact=v.artifact.copy(signer=Sha256(tv.cleanyour.core.spec.CleanHome.SIGNER_SHA256)))
+        val target=Component(pkg,".HomeActivity");val routes=mutableListOf<Component>();val delegate=FakeConfigTransport()
+        val transport=object:tv.cleanyour.core.ops.ConfigTransport by delegate {
+            override fun forLauncher(home:Component):tv.cleanyour.core.ops.ConfigTransport {routes+=home;return delegate}
+        }
+        val config=BlobRef(Sha256("c".repeat(64)),100,"cfg")
+        val request=PlanRequest.AddModule(base.copy(pkg=pkg),version,BlobRef(version.artifact.sha256,version.artifact.size,"apk"),config)
+        val operations=ops(plan(request,planner=PlannerFixtures.planner(transport)))
+        assertEquals(listOf(target),routes)
+        assertEquals(Op.StartActivity(target,true),operations.last())
+        assertTrue(operations.none {it is Op.SetHome || it is Op.Disable || it is Op.Uninstall})
+    }
+
+    @Test fun currentCleanHomeCannotBeRemovedAndOnlyItsPinnedSignerReceivesPhoneConfig() {
+        val pkg=PackageName(tv.cleanyour.core.spec.CleanHome.PACKAGE);val target=Component(pkg,".HomeActivity")
+        val state=PackageState(EnabledState.ENABLED,false,3,Sha256(tv.cleanyour.core.spec.CleanHome.SIGNER_SHA256),true,false,null,false)
+        val snap=snapshot(home=target,claimants=listOf(target,stock),extra=mapOf(pkg to state,installedLauncher()))
+        assertTrue(refused(PlanRequest.RemoveModule(pkg),snap).single().contains("own home screen first"))
+        val routes=mutableListOf<Component>();val delegate=FakeConfigTransport()
+        val transport=object:tv.cleanyour.core.ops.ConfigTransport by delegate {
+            override fun forLauncher(home:Component):tv.cleanyour.core.ops.ConfigTransport {routes+=home;return delegate}
+        }
+        val config=BlobRef(Sha256("c".repeat(64)),100,"cfg");val request=PlanRequest.ApplyTheme(tv.cleanyour.core.spec.LauncherConfigDoc(),config,null)
+        plan(request,snap,planner=PlannerFixtures.planner(transport));assertEquals(listOf(target),routes);routes.clear()
+        val foreign=snap.copy(packages=snap.packages+(pkg to state.copy(signer=Sha256("0".repeat(64)))))
+        plan(request,foreign,planner=PlannerFixtures.planner(transport));assertTrue(routes.isEmpty())
+    }
+
     @Test fun addAndRemoveModule() {
         val (m, v) = module()
         val apk = BlobRef(v.artifact.sha256, v.artifact.size, "cache/retro")

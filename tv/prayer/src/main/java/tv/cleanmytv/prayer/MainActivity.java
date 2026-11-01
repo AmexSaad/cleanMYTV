@@ -37,6 +37,8 @@ public class MainActivity extends Activity {
         ScrollView scroll = new ScrollView(this); scroll.setFillViewport(true);scroll.setBackgroundColor(0xFF06142B);root = new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(36,24,36,36);
         root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF132E50,0xFF06142B})); scroll.addView(root); setContentView(scroll);
         root.addView(text("PRAYER TIME  /  MALAYSIA",18,0xFFBED7F5)); root.addView(text("Waktu solat & azan",32,Color.WHITE));
+        button("Buka menu TV • + tambah app & widget waktu solat", () -> open(new Intent(this,HomeActivity.class)));
+        button("Pilih Prayer Time sebagai menu utama TV", () -> open(new Intent(Settings.ACTION_HOME_SETTINGS)));
         if (!PrayerStore.added(this)) {
             root.addView(text("Fungsi pilihan. Tambah untuk melihat waktu solat Malaysia. Audio azan hanya dihidupkan apabila anda memilihnya.",18,0xFFCAD6E9));
             button("+ Tambah waktu solat & azan", () -> { PrayerStore.prefs(this).edit().putBoolean("added",true).putBoolean("azan",false).apply(); render(); pickState(); });
@@ -60,7 +62,7 @@ public class MainActivity extends Activity {
             if (!full && !Settings.canDrawOverlays(this)) { open(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName()))); return; }
             PrayerStore.prefs(this).edit().putBoolean("fullscreen",!full).apply(); render();
         });
-        root.addView(text("Subuh menggunakan rakaman berasingan dengan ‘As-salātu khayrun minan-nawm’. Syuruk tidak memainkan azan. Paparan penuh memerlukan kebenaran di atas app lain; Home dan video bergantung pada box.",16,0xFFCAD6E9));
+        root.addView(text("Subuh menggunakan rakaman berasingan dengan ‘As-salātu khayrun minan-nawm’. Syuruk tidak memainkan azan. Paparan penuh memerlukan kebenaran di atas app lain. Butang sistem bergantung pada firmware box.",16,0xFFCAD6E9));
         button("▶ Cuba azan Subuh", () -> test(0)); button("▶ Cuba azan biasa", () -> test(1));
         button("▶ Cuba poster & azan • pilih waktu", () -> new AlertDialog.Builder(this).setTitle("Pratonton poster & azan")
             .setItems(PrayerClock.NAMES, (d,w) -> test(w)).setNegativeButton("Batal",null).show());
