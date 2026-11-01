@@ -32,7 +32,9 @@ jobs:
           assert run['head_repository']['full_name']==os.environ['GITHUB_REPOSITORY']
           assert run['head_branch'] in ('main','feature/reference-parity','feature/lime-ui','feature/app-updates','feature/optional-malaysia-azan')
           subprocess.run(['git','merge-base','--is-ancestor',run['head_sha'],'HEAD'],check=True)
-          subprocess.run(['git','diff','--exit-code',run['head_sha'],'HEAD','--','.',':!.github',':!README.md',':!previews',':(exclude,glob)**/src/test/screenshots/*.png'],check=True)
+          # The phone screenshot harness is not packaged in the APK. It may receive emulator
+          # readiness fixes between attempts; all Android/Gradle/assets must still match exactly.
+          subprocess.run(['git','diff','--exit-code',run['head_sha'],'HEAD','--','.',':!.github',':!README.md',':!previews',':!scripts/capture-phone-ui.py',':(exclude,glob)**/src/test/screenshots/*.png'],check=True)
           open('/tmp/validated-sha','w').write(run['head_sha'])
           PY
           gh run download "$REVIEWED_RUN" --repo "$GITHUB_REPOSITORY" --name cleanMYTV-apk --dir dist

@@ -12,22 +12,38 @@ PACKAGE = "my.cleanmytv.app"
 ACTIVITY = PACKAGE + "/tv.cleanyour.app.MainActivity"
 
 def adb(*args):
-    return subprocess.run(["adb", *args], check=True, capture_output=True, text=True).stdout
+    return subprocess.run(["adb", *args], check=True, capture_output=True, text=True, timeout=30).stdout
 
 def window():
+    # uiautomator can exit 0 without creating its XML while Android is still settling.
+    # Never accept the previous dump as evidence of the new screen.
+    adb("shell", "rm", "-f", "/sdcard/cleanmytv-ui.xml")
     adb("shell", "uiautomator", "dump", "/sdcard/cleanmytv-ui.xml")
-    return adb("shell", "cat", "/sdcard/cleanmytv-ui.xml")
+    xml = adb("shell", "cat", "/sdcard/cleanmytv-ui.xml")
+    ET.fromstring(xml)
+    return xml
 
-def wait_text(text, timeout=60):
+def wait_text(text, timeout=90, home=False):
     end = time.monotonic() + timeout
+    xml = ""
     while time.monotonic() < end:
-        xml = window()
+        try:
+            xml = window()
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, ET.ParseError):
+            time.sleep(2)
+            continue
         if text in xml:
             return xml
         if "Pixel Launcher isn" in xml:
             adb("shell", "am", "force-stop", "com.google.android.apps.nexuslauncher")
-            adb("shell", "am", "start", "-n", ACTIVITY)
+            if home:
+                adb("shell", "am", "start", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.HOME")
+            else:
+                adb("shell", "am", "start", "-n", ACTIVITY)
         time.sleep(2)
+    OUT.joinpath("phone-failure.xml").write_text(xml, encoding="utf-8")
+    adb("shell", "screencap", "-p", "/sdcard/cleanmytv-failure.png")
+    adb("pull", "/sdcard/cleanmytv-failure.png", str(OUT / "phone-failure.png"))
     raise AssertionError("Expected installed UI text: " + text)
 
 def tap(text):
@@ -96,9 +112,19 @@ update_dialog("ms")
 english()
 shot("phone-en")
 update_dialog("en")
-adb("shell", "input", "keyevent", "KEYCODE_HOME")
-time.sleep(5)
-adb("shell", "input", "swipe", "540", "1700", "540", "350", "350")
-time.sleep(3)
-wait_text("cleanMYTV")
+for attempt in range(3):
+    # Recover the stock emulator launcher, not the app under test. A successful app screen
+    # must not masquerade as a launcher screenshot after a Pixel Launcher ANR.
+    adb("shell", "am", "start", "-a", "android.intent.action.MAIN", "-c", "android.intent.category.HOME")
+    time.sleep(5)
+    adb("shell", "input", "swipe", "540", "1700", "540", "350", "350")
+    try:
+        xml = wait_text("cleanMYTV", timeout=25, home=True)
+        if 'package="my.cleanmytv.app"' in xml:
+            raise AssertionError("Expected the emulator launcher, not the app window")
+        break
+    except AssertionError:
+        if attempt == 2:
+            raise
+        adb("shell", "am", "force-stop", "com.google.android.apps.nexuslauncher")
 shot("phone-launcher")
