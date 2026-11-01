@@ -22,3 +22,8 @@ Screenshot popup dilabel **PRATONTON**, bukan bukti penggera solat sebenar berbu
 ## Binaan keluaran
 
 [Binaan bertandatangan dan ujian GitHub](https://github.com/AmexSaad/cleanMYTV/actions/runs/41286958780). Lihat keputusan langsung di situ; nota ini tidak menggantikan status binaan.
+
+Keputusan akhir GitHub: **1,159 ujian, 0 kegagalan, 0 ralat**. Job APK dan phone-preview lulus, termasuk pemasangan in-place serta pilihan Bahasa Melayu yang kekal. Skrip screenshot emulator diperbaiki untuk menunggu XML yang sah dan memastikan screenshot launcher bukan skrin app. APK tidak dibina semula atau diubah antara ulangan emulator.
+
+APK: 1.3.0-beta3, versionCode 8, pakej my.cleanmytv.app. SHA-256: 99f7aff4db1bd6f2142aabf33c7e5bffdc993afecb6630a8f0b277c2fb438439. Sijil release SHA-256: e9ef5b2f671315f82ccb020f07c5fcf4dc1c0ab491023d9b55ecab59cac04fae.
+
