@@ -30,7 +30,7 @@ jobs:
           assert run['conclusion']=='success' and run['status']=='completed'
           assert run['name']=='Build cleanMYTV'
           assert run['head_repository']['full_name']==os.environ['GITHUB_REPOSITORY']
-          assert run['head_branch'] in ('main','feature/reference-parity','feature/lime-ui','feature/app-updates')
+          assert run['head_branch'] in ('main','feature/reference-parity','feature/lime-ui','feature/app-updates','feature/optional-malaysia-azan')
           subprocess.run(['git','merge-base','--is-ancestor',run['head_sha'],'HEAD'],check=True)
           subprocess.run(['git','diff','--exit-code',run['head_sha'],'HEAD','--','.',':!.github',':!README.md',':!previews',':(exclude,glob)**/src/test/screenshots/*.png'],check=True)
           open('/tmp/validated-sha','w').write(run['head_sha'])
@@ -43,17 +43,19 @@ jobs:
           import json
           info=json.load(open('dist/release-info.json'))
           assert info['signing']=='release'
-          assert info['versionName']=='1.3.0-beta1' and info['versionCode']>=6
+          assert info['versionName']=='1.3.0-beta2' and info['versionCode']==7
           PY
           cat > /tmp/release-notes.md <<'NOTES'
-          cleanMYTV 1.3.0 beta1 — butang Kemas kini / Update dalam BM dan English, logo 03 Monogram dan tema Hitam + Limau.
+          cleanMYTV 1.3.0 beta2 — tambah app pada menu TV serta pilihan Waktu Solat & Azan Malaysia.
 
-          Semak versi GitHub termasuk beta, lihat nota perubahan dan muat turun APK daripada repo rasmi cleanMYTV. Buka fail yang dimuat turun dan sahkan pemasangan Android. Semakan tidak berjalan secara automatik ketika app dibuka. Muat turun dihalang apabila operasi TV belum selesai.
+          Dalam cleanMYTV lama, tekan Kemas kini untuk mendapatkan APK ini. Binaan menggunakan nama pakej dan kunci release yang sama seperti 1.3.0 beta1, dengan nombor versi lebih tinggi; pasang terus tanpa menyahpasang app atau membuang rekod.
 
-          Keluaran ini menggunakan kunci tandatangan release tetap. Kemas kini seterusnya yang menggunakan kunci ini boleh dipasang tanpa menyahpasang app. Beta debug 1.2.x terdahulu mempunyai tandatangan berbeza: selesaikan pemulihan TV yang diperlukan dengan app lama sebelum menyahpasangnya untuk pemasangan pertama keluaran ini.
+          Menu TV: butang tambah app, baris baharu secara automatik apabila baris pertama penuh, dan App library untuk app Android biasa.
 
-          This release adds an Update button, correct stable/beta version checks, release notes and direct APK download from the cleanMYTV repository. Android still asks the user to confirm installation. Downloads are blocked while a TV operation is unfinished. A permanent release signing identity replaces the earlier temporary debug certificates; future releases using this identity support in-place upgrades. Earlier 1.2.x debug betas require a one-time reinstall after completing any needed TV recovery with the old app.
+          Waktu solat & azan ialah fungsi pilihan, dimatikan secara lalai. Tambah melalui menu skrin utama TV dalam telefon, kemudian pilih negeri/daerah daripada 60 zon Malaysia. Audio Subuh berasingan disertakan, bersama audio biasa untuk Zohor, Asar, Maghrib dan Isyak. Syuruk tidak memainkan azan. Terdapat butang percubaan, pilihan paparan penuh sehingga audio tamat, serta kawalan matikan/buang. Jadual JAKIM melalui Solat.my; audio CC BY 3.0 dengan kredit dalam modul. Paparan penuh bukan kunci mutlak semua firmware.
+
+          Same-package, same-key in-place update from 1.3.0 beta1. Adds optional Malaysian prayer times and azan, separate bundled Fajr audio, and improved TV Home app selection. Existing Update controls discover this beta and offer the official APK. Android still asks before installation; downloads remain blocked during unfinished TV operations.
 
           Android 9+ phone required. Core connection, analysis, cleaning and recovery functions remain in place. Physical TV compatibility still needs device testing. Upstream MIT copyright and third-party notices are retained.
           NOTES
-          gh release create v1.3.0-beta1 dist/cleanMYTV.apk dist/SHA256SUMS.txt dist/SIGNING_CERTIFICATE.txt dist/release-info.json --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.3.0 beta1' --notes-file /tmp/release-notes.md
+          gh release create v1.3.0-beta2 dist/cleanMYTV.apk dist/SHA256SUMS.txt dist/SIGNING_CERTIFICATE.txt dist/release-info.json --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.3.0 beta2 — Waktu Solat & Azan' --notes-file /tmp/release-notes.md

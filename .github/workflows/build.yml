@@ -54,7 +54,7 @@ jobs:
             ./gradlew :app:assembleFullDebug --no-configuration-cache --console=plain
           fi
       - name: Test connection, plans, operations, recovery and app integration
-        run: ./gradlew :core:model:check :core:spec:check :core:ops:check :core:probe:check :core:planner:check :core:engine:check :core:backup:check :core:flows:check :core:trust:check :core:registry:check :adb:wire:check :adb:pairing:check :adb:session:check :app:testFullDebugUnitTest :e2e:check --continue --no-configuration-cache --console=plain
+        run: ./gradlew :core:model:check :core:spec:check :core:ops:check :core:probe:check :core:planner:check :core:engine:check :core:backup:check :core:flows:check :core:trust:check :core:registry:check :adb:wire:check :adb:pairing:check :adb:session:check :app:testFullDebugUnitTest :tv:prayer:testDebugUnitTest :e2e:check --continue --no-configuration-cache --console=plain
       - name: Record refreshed screenshots and test feature interactions
         if: ${{ !inputs.branding_only }}
         run: ./gradlew recordRoborazziDebug --continue --no-configuration-cache --console=plain

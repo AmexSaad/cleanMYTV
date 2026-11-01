@@ -15,8 +15,8 @@ android {
         // cleanMYTV derivative of upstream v0.4.6-beta2; follows cleanMYTV 1.1.0 (code 2).
         // CI installs this test-only predecessor, then upgrades to the normal signed APK.
         val upgradeBase = providers.gradleProperty("cleanmytvUpgradeBase").orNull == "true"
-        versionCode = if (upgradeBase) 5 else 6
-        versionName = if (upgradeBase) "1.3.0-beta1-upgradecheck" else "1.3.0-beta1"
+        versionCode = if (upgradeBase) 6 else 7
+        versionName = if (upgradeBase) "1.3.0-beta2-upgradecheck" else "1.3.0-beta2"
     }
     // STORES-PLAN 1: one codebase, two store builds, the same applicationId and signing certificate.
     // `full` (GitHub and F-Droid) checks GitHub for a newer release and offers the optional add-ons;
