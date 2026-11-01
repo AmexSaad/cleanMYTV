@@ -7,9 +7,12 @@
   Screens: M2 Home screen, the theme picker, the dock sheet (S3b, own copy in this module).
 -->
 <resources>
-    <string name="home_add_prayer">+ Tambah waktu solat &amp; azan</string>
+    <string name="home_add_prayer">+ Tambah Prayer Time &amp; azan</string>
+    <string name="home_update_prayer">Kemas kini Prayer Time</string>
+    <string name="prayer_installed">Prayer Time sudah dipasang. Buka pada TV untuk pilih zon, hidupkan azan dan cuba popup.</string>
+    <string name="prayer_poster_note">Poster masjid malam dengan nama solat, waktu jadual dan kawasan pilihan yang berubah automatik. Tiada video atau iklan. Audio Subuh berasingan. Cuba popup kelima-lima waktu pada TV.</string>
     <string name="home_remove_prayer">Buang fungsi waktu solat &amp; azan</string>
-    <string name="home_prayer_note">Pilihan sahaja. Selepas ditambah, buka Waktu Solat pada TV untuk pilih negeri/zon Malaysia dan hidupkan azan. Audio Subuh berasingan disertakan.</string>
+    <string name="home_prayer_note">Pilihan sahaja. Selepas ditambah, buka Prayer Time pada TV untuk pilih negeri/zon Malaysia dan hidupkan azan. Audio Subuh berasingan disertakan.</string>
     <string name="home_add_apps">+ Tambah app ke menu utama</string>
     <string name="home_add_apps_tv">Selepas simpan app atau gaya, buka App library pada box. Tekan OK untuk tambah atau buang app daripada menu utama, termasuk app Android biasa.</string>
   <!-- Shared button words -->

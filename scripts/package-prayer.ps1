@@ -18,7 +18,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Signature verification failed.' }
     $signer = ($certificate | Select-String '^Signer #1 certificate SHA-256 digest: (.*)$').Matches.Groups[1].Value
     if ($signer -notmatch '^[0-9a-fA-F]{64}$') { throw 'Signing certificate digest missing.' }
-    @{sha256=(Get-FileHash $asset -Algorithm SHA256).Hash.ToLower(); signer=$signer.ToLower(); package='tv.cleanmytv.prayer'; versionCode=1} |
+    @{sha256=(Get-FileHash $asset -Algorithm SHA256).Hash.ToLower(); signer=$signer.ToLower(); package='tv.cleanmytv.prayer'; versionCode=2} |
         ConvertTo-Json | Set-Content -Encoding utf8NoBOM android/platform/src/main/assets/bundled/cleanmytv-prayer.json
     Write-Output 'Companion bundled and pinned. No private signing material was copied into the repository.'
 } finally { Pop-Location }

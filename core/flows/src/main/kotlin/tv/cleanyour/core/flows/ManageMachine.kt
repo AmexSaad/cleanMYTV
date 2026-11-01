@@ -51,7 +51,7 @@ data class ManageState(
 
 enum class ManageSection(val key: String) {
     HOME_SCREEN("home"), MODULES("modules"), SWITCHED_OFF("switchedoff"), LEFTOVERS("leftovers"),
-    RESTORE_POINT("restore"), TV_SETTINGS("tvsettings"),
+    RESTORE_POINT("restore"), TV_SETTINGS("tvsettings"), PRAYER("prayer"),
 }
 
 sealed interface ManageIntent {
@@ -178,7 +178,7 @@ class ManageMachine(
                 if (ok) connected()
             }
             ManageIntent.SwitchStockHomeOn -> if (id != null && !before.switchingHome && after.current?.wizardHome == true) scope.launch { switchStockHomeOn(id) }
-            is ManageIntent.Open -> if (event.section != ManageSection.MODULES || d.store.addOns) id?.let { effect(ManageEffect.Navigate("${event.section.key}/${it.value}")) }
+            is ManageIntent.Open -> if (event.section !in setOf(ManageSection.MODULES, ManageSection.PRAYER) || d.store.addOns) id?.let { effect(ManageEffect.Navigate("${event.section.key}/${it.value}")) }
             ManageIntent.SetUpAnother -> effect(ManageEffect.Navigate("setup"))
             ManageIntent.CleanAgain -> id?.let { effect(ManageEffect.Navigate("setup/${it.value}")) }
             ManageIntent.AppSettings -> effect(ManageEffect.Navigate("appsettings"))

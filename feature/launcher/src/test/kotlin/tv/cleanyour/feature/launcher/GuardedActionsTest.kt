@@ -44,6 +44,14 @@ import tv.cleanyour.ui.design.component.DockEditorState
 @Config(sdk = [35], qualifiers = "w360dp-h1600dp-xhdpi")
 class GuardedActionsTest {
     @get:Rule val compose = createAndroidComposeRule<ComponentActivity>()
+    @Test fun prayerInstallAndUpdateAreExplicitAndGuarded() {
+        val hits=mutableListOf<HomeScreenIntent>()
+        compose.showColumn { PrayerScreen(HomeScreenState(prayerAvailable=true,prayerInstalled=true,prayerUpdateAvailable=true),{hits+=it},{}) }
+        compose.tap("Update Prayer Time",OBSCURED)
+        assertEquals(emptyList<HomeScreenIntent>(),hits)
+        compose.tap("Update Prayer Time",0)
+        assertEquals(listOf(HomeScreenIntent.AddPrayer),hits)
+    }
 
     @Test fun useTheTvsOwnIsGuardedAndCancelIsNot() {
         val hits = mutableListOf<HomeScreenIntent>()

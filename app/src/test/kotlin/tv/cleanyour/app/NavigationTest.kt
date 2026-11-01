@@ -8,6 +8,15 @@ import kotlin.test.assertTrue
 
 // The emulator run: Back from "I've set up a TV before" left the app instead of returning to Welcome.
 class NavigationTest {
+    @Test fun prayerDashboardRouteRespectsAddOnsAndBack() {
+        val stack=mutableListOf<NavKey>(Dest.Manage("tv"))
+        applyRoute(stack,"prayer/tv",noTvs=false,addOns=false)
+        assertEquals(listOf<NavKey>(Dest.Manage("tv")),stack)
+        applyRoute(stack,"prayer/tv",noTvs=false,addOns=true)
+        assertEquals(Dest.Prayer("tv"),stack.last())
+        applyRoute(stack,"back",noTvs=false,addOns=true)
+        assertEquals(listOf<NavKey>(Dest.Manage("tv")),stack)
+    }
     @Test fun backFromIveSetUpATvBeforeReturnsToWelcome() {
         val stack = mutableListOf<NavKey>(Dest.Setup())
         assertTrue(applyRoute(stack, "returning", noTvs = true))

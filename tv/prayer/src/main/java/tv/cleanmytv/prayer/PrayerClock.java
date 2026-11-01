@@ -32,4 +32,10 @@ public final class PrayerClock {
     }
     public static String date(long now) { return Instant.ofEpochMilli(now).atZone(MALAYSIA).toLocalDate().toString(); }
     public static String time(long stamp) { return Instant.ofEpochMilli(stamp).atZone(MALAYSIA).format(DateTimeFormatter.ofPattern("HH:mm")); }
+    public static String posterTime(long stamp) {
+        ZonedDateTime t = Instant.ofEpochMilli(stamp).atZone(MALAYSIA);
+        int h = t.getHour();
+        String period = h < 12 ? "PAGI" : h < 14 ? "TENGAH HARI" : h < 19 ? "PETANG" : "MALAM";
+        return String.format(Locale.US, "%d:%02d %s", h % 12 == 0 ? 12 : h % 12, t.getMinute(), period);
+    }
 }

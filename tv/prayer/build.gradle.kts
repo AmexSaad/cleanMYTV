@@ -4,8 +4,8 @@ android {
     namespace = "tv.cleanmytv.prayer"
     defaultConfig {
         applicationId = "tv.cleanmytv.prayer"
-        versionCode = 1
-        versionName = "1.0-beta1"
+        versionCode = 2
+        versionName = "1.0-beta2"
     }
     testOptions { unitTests { isIncludeAndroidResources = true } }
 }

@@ -5,6 +5,13 @@ import java.time.*;
 import static org.junit.Assert.*;
 
 public class PrayerClockTest {
+    @Test public void posterUsesTheScheduledMalaysiaTimeWithoutHardcodedMaghribOrLocation() {
+        assertEquals("5:49 PAGI",PrayerClock.posterTime(PrayerClock.at("01-Nov-2026","05:49:00")));
+        assertEquals("1:01 TENGAH HARI",PrayerClock.posterTime(PrayerClock.at("01-Nov-2026","13:01:00")));
+        assertEquals("4:20 PETANG",PrayerClock.posterTime(PrayerClock.at("01-Nov-2026","16:20:00")));
+        assertEquals("7:00 MALAM",PrayerClock.posterTime(PrayerClock.at("01-Nov-2026","19:00:00")));
+        assertEquals("8:12 MALAM",PrayerClock.posterTime(PrayerClock.at("01-Nov-2026","20:12:00")));
+    }
     @Test public void subuhUsesItsOwnAudioAndTheOtherFourUseRegularAudio() {
         assertEquals("azan_fajr", PrayerClock.audioName(0));
         for(int p=1;p<5;p++)assertEquals("azan_regular",PrayerClock.audioName(p));

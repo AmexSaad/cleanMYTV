@@ -27,18 +27,18 @@ public class MainActivity extends Activity {
     private void button(String s, Runnable action) {
         Button b=new Button(this);b.setText(s);b.setTextSize(18);b.setAllCaps(false);b.setPadding(20,12,20,12);b.setMinHeight(56);
         StateListDrawable background=new StateListDrawable();
-        GradientDrawable selected=new GradientDrawable();selected.setColor(0xFFD6FF38);selected.setCornerRadius(12);
-        GradientDrawable rest=new GradientDrawable();rest.setColor(0xFF172015);rest.setCornerRadius(12);rest.setStroke(1,0xFF566047);
+        GradientDrawable selected=new GradientDrawable();selected.setColor(0xFFFFE4A3);selected.setCornerRadius(12);
+        GradientDrawable rest=new GradientDrawable();rest.setColor(0xFF102849);rest.setCornerRadius(12);rest.setStroke(1,0xFF466386);
         background.addState(new int[]{android.R.attr.state_focused},selected);background.addState(new int[]{android.R.attr.state_pressed},selected);background.addState(new int[]{},rest);b.setBackground(background);
-        b.setTextColor(new ColorStateList(new int[][]{new int[]{android.R.attr.state_focused},new int[]{android.R.attr.state_pressed},new int[]{}},new int[]{0xFF101610,0xFF101610,Color.WHITE}));
+        b.setTextColor(new ColorStateList(new int[][]{new int[]{android.R.attr.state_focused},new int[]{android.R.attr.state_pressed},new int[]{}},new int[]{0xFF071A36,0xFF071A36,Color.WHITE}));
         b.setOnClickListener(v->action.run());LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.setMargins(4,6,4,6);root.addView(b,lp);
     }
     private void render() {
-        ScrollView scroll = new ScrollView(this); scroll.setFillViewport(true);scroll.setBackgroundColor(0xFF090D0B);root = new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(36,24,36,36);
-        root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF253016,0xFF090D0B})); scroll.addView(root); setContentView(scroll);
-        root.addView(text("cleanMYTV  /  MALAYSIA",18,0xFFD6FF38)); root.addView(text("Waktu solat & azan",32,Color.WHITE));
+        ScrollView scroll = new ScrollView(this); scroll.setFillViewport(true);scroll.setBackgroundColor(0xFF06142B);root = new LinearLayout(this); root.setOrientation(LinearLayout.VERTICAL); root.setPadding(36,24,36,36);
+        root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF132E50,0xFF06142B})); scroll.addView(root); setContentView(scroll);
+        root.addView(text("PRAYER TIME  /  MALAYSIA",18,0xFFBED7F5)); root.addView(text("Waktu solat & azan",32,Color.WHITE));
         if (!PrayerStore.added(this)) {
-            root.addView(text("Fungsi pilihan. Tambah untuk melihat waktu solat Malaysia. Audio azan hanya dihidupkan apabila anda memilihnya.",18,0xFFBAC4B7));
+            root.addView(text("Fungsi pilihan. Tambah untuk melihat waktu solat Malaysia. Audio azan hanya dihidupkan apabila anda memilihnya.",18,0xFFCAD6E9));
             button("+ Tambah waktu solat & azan", () -> { PrayerStore.prefs(this).edit().putBoolean("added",true).putBoolean("azan",false).apply(); render(); pickState(); });
             button("Kembali", this::finish); return;
         }
@@ -60,8 +60,10 @@ public class MainActivity extends Activity {
             if (!full && !Settings.canDrawOverlays(this)) { open(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName()))); return; }
             PrayerStore.prefs(this).edit().putBoolean("fullscreen",!full).apply(); render();
         });
-        root.addView(text("Subuh menggunakan rakaman berasingan dengan ‘As-salātu khayrun minan-nawm’. Syuruk tidak memainkan azan. Paparan penuh memerlukan kebenaran di atas app lain; Home dan video bergantung pada box.",16,0xFFBAC4B7));
+        root.addView(text("Subuh menggunakan rakaman berasingan dengan ‘As-salātu khayrun minan-nawm’. Syuruk tidak memainkan azan. Paparan penuh memerlukan kebenaran di atas app lain; Home dan video bergantung pada box.",16,0xFFCAD6E9));
         button("▶ Cuba azan Subuh", () -> test(0)); button("▶ Cuba azan biasa", () -> test(1));
+        button("▶ Cuba poster & azan • pilih waktu", () -> new AlertDialog.Builder(this).setTitle("Pratonton poster & azan")
+            .setItems(PrayerClock.NAMES, (d,w) -> test(w)).setNegativeButton("Batal",null).show());
         button("■ Hentikan percubaan / azan", () -> stopService(new Intent(this,AzanService.class)));
         button("Muat semula jadual", this::sync);
         button("Buang fungsi waktu solat & azan", () -> new AlertDialog.Builder(this).setTitle("Buang fungsi ini?")
@@ -73,7 +75,13 @@ public class MainActivity extends Activity {
             .setPositiveButton("Tutup",null).show());
         String problem = PrayerStore.prefs(this).getString("problem", ""); if (!problem.isEmpty()) root.addView(text(problem,16,0xFFFFCC80));
     }
-    private void test(int prayer) { startForegroundService(new Intent(this,AzanService.class).putExtra("test",true).putExtra("prayer",prayer)); }
+    private void test(int prayer) {
+        if (!Settings.canDrawOverlays(this)) {
+            toast("Benarkan paparan di atas app lain untuk cuba poster. Kemudian tekan Cuba sekali lagi.");
+            open(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:"+getPackageName()))); return;
+        }
+        startForegroundService(new Intent(this,AzanService.class).putExtra("test",true).putExtra("prayer",prayer));
+    }
     private void open(Intent i) { try { startActivity(i); } catch (RuntimeException e) { toast("Buka Tetapan Android › Akses khas app untuk memberi kebenaran pada box ini."); } }
     private void toast(String s) { Toast.makeText(this,s,Toast.LENGTH_LONG).show(); }
     private JSONArray locations() throws Exception { return new JSONArray(PrayerStore.read(getAssets().open("locations.json"))); }

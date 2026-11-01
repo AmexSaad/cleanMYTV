@@ -1,3 +1,28 @@
+# Catatan kemas kini / Changelog
+
+## 1.3.0-beta3 — Prayer Time: poster azan dinamik
+
+- Reka bentuk masjid biru malam (pilihan nombor 2), dengan satu gambar latar WebP sekitar 180 KB.
+- Nama solat, waktu jadual pada hari itu dan kawasan/zon Malaysia pilihan dipaparkan sebagai teks dinamik. Tiada Maghrib, 7:15 atau Kuala Lumpur yang dikunci dalam gambar.
+- Tiada video, YouTube, iklan atau muat turun media. Audio biasa dan audio Subuh berasingan kekal disertakan.
+- Popup tutup sendiri selepas audio habis. Percubaan popup untuk Subuh, Zohor, Asar, Maghrib dan Isyak dilabel sebagai pratonton; percubaan tidak mengaktifkan azan automatik.
+- Kad Prayer Time & azan terus pada dashboard telefon untuk tambah/kemas kini modul pada TV. Nama app, ikon dan banner TV dikemas kini.
+- Modul TV versi 2 boleh menggantikan versi 1 menggunakan pakej dan penandatangan yang sama, mengekalkan tetapan. Kemas kini app telefon dahulu, kemudian tekan Prayer Time pada dashboard untuk mengemas kini modul TV.
+- Pembaikan senarai dock: app baharu daripada senarai semasa TV tidak lagi dibuang kerana tiada dalam rekod lama.
+- App telefon kod versi 8; ujian pemasangan mengekalkan data menggunakan kod versi 7 sebagai pendahulu. Kunci keluaran yang sama digunakan.
+
+Pilihan azan dan paparan penuh masih dimatikan secara lalai. Pengguna memilih zon dan memberi kebenaran yang diperlukan pada TV. Paparan penuh ialah overlay sehingga audio tamat, bukan mod kiosk mutlak pada semua model. Jadual Malaysia daripada JAKIM melalui Solat.my; kredit audio CC BY 3.0 dalam [ATTRIBUTION](tv/prayer/ATTRIBUTION.md).
+
+Kad Prayer Time pada launcher membuka jadual dalam modul. Widget waktu solat hidup pada Home dan butang + dalam slot dock kosong belum termasuk dalam keluaran ini.
+
+## 1.3.0-beta2
+
+- Modul waktu solat Malaysia pilihan, 60 zon, audio Subuh berasingan, penggera dan paparan penuh pilihan.
+- Pemilihan app Android biasa dan app TV untuk dock serta App library.
+
+
+---
+
 # Changelog
 
 All notable changes to the app. Versions follow [semantic versioning](https://semver.org/).

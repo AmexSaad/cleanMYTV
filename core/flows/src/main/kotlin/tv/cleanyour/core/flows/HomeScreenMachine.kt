@@ -100,6 +100,7 @@ data class HomeScreenState(
     val lookSending: Boolean = false,
     val prayerAvailable: Boolean = false,
     val prayerInstalled: Boolean = false,
+    val prayerUpdateAvailable: Boolean = false,
 ) {
     val waiting: Int get() = waitingApps.size
 }
@@ -219,7 +220,7 @@ class HomeScreenMachine(
         if (after.notOnTv != null && (event is HomeScreenIntent.SetDock || event is HomeScreenIntent.SetTheme || event == HomeScreenIntent.RestoreMine ||
             event == HomeScreenIntent.UseLook)) return
         when (event) {
-            HomeScreenIntent.AddPrayer -> if (d.store.addOns && !after.prayerInstalled) scope.launch { addPrayer() }
+            HomeScreenIntent.AddPrayer -> if (d.store.addOns && after.busy == null && (!after.prayerInstalled || after.prayerUpdateAvailable)) scope.launch { addPrayer() }
             HomeScreenIntent.RemovePrayer -> if (d.store.addOns && after.prayerInstalled) scope.launch {
                 val result = writer.write(tvId, PlanRequest.RemoveModule(BundledPrayer.PKG), fresh = true) { send(BusyNow(it)) }
                 if (result is WriteResult.Done) refreshPrayerSnapshot()
@@ -328,7 +329,8 @@ class HomeScreenMachine(
             ownPicture = own, ownDim = choice?.dim ?: OwnPicture.DEFAULT_DIM,
             waitingApps = waiting, earlierPicture = earlierLook?.photo?.ref, sent = sentPreview, sentStyle = drafts.styleOf(choice, tvLook),
             sentPicture = drafts.pictureIdOf(choice, tvLook), launcherVersionCode = versionCode, ramMb = ramMb, hasInputs = hasInputs,
-            prayerAvailable = d.store.addOns && d.bundledPrayer != null, prayerInstalled = BundledPrayer.PKG in packages),
+            prayerAvailable = d.store.addOns && d.bundledPrayer != null, prayerInstalled = BundledPrayer.PKG in packages,
+            prayerUpdateAvailable = packages[BundledPrayer.PKG]?.versionCode?.let { it < BundledPrayer.VERSION_CODE } == true),
             choice, earlierLook, cardsNow, keys))
     }
 

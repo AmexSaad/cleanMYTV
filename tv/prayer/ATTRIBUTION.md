@@ -1,5 +1,7 @@
 # Bundled azan recordings
 
+Prayer Time night-mosque background: AI-generated illustration, selected and approved as design number 2 by the project owner, with text removed for dynamic rendering. See [DESIGN.md](DESIGN.md). It is a decorative illustration, not a verified photograph of a particular mosque/location. The image does not change the licences of the recordings below.
+
 Both recordings are freely redistributable under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
 The app displays these credits under **Sumber & kredit audio**. Neither author endorses cleanMYTV.
 

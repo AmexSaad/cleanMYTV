@@ -14,20 +14,9 @@ import android.widget.*;
 public class AzanService extends Service {
     static final String STOP = "tv.cleanmytv.prayer.STOP";
     private MediaPlayer player; private AudioFocusRequest focus;
-    private WindowManager wm; private View overlay; private TextView remaining; private ProgressBar progress;
+    private WindowManager wm; private View overlay;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable watchdog = this::stopSelf;
-    private final Runnable tick = new Runnable() {
-        @Override public void run() {
-            if (player == null) return;
-            try {
-                int duration = player.getDuration(), position = player.getCurrentPosition();
-                if (remaining != null) remaining.setText("Baki " + String.format(java.util.Locale.US, "%d:%02d", (duration-position)/60000, ((duration-position)/1000)%60));
-                if (progress != null) { progress.setMax(duration); progress.setProgress(position); }
-                handler.postDelayed(this, 500);
-            } catch (RuntimeException stopped) { stopSelf(); }
-        }
-    };
     @Override public IBinder onBind(Intent i) { return null; }
     @Override public int onStartCommand(Intent i, int flags, int id) {
         if (i == null || STOP.equals(i.getAction())) { stopSelf(); return START_NOT_STICKY; }
@@ -48,7 +37,7 @@ public class AzanService extends Service {
             .setContentTitle("Azan " + PrayerClock.NAMES[prayer]).setContentText("cleanMYTV • " + PrayerStore.zone(this))
             .setContentIntent(settings).setOngoing(true).addAction(new Notification.Action.Builder(null, "Hentikan azan", stop).build()).build());
         handler.postDelayed(watchdog, 10 * 60_000L); // Always release the screen if a decoder never finishes.
-        if (PrayerStore.prefs(this).getBoolean("fullscreen", false) && Settings.canDrawOverlays(this)) showOverlay(prayer, test);
+        if ((test || PrayerStore.prefs(this).getBoolean("fullscreen", false)) && Settings.canDrawOverlays(this)) showOverlay(prayer, test, i.getLongExtra("at", 0));
         AudioAttributes attrs = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build();
         focus = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT).setAudioAttributes(attrs)
             .setOnAudioFocusChangeListener(change -> { if (change == AudioManager.AUDIOFOCUS_LOSS) stopSelf(); }).build();
@@ -60,25 +49,23 @@ public class AzanService extends Service {
             try (android.content.res.AssetFileDescriptor fd = getResources().openRawResourceFd(audio)) { player.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength()); }
             player.setOnCompletionListener(mp -> stopSelf());
             player.setOnErrorListener((mp, what, extra) -> { fail("Audio azan tidak dapat dimainkan."); return true; });
-            player.setOnPreparedListener(mp -> { mp.start(); handler.post(tick); }); player.prepareAsync();
+            player.setOnPreparedListener(MediaPlayer::start); player.prepareAsync();
         } catch (Exception e) { fail("Audio azan tidak dapat dibuka."); }
         return START_NOT_STICKY;
     }
     private void fail(String message) { PrayerStore.prefs(this).edit().putString("problem", message).apply(); Toast.makeText(this, message, Toast.LENGTH_LONG).show(); stopSelf(); }
-    private void showOverlay(int prayer, boolean test) {
-        LinearLayout panel = new LinearLayout(this); panel.setOrientation(LinearLayout.VERTICAL); panel.setGravity(Gravity.CENTER); panel.setPadding(48, 32, 48, 32);
-        panel.setBackgroundColor(0xFF090D0B);
-        TextView brand = label("cleanMYTV  /  WAKTU SOLAT", 18, 0xFFD6FF38);
-        TextView arabic = label("حَيَّ عَلَى الصَّلَاةِ", 46, 0xFFD6FF38);
-        TextView name = label((test ? "Cuba azan " : "Azan ") + PrayerClock.NAMES[prayer], 42, Color.WHITE);
-        panel.addView(brand); panel.addView(arabic); panel.addView(name);
-        panel.addView(label(PrayerStore.prefs(this).getString("place", "Malaysia"), 20, 0xFFBAC4B7));
-        remaining = label("Azan sedang dimuatkan…", 20, 0xFFBAC4B7); panel.addView(remaining);
-        progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal); progress.setProgressTintList(android.content.res.ColorStateList.valueOf(0xFFD6FF38));
-        panel.addView(progress, new LinearLayout.LayoutParams(480, 12));
-        panel.addView(label("Paparan ditutup sendiri selepas azan tamat", 16, 0xFFBAC4B7));
+    private void showOverlay(int prayer, boolean test, long scheduled) {
         if (test) {
-            Button stop = new Button(this); stop.setText("Tamatkan percubaan"); stop.setOnClickListener(v -> stopSelf()); panel.addView(stop);
+            long now = System.currentTimeMillis(); String today = PrayerClock.date(now);
+            scheduled = PrayerStore.cached(this, PrayerStore.zone(this)).stream()
+                .filter(e -> e.prayer == prayer && today.equals(PrayerClock.date(e.at))).mapToLong(e -> e.at).findFirst().orElse(now);
+        }
+        FrameLayout panel = new FrameLayout(this);
+        panel.addView(new PrayerPoster(this, prayer, scheduled,
+            PrayerStore.prefs(this).getString("place", "Malaysia"), test), new FrameLayout.LayoutParams(-1,-1));
+        if (test) {
+            Button stop = new Button(this); stop.setText("Tamatkan percubaan"); stop.setOnClickListener(v -> stopSelf());
+            FrameLayout.LayoutParams p = new FrameLayout.LayoutParams(-2,-2,Gravity.BOTTOM|Gravity.RIGHT); p.setMargins(16,16,24,16);panel.addView(stop,p);
         }
         panel.setFocusableInTouchMode(true); panel.setOnKeyListener((v, key, event) -> key == KeyEvent.KEYCODE_BACK);
         wm = getSystemService(WindowManager.class);
@@ -86,7 +73,6 @@ public class AzanService extends Service {
             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, PixelFormat.OPAQUE);
         try { wm.addView(panel, lp); overlay = panel; panel.requestFocus(); } catch (RuntimeException denied) { overlay = null; }
     }
-    private TextView label(String s, int size, int color) { TextView v = new TextView(this); v.setText(s); v.setTextSize(size); v.setTextColor(color); v.setGravity(Gravity.CENTER); v.setPadding(12,12,12,12); return v; }
     @Override public void onDestroy() {
         handler.removeCallbacksAndMessages(null);
         if (player != null) { player.release(); player = null; }

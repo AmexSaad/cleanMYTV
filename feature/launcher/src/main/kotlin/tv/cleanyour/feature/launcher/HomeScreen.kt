@@ -109,8 +109,10 @@ fun HomeScreen(
         }
         // look2: a failed look send keeps the draft (and a new photo); Open Look reopens it.
         if (state.prayerAvailable && busy == null) {
+            if (state.prayerUpdateAvailable) PrimaryButton(stringResource(R.string.home_update_prayer),
+                { onIntent(HomeScreenIntent.AddPrayer) }, Modifier.padding(top = 8.dp))
             TertiaryButton(stringResource(if (state.prayerInstalled) R.string.home_remove_prayer else R.string.home_add_prayer),
-                { onIntent(if (state.prayerInstalled) HomeScreenIntent.RemovePrayer else HomeScreenIntent.AddPrayer) }, Modifier.padding(top = 8.dp))
+                { onIntent(if (state.prayerInstalled) HomeScreenIntent.RemovePrayer else HomeScreenIntent.AddPrayer) }, Modifier.padding(top = 8.dp), guardObscured = true)
             Body(stringResource(R.string.home_prayer_note), Modifier.padding(horizontal = 4.dp))
         }
         if (busy == null) {

@@ -56,8 +56,11 @@ jobs:
       - name: Test connection, plans, operations, recovery and app integration
         run: ./gradlew :core:model:check :core:spec:check :core:ops:check :core:probe:check :core:planner:check :core:engine:check :core:backup:check :core:flows:check :core:trust:check :core:registry:check :adb:wire:check :adb:pairing:check :adb:session:check :app:testFullDebugUnitTest :tv:prayer:testDebugUnitTest :e2e:check --continue --no-configuration-cache --console=plain
       - name: Record refreshed screenshots and test feature interactions
+        # Focused dashboard/install tests also run when the full screenshot suite is skipped.
         if: ${{ !inputs.branding_only }}
         run: ./gradlew recordRoborazziDebug --continue --no-configuration-cache --console=plain
+      - name: Test Prayer Time dashboard and guarded update controls
+        run: ./gradlew :feature:manage:testDebugUnitTest --tests '*PrayerDashboardTest' :feature:launcher:testDebugUnitTest --tests '*GuardedActionsTest.prayerInstallAndUpdateAreExplicitAndGuarded' -Proborazzi.test.record=true --no-configuration-cache --console=plain
       - name: Save feature storyboard for visual review
         if: ${{ !inputs.branding_only }}
         run: |

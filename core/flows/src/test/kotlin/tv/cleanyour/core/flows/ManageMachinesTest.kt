@@ -410,6 +410,10 @@ class ManageMachinesTest {
             m.dispatch(ManageIntent.Open(ManageSection.SWITCHED_OFF)); settle()
             assertEquals(ManageEffect.Navigate("switchedoff/${tv.id.value}"), drain().single())
         }
+        m.effects.test {
+            m.dispatch(ManageIntent.Open(ManageSection.PRAYER)); settle()
+            assertEquals(ManageEffect.Navigate("prayer/${tv.id.value}"), drain().single())
+        }
     }
 
     @Test fun addModuleFetchesChecksTheSignerInstallsAndMirrorsTheKey() = runTest(timeout = 30.seconds) {

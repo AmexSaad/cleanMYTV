@@ -66,6 +66,7 @@ import tv.cleanyour.feature.backup.RestoreScreen
 import tv.cleanyour.feature.connect.ConnectFlow
 import tv.cleanyour.feature.connect.isConnectState
 import tv.cleanyour.feature.launcher.HomeScreen
+import tv.cleanyour.feature.launcher.PrayerScreen
 import tv.cleanyour.feature.manage.AppSettingsScreen
 import tv.cleanyour.feature.manage.DebugStepSheet
 import tv.cleanyour.feature.manage.LeftoversScreen
@@ -85,6 +86,7 @@ import tv.cleanyour.feature.setup.SetupFlow
     @Serializable data class SwitchedOff(val tvId: String) : Dest
     @Serializable data class Leftovers(val tvId: String) : Dest
     @Serializable data class Home(val tvId: String) : Dest
+    @Serializable data class Prayer(val tvId: String) : Dest
     @Serializable data class Modules(val tvId: String) : Dest
     @Serializable data class Restore(val tvId: String) : Dest
     @Serializable data class TvSettings(val tvId: String) : Dest
@@ -114,6 +116,7 @@ internal fun applyRoute(stack: MutableList<NavKey>, route: String, noTvs: Boolea
         "setup" -> Dest.Setup(id)
         "resume" -> id?.let { t -> parts.getOrNull(2)?.let { p -> Dest.Setup(t, p) } }
         "modules" -> if (addOns) id?.let { Dest.Modules(it) } else null
+        "prayer" -> if (addOns) id?.let { Dest.Prayer(it) } else null
         "home" -> if (id != null) Dest.Home(id) else null
         "switchedoff" -> id?.let { Dest.SwitchedOff(it) }
         "leftovers" -> id?.let { Dest.Leftovers(it) }
@@ -295,6 +298,12 @@ fun AppRoot(graph: AppGraph, start: Dest, onExit: () -> Unit) {
                     HomeScreen(state, m::dispatch, onBack = { go("back") }, photos = photoPicker, onReport = { lead ->
                         go(IssueRoute.of(TvId(key.tvId), ReportContext("Home screen", ReportContext.named(lead, state.tvName), "HOME_BLOCKED_${state.notOnTv?.reason ?: "NONE"}")))
                     })
+                }
+                entry<Dest.Prayer> { key ->
+                    val m = rememberMachine("prayer:${key.tvId}") { graph.homeScreen(it, TvId(key.tvId)) }
+                    val state by m.state.collectAsStateWithLifecycle()
+                    LaunchedEffect(m) { m.effects.collect { onManageEffect(it) } }
+                    PrayerScreen(state, m::dispatch, onBack = { go("back") })
                 }
                 entry<Dest.Modules> { key ->
                     val m = rememberMachine("modules:${key.tvId}") { graph.modules(it, TvId(key.tvId)) }

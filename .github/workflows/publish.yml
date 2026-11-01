@@ -43,19 +43,21 @@ jobs:
           import json
           info=json.load(open('dist/release-info.json'))
           assert info['signing']=='release'
-          assert info['versionName']=='1.3.0-beta2' and info['versionCode']==7
+          assert info['versionName']=='1.3.0-beta3' and info['versionCode']==8
           PY
           cat > /tmp/release-notes.md <<'NOTES'
-          cleanMYTV 1.3.0 beta2 — tambah app pada menu TV serta pilihan Waktu Solat & Azan Malaysia.
+          cleanMYTV 1.3.0 beta3 — Prayer Time dengan poster azan dinamik, reka bentuk masjid biru malam pilihan pengguna.
 
-          Dalam cleanMYTV lama, tekan Kemas kini untuk mendapatkan APK ini. Binaan menggunakan nama pakej dan kunci release yang sama seperti 1.3.0 beta1, dengan nombor versi lebih tinggi; pasang terus tanpa menyahpasang app atau membuang rekod.
+          Dalam cleanMYTV lama, tekan Kemas kini untuk mendapatkan APK ini. Nama pakej dan kunci release kekal; versi kod 8 boleh dipasang terus ke atas beta2 tanpa membuang app atau rekod.
 
-          Menu TV: butang tambah app, baris baharu secara automatik apabila baris pertama penuh, dan App library untuk app Android biasa.
+          Baharu: akses Prayer Time & azan terus pada dashboard telefon. Tambah atau kemas kini modul sedia ada, kemudian buka Prayer Time pada TV untuk memilih zon dan mengaktifkan audio/paparan penuh. Nama dan ikon/banner modul turut dikemas kini.
 
-          Waktu solat & azan ialah fungsi pilihan, dimatikan secara lalai. Tambah melalui menu skrin utama TV dalam telefon, kemudian pilih negeri/daerah daripada 60 zon Malaysia. Audio Subuh berasingan disertakan, bersama audio biasa untuk Zohor, Asar, Maghrib dan Isyak. Syuruk tidak memainkan azan. Terdapat butang percubaan, pilihan paparan penuh sehingga audio tamat, serta kawalan matikan/buang. Jadual JAKIM melalui Solat.my; audio CC BY 3.0 dengan kredit dalam modul. Paparan penuh bukan kunci mutlak semua firmware.
+          Poster: satu latar masjid malam ringan; teks nama solat, waktu jadual sebenar hari itu dan kawasan/zon pilihan berubah secara automatik. Bukan gambar dengan teks contoh kekal. Tiada video, YouTube, iklan atau muat turun media. Latar WebP sekitar 180 KB. Audio Subuh berasingan dikekalkan. Popup ditutup selepas audio tamat; percubaan kelima-lima waktu disediakan dan dilabel sebagai pratonton. Pilihan hidup/mati kekal, dengan audio serta paparan penuh dimatikan secara lalai.
 
-          Same-package, same-key in-place update from 1.3.0 beta1. Adds optional Malaysian prayer times and azan, separate bundled Fajr audio, and improved TV Home app selection. Existing Update controls discover this beta and offer the official APK. Android still asks before installation; downloads remain blocked during unfinished TV operations.
+          App dock: app yang baru dipasang pada TV tidak lagi hilang daripada senarai hanya kerana rekod TV lama. App TV dan app Android biasa yang mempunyai pintasan boleh dipilih. Tiada perubahan launcher untuk widget hidup pada Home atau butang + dalam slot kosong dalam keluaran ini.
+
+          Jadual JAKIM melalui Solat.my, 60 zon Malaysia. Penggera menggunakan waktu Malaysia, bukan zon masa telefon. Paparan penuh memerlukan kebenaran overlay dan bukan kunci mutlak semua firmware. Existing Update controls discover this signed beta; Android still asks before installation, and unfinished TV operations block downloads. After updating the phone app, use Prayer Time on the dashboard to update the TV companion too.
 
           Android 9+ phone required. Core connection, analysis, cleaning and recovery functions remain in place. Physical TV compatibility still needs device testing. Upstream MIT copyright and third-party notices are retained.
           NOTES
-          gh release create v1.3.0-beta2 dist/cleanMYTV.apk dist/SHA256SUMS.txt dist/SIGNING_CERTIFICATE.txt dist/release-info.json --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.3.0 beta2 — Waktu Solat & Azan' --notes-file /tmp/release-notes.md
+          gh release create v1.3.0-beta3 dist/cleanMYTV.apk dist/SHA256SUMS.txt dist/SIGNING_CERTIFICATE.txt dist/release-info.json --repo "$GITHUB_REPOSITORY" --target "$(cat /tmp/validated-sha)" --prerelease --title 'cleanMYTV 1.3.0 beta3 — Prayer Time: Poster Azan Dinamik' --notes-file /tmp/release-notes.md

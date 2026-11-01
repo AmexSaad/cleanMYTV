@@ -152,6 +152,10 @@ fun ManageScreen(state: ManageState, onIntent: (ManageIntent) -> Unit, modifier:
                 if (state.switchingHome) LiveLine(stringResource(R.string.manage_wizard_home_working))
             }
             Column(Modifier.padding(top = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (state.addOns) DashboardTile(stringResource(R.string.manage_row_prayer), CytIcons.Plus,
+                    subtitle = stringResource(R.string.manage_row_prayer_sub)) {
+                    onIntent(ManageIntent.Open(ManageSection.PRAYER))
+                }
                 androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     DashboardTile(stringResource(R.string.manage_row_home), CytIcons.Tv, Modifier.weight(1f),
                         subtitle = if (tv.ownHome) stringResource(R.string.manage_row_home_own) else tv.dockNames.joinToString(", ").ifEmpty { null }) {

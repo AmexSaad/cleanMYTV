@@ -7,6 +7,18 @@ import tv.cleanyour.testing.fixtures.Samples
 import kotlin.test.*
 
 class BundledPrayerTest {
+    @Test fun anInstalledOlderCompanionCanBeUpdatedExplicitly() = runTest {
+        val h=Harness(); val tv=h.knownTv()
+        val old=PackageState(EnabledState.ENABLED,false,1,null,false,false,null,false)
+        h.snapshots.save(Samples.snapshot(packages=Samples.miTvPackages() + (BundledPrayer.PKG to old),takenAtMs=Samples.NOW_MS+1))
+        val blob=h.blobs.add("updated bundled companion".encodeToByteArray())
+        val info=ApkInfo(BundledPrayer.PKG,2,"1.0-beta2",Samples.zeroHash,blob.sha256,blob.size,"test")
+        val home=HomeScreenMachine(h.manageDeps(encoder=ConfigEncoder.Codec,bundledPrayer={BundledPrayer.of(info,blob)}),backgroundScope,tv.id)
+        settle();assertTrue(home.state.value.prayerInstalled);assertTrue(home.state.value.prayerUpdateAvailable)
+        assertTrue(h.planner.requests.none { it is PlanRequest.AddModule })
+        home.dispatch(HomeScreenIntent.AddPrayer);settle()
+        assertEquals(2L,h.planner.requests.filterIsInstance<PlanRequest.AddModule>().single().version.versionCode)
+    }
     @Test fun openingHomeDoesNotInstallTheOptionalModule() = runTest {
         val h = Harness(); val tv = h.knownTv()
         var reads = 0
