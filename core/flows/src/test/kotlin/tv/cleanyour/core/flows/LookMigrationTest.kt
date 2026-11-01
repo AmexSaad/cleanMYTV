@@ -41,6 +41,12 @@ class LookMigrationTest {
     private fun fixture(file: String): String =
         assertNotNull(javaClass.getResourceAsStream("/legacy-looks/$file"), "fixture $file").use { it.readBytes() }.decodeToString()
 
+    // Saved style bytes stay frozen. An explicit send now also enables cleanMYTV's app picker.
+    private fun sentFixture(file: String): String {
+        val doc = assertIs<DecodeResult.Ok>(LauncherConfigCodec.decode(fixture(file).encodeToByteArray())).doc
+        return LauncherConfigCodec.encode(HomeAppLibrary.applyTo(doc)).decodeToString()
+    }
+
     // Every fixture, through the frozen path (LegacyLook) and through a saved legacy HomeChoice as
     // every push of it encodes it (LookDrafts.docOf): JSON text equal, so a diff names the key.
     @Test fun aSavedLegacyLookKeepsItsBytes() {
@@ -118,18 +124,18 @@ class LookMigrationTest {
 
     private fun Harness.lastPush(): String = blobs.bytes(planner.requests.filterIsInstance<PlanRequest.ApplyTheme>().last().config).decodeToString()
 
-    // Restore mine and a dock change on a saved legacy look send its 0.4.0 bytes, and it stays a
-    // legacy choice; the first "Put it on the TV" writes the new form, with columns= always.
-    @Test fun restoreMineAndADockChangeKeepTheLegacyBytesUntilTheNextSend() = runTest(timeout = 30.seconds) {
+    // Restore mine and a dock change preserve the legacy style, adding the app library. The
+    // choice stays legacy until "Put it on the TV" writes the new form, with columns= always.
+    @Test fun restoreMineAndADockChangeKeepTheLegacyStyleAndEnableTheLibrary() = runTest(timeout = 30.seconds) {
         for (columns in listOf(null, 6)) {
             val h = Harness()
             val dock = LegacyCases.fifteen.take(4)
             val (m, id) = home(h, HomeChoice(dock, "mist", cards = false, columns = columns))
             val file = "mist.cols-${columns ?: "own"}.pic-own.dock-4.json"
             m.dispatch(HomeScreenIntent.RestoreMine); settle()
-            assertEquals(fixture(file), h.lastPush(), "Restore mine: $file")
+            assertEquals(sentFixture(file), h.lastPush(), "Restore mine: $file")
             m.dispatch(HomeScreenIntent.SetDock(dock)); settle()
-            assertEquals(fixture(file), h.lastPush(), "a dock change: $file")
+            assertEquals(sentFixture(file), h.lastPush(), "a dock change: $file")
             assertNull(HomePrefs(h.documents).load(id)?.style, "still the legacy choice")
             assertEquals("mist", m.state.value.themeId)
             assertEquals(StyleId.CLASSIC to "mist", m.state.value.sentStyle to m.state.value.sentPicture)
@@ -139,7 +145,7 @@ class LookMigrationTest {
             m.dispatch(HomeScreenIntent.UseLook); settle()
             val text = assertNotNull(h.documents.read("tvs/${id.value}/home.txt") { it.decodeToString() })
             assertTrue("\nstyle=classic\n" in text && "\ncolumns=${columns ?: 5}\n" in text, text)
-            assertNotEquals(fixture(file), h.lastPush(), "the new form")
+            assertNotEquals(sentFixture(file), h.lastPush(), "the new form")
             val back = assertIs<DecodeResult.Ok>(LauncherConfigCodec.decode(h.lastPush().encodeToByteArray()))
             assertEquals(emptyList(), back.warnings)
             // This 1 GB TV gets Quick with Lift and zoom off.
@@ -167,9 +173,9 @@ class LookMigrationTest {
         }
         for (id in LegacyCases.ids) {
             val s = LookSamples.matrix.single { it.name == "legacy-$id" }
-            assertEquals(fixture("$id.cols-own.pic-own.dock-4.json"), LookSamples.push(s, looks, looks).second.decodeToString(), s.name)
+            assertEquals(sentFixture("$id.cols-own.pic-own.dock-4.json"), LookSamples.push(s, looks, looks).second.decodeToString(), s.name)
         }
-        assertEquals(fixture("console.cols-5.pic-own.dock-4.json"),
+        assertEquals(sentFixture("console.cols-5.pic-own.dock-4.json"),
             LookSamples.push(LookSamples.matrix.single { it.name == "legacy-console-cols5" }, looks, looks).second.decodeToString())
         // next-mist is what the Look sheet sends for an untouched migrated Mist on a 2 GB TV.
         val h = Harness()

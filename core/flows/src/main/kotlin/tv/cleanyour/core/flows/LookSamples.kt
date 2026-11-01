@@ -101,7 +101,8 @@ object LookSamples {
     fun push(sample: LookSample, themes: ThemeSource, pictures: PictureSource): Triple<LauncherConfigDoc, ByteArray, BlobRef?> {
         val drafts = LookDrafts(themes, pictures, ConfigEncoder.Codec, DAY)
         val (doc, wallpaper) = drafts.docOf(sample.choice, sample.dock, sample.choice.cards ?: false, null, sample.tv)
-        return Triple(doc, ConfigEncoder.Codec.encode(doc), wallpaper)
+        val home = HomeAppLibrary.applyTo(doc)
+        return Triple(home, ConfigEncoder.Codec.encode(home), wallpaper)
     }
 
     // The phone's preview of those bytes, for the side by side goldens (names from AppNames on a

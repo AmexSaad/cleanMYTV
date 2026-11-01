@@ -859,8 +859,8 @@ class SetupMachineTest {
         // RFC-CARDS-1: module_cards is always written, off on a first Setup. 0.4.0: fill_dock false.
         // look2: Setup sends the new form; a TV never customised has Setup's Default look (Classic,
         // no picture, 4 apps in a row), and this 1 GB TV gets Quick movement.
-        fun expected(dock: List<PackageName>) = LauncherConfigCodec.encode(LookKeys.build(LookKeys.spec(StyleId.CLASSIC, movement = Movement.QUICK),
-            PictureKeys(false, "#000000", 0, 0), 4, dock, cards = false))
+        fun expected(dock: List<PackageName>) = LauncherConfigCodec.encode(HomeAppLibrary.applyTo(LookKeys.build(LookKeys.spec(StyleId.CLASSIC, movement = Movement.QUICK),
+            PictureKeys(false, "#000000", 0, 0), 4, dock, cards = false)))
         // The first plan: the picked dock on Setup's Default look.
         val first = expected(listOf(PackageName("com.netflix.ninja")))
         assertEquals(first.decodeToString(), h.blobs.bytes(assertNotNull(last().config)).decodeToString())

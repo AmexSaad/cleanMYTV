@@ -71,8 +71,8 @@
   <string name="cyt_dock_remove_row_cd">Alih keluar baris %1$d</string>
   <string name="cyt_dock_row_removed">Baris %1$d dialih keluar. Aplnya kembali di bawah Apl lain.</string>
   <string name="cyt_dock_row_empty">Ketik apl di bawah untuk meletakkannya dalam baris ini.</string>
-  <string name="cyt_dock_full">Dok memegang %1$d. Keluarkan satu, atau tambah satu baris di bawahnya.</string>
-  <string name="cyt_dock_row_full">Baris ini penuh. Keluarkan satu, atau tambah satu lagi baris.</string>
+  <string name="cyt_dock_full">Baris pertama memuatkan %1$d app. Pilih app lain di bawah untuk mulakan baris seterusnya.</string>
+  <string name="cyt_dock_row_full">Pilih app lain di bawah untuk mulakan baris seterusnya.</string>
   <string name="cyt_dock_all_full">Dok dan dua baris di bawahnya penuh. Keluarkan satu untuk menambah satu lagi.</string>
   <string name="cyt_dock_gaps">Tempat kosong di dok kekal kosong di TV.</string>
   <string name="cyt_dock_gaps_rows">Tempat kosong dalam baris di bawah dok menunjukkan apl anda yang lain mengikut nama.</string>

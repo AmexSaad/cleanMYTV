@@ -673,7 +673,7 @@ class ManageMachinesTest {
         val back = assertIs<DecodeResult.Ok>(LauncherConfigCodec.decode(bytes)).doc
         // RFC-CARDS-1: no kept choice and no overlay on the TV: Manage keeps the launcher's default, on.
         // 0.4.0: fill_dock false in every push.
-        assertEquals(LauncherConfigDoc(dockApps = six, rowsBelowDock = 1, moduleCards = true, fillDock = false), back)
+        assertEquals(HomeAppLibrary.applyTo(LauncherConfigDoc(dockApps = six, rowsBelowDock = 1, moduleCards = true, fillDock = false)), back)
         assertEquals(six, m.state.value.dock.map { it.pkg })
         // Later the second app is switched off on the TV: the rest move up a slot, as on the TV.
         h.snapshots.save(Samples.snapshot(packages = Samples.miTvPackages() + six.associateWith { state(it != six[1]) }, takenAtMs = Samples.NOW_MS + 2))

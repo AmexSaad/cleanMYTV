@@ -108,6 +108,15 @@ fun HomeScreen(
             LookRow(state, onClick = if (busy == null) ({ onIntent(HomeScreenIntent.OpenLook) }) else null)
         }
         // look2: a failed look send keeps the draft (and a new photo); Open Look reopens it.
+        if (state.prayerAvailable && busy == null) {
+            TertiaryButton(stringResource(if (state.prayerInstalled) R.string.home_remove_prayer else R.string.home_add_prayer),
+                { onIntent(if (state.prayerInstalled) HomeScreenIntent.RemovePrayer else HomeScreenIntent.AddPrayer) }, Modifier.padding(top = 8.dp))
+            Body(stringResource(R.string.home_prayer_note), Modifier.padding(horizontal = 4.dp))
+        }
+        if (busy == null) {
+            TertiaryButton(stringResource(R.string.home_add_apps), { dockOpen = true }, Modifier.padding(top = 8.dp))
+            Body(stringResource(R.string.home_add_apps_tv), Modifier.padding(start = 4.dp, end = 4.dp, top = 4.dp))
+        }
         if (state.lookFailed && busy == null) {
             Banner(stringResource(R.string.home_look_failed), BannerTone.WARNING, Modifier.padding(top = 12.dp),
                 actionLabel = stringResource(R.string.home_look_failed_open), onAction = { onIntent(HomeScreenIntent.OpenLook) })

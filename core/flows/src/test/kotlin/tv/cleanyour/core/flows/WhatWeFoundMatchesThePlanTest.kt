@@ -89,7 +89,7 @@ class WhatWeFoundMatchesThePlanTest {
     // RFC-CARDS-1: with module_cards false, so the new home screen asks about no card on its first start.
     // 0.4.0: and fill_dock false, so a free dock space stays empty.
     private fun assertTheLookIsPushed(plan: Plan, dock: List<PackageName>, rowsBelowDock: Int) {
-        val expected = LauncherConfigCodec.encode(DockLayers.applyTo(LauncherConfigDoc(), dock).copy(moduleCards = false, fillDock = false))
+        val expected = LauncherConfigCodec.encode(HomeAppLibrary.applyTo(DockLayers.applyTo(LauncherConfigDoc(), dock).copy(moduleCards = false, fillDock = false)))
         val pushes = plan.steps.filter { (it.op as? Op.PushAsset)?.dest == FileOverlayTransport.CONFIG }
         val push = pushes.single().op as Op.PushAsset
         assertEquals(sha256Of(expected), push.sha256)

@@ -4,9 +4,14 @@ plugins {
 }
 
 android {
+    // Local side-by-side preview: preserves the installed release and its TV recovery journal.
+    if (providers.gradleProperty("cleanmytvPrayerPreview").orNull == "true") {
+        buildTypes.getByName("debug") { applicationIdSuffix = ".prayerpreview" }
+    }
     // The app's version, in one place for every store flavour and for F-Droid's checkupdates
     // (STORES-PLAN 0 and 3): GitHub, F-Droid and Google Play ship the same versionCode and versionName.
     defaultConfig {
+        testInstrumentationRunner = "tv.cleanyour.app.PrayerBundleInstrumentation"
         // cleanMYTV derivative of upstream v0.4.6-beta2; follows cleanMYTV 1.1.0 (code 2).
         // CI installs this test-only predecessor, then upgrades to the normal signed APK.
         val upgradeBase = providers.gradleProperty("cleanmytvUpgradeBase").orNull == "true"

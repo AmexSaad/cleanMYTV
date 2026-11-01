@@ -122,6 +122,8 @@ class ManageDeps(
     val pictures: PictureSource = themes as? PictureSource ?: PictureSource.NONE,
     // 0.4.6: the app's redactor, run over what a card puts into a problem report (ReportContext).
     val redact: (String) -> String = { it },
+    val launchable: tv.cleanyour.core.probe.LaunchableApps? = prober as? tv.cleanyour.core.probe.LaunchableApps,
+    val bundledPrayer: (suspend () -> BundledPrayer?)? = null,
 ) {
     fun tv(id: TvId): Tv? = tvs.tvs.value.firstOrNull { it.id == id }
 

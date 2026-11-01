@@ -3,6 +3,7 @@ package tv.cleanyour.core.flows
 import java.time.LocalDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import tv.cleanyour.core.engine.RunStatus
 import tv.cleanyour.core.model.BlobRef
 import tv.cleanyour.core.model.Component
@@ -97,11 +98,15 @@ data class HomeScreenState(
     val lookFailed: Boolean = false,
     // look2 W1: a look send runs with the sheet closed; the Look row reads "Sending..." while busy.
     val lookSending: Boolean = false,
+    val prayerAvailable: Boolean = false,
+    val prayerInstalled: Boolean = false,
 ) {
     val waiting: Int get() = waitingApps.size
 }
 
 sealed interface HomeScreenIntent {
+    data object AddPrayer : HomeScreenIntent
+    data object RemovePrayer : HomeScreenIntent
     data class SetDock(val dock: List<PackageName>) : HomeScreenIntent
     data class SetTheme(val id: String, val picture: String? = null) : HomeScreenIntent
     // 0.4.0: the Look sheet, starting from the TV's look; look2: after a failed send, the kept draft.
@@ -214,6 +219,13 @@ class HomeScreenMachine(
         if (after.notOnTv != null && (event is HomeScreenIntent.SetDock || event is HomeScreenIntent.SetTheme || event == HomeScreenIntent.RestoreMine ||
             event == HomeScreenIntent.UseLook)) return
         when (event) {
+            HomeScreenIntent.AddPrayer -> if (d.store.addOns && !after.prayerInstalled) scope.launch { addPrayer() }
+            HomeScreenIntent.RemovePrayer -> if (d.store.addOns && after.prayerInstalled) scope.launch {
+                val result = writer.write(tvId, PlanRequest.RemoveModule(BundledPrayer.PKG), fresh = true) { send(BusyNow(it)) }
+                if (result is WriteResult.Done) refreshPrayerSnapshot()
+                if (result !is WriteResult.Done) effect(ManageEffect.Snackbar(SnackKind.FAILED, "", false))
+                send(BusyNow(null)); load()
+            }
             // 0.4.0: the sheet's list, then the saved apps it never showed (waiting for more apps in
             // a row), so a new dock never loses them. Apps in a row stays the saved one.
             // look2: a saved choice in the new form is pushed again in its own form; a legacy one
@@ -272,9 +284,12 @@ class HomeScreenMachine(
         val choice = d.homePrefs.load(tvId)
         val today = d.clock.today()
         val lookId = choice?.lookOn(today)
-        // The stored snapshot cannot say which apps are launchable, so the rule without that
-        // answer applies: never a home screen, a provider or a system-only package.
-        val apps = (snap?.let { DockCandidates.of(it, null, profile, d.facts) } ?: emptySet())
+        // Ask a connected TV for both TV and ordinary Android entry points. A stored snapshot
+        // alone excludes launchable system apps; retain the conservative fallback when offline.
+        val launchable = d.access.live(tvId)?.let { session ->
+            withTimeoutOrNull(5_000) { attempt { d.launchable?.launchable(session) }.getOrNull() }
+        }
+        val apps = (snap?.let { DockCandidates.of(it, launchable, profile, d.facts) } ?: emptySet())
             .map { AppChoice(it, d.nameOf(it, packages[it]?.label)) }.sortedBy { it.name.lowercase() }
         // The dock as the TV shows it: an app no longer there (gone, switched off) is skipped and the
         // later ones move up a slot, as the launcher does. 0.4.0: at the saved apps in a row, else the
@@ -310,8 +325,41 @@ class HomeScreenMachine(
             endedLook = ended, pictureId = pictureId, pictures = pictureOptions(),
             ownPicture = own, ownDim = choice?.dim ?: OwnPicture.DEFAULT_DIM,
             waitingApps = waiting, earlierPicture = earlierLook?.photo?.ref, sent = sentPreview, sentStyle = drafts.styleOf(choice, tvLook),
-            sentPicture = drafts.pictureIdOf(choice, tvLook), launcherVersionCode = versionCode, ramMb = ramMb, hasInputs = hasInputs),
+            sentPicture = drafts.pictureIdOf(choice, tvLook), launcherVersionCode = versionCode, ramMb = ramMb, hasInputs = hasInputs,
+            prayerAvailable = d.store.addOns && d.bundledPrayer != null, prayerInstalled = BundledPrayer.PKG in packages),
             choice, earlierLook, cardsNow, keys))
+    }
+
+    private suspend fun addPrayer() {
+        send(BusyNow(Busy.Connecting))
+        val bundled = attempt { d.bundledPrayer?.invoke() }.getOrNull()
+        if (bundled == null) {
+            send(BusyNow(null)); effect(ManageEffect.Snackbar(SnackKind.FAILED, "", false)); return
+        }
+        val choice = savedChoice()
+        val dock = ((choice?.dock ?: state.value.dock.map { it.pkg }) + BundledPrayer.PKG).distinct()
+        val config = attempt {
+            val own = OwnPicture.ref(d, tvId)
+            val (doc, wallpaper) = drafts.docOf(choice ?: HomeChoice(dock, null), dock, true, own, lookTv(state.value))
+            Look.encode(d.encoder, d.blobs, doc, wallpaper)
+        }.getOrNull()
+        if (config == null) {
+            send(BusyNow(null)); effect(ManageEffect.Snackbar(SnackKind.FAILED, "", false)); return
+        }
+        val result = writer.write(tvId, PlanRequest.AddModule(bundled.module, bundled.version, bundled.blob,
+            config.config, config.wallpaper), fresh = true) { send(BusyNow(it)) }
+        send(BusyNow(null))
+        if (result is WriteResult.Done) {
+            // The TV asks whether to show its card. Sound and alarms remain OFF inside the companion.
+            rememberPushedLook(d, tvId, config.digest)
+            d.homePrefs.save(tvId, (choice ?: HomeChoice(dock, null)).copy(dock = dock, cards = true))
+            refreshPrayerSnapshot()
+        } else effect(ManageEffect.Snackbar(SnackKind.FAILED, "", false))
+        load()
+    }
+
+    private suspend fun refreshPrayerSnapshot() {
+        d.access.live(tvId)?.let { session -> attempt { d.snapshots.save(d.runner.freshSnapshot(session)) } }
     }
 
     // 0.3.3 D2: null while the new home screen is on the TV: Setup recorded it (tv.launcher), or the
