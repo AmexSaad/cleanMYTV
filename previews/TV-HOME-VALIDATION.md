@@ -39,3 +39,12 @@ Pilih **Prayer Time** dan sahkan **Change/Tukar** sekali sahaja. [Screenshot pil
 
 [GitHub Actions 41294837811](https://github.com/AmexSaad/cleanMYTV/actions/runs/41294837811) berjaya: **1,165 ujian, 0 gagal, 0 ralat**. Job phone-preview turut lulus pemasangan naik taraf dengan signer yang sama dan menghasilkan gambar BM/English terbaru. Kod telefon 9 (1.3.0-beta4); modul TV kod 3 (2.0-beta1).
 
+
+## Muat turun disahkan
+
+[Release beta4](https://github.com/AmexSaad/cleanMYTV/releases/tag/v1.3.0-beta4) telah diterbitkan. Kedua-dua pautan APK memberi HTTP 200 selepas redirect.
+
+- Telefon cleanMYTV.apk: SHA-256 b6e07ba792da9c7fce43389e8321a18d9746d85b3f34cf599df949517ba59b84.
+- TV Prayer-Time-TV.apk: SHA-256 574404ca039d0bd587efe1226c41c72844ff02cc0bb37ed01afec91060eb3200.
+- [Penerbitan yang mengesahkan semula APK tepat daripada binaan](https://github.com/AmexSaad/cleanMYTV/actions/runs/41295883590) berjaya.
+
